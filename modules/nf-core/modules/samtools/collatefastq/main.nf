@@ -44,4 +44,21 @@ process SAMTOOLS_COLLATEFASTQ {
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """
+    
+    stub:
+    def args = task.ext.args ?: ''
+    def args2 = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    touch ${prefix}_1.fq.gz
+    touch ${prefix}_2.fq.gz
+    touch ${prefix}_other.fq.gz
+    touch ${prefix}_singleton.fq.gz
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
 }

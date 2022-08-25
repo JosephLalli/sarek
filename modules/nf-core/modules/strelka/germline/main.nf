@@ -45,4 +45,20 @@ process STRELKA_GERMLINE {
         strelka: \$( configureStrelkaGermlineWorkflow.py --version )
     END_VERSIONS
     """
+    
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def regions  = target_bed ? "--callRegions ${target_bed}" : ""
+    """
+    touch ${prefix}.genome.vcf.gz
+    touch ${prefix}.genome.vcf.gz.tbi
+    touch ${prefix}.variants.vcf.gz
+    touch ${prefix}.variants.vcf.gz.tbi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        strelka: \$( configureStrelkaGermlineWorkflow.py --version )
+    END_VERSIONS
+    """
 }

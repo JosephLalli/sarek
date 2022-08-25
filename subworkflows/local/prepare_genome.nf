@@ -8,6 +8,7 @@
 // Condition is based on params.step and params.tools
 // If and extra condition exists, it's specified in comments
 
+include { AUTOINDEX_GFA                          } from '../../modules/local/vg/autoindex/main'
 include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/modules/bwa/index/main'
 include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
 include { DRAGMAP_HASHTABLE                      } from '../../modules/nf-core/modules/dragmap/hashtable/main'
@@ -31,6 +32,8 @@ workflow PREPARE_GENOME {
         ascat_loci              // channel: [optional]  ascat loci files
         ascat_loci_gc           // channel: [optional]  ascat gc content file
         ascat_loci_rt           // channel: [optional]  ascat replictiming file
+        graph                   // channel: [optional]  genome_graph
+        giraffe_chr_names       // channel: [optional]  names_of_ref_chroms in graph
         chr_dir                 // channel: [optional]  chromosome files
         dbsnp                   // channel: [optional]  dbsnp
         fasta                   // channel: [mandatory] fasta
@@ -44,7 +47,9 @@ workflow PREPARE_GENOME {
     main:
 
     ch_versions = Channel.empty()
+    AUTOINDEX_GFA(graph, giraffe_chr_names) // If aligner is giraffe
 
+    fasta = fasta ? fasta : AUTOINDEX_GFA.out.fasta
     BWAMEM1_INDEX(fasta)     // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta)     // If aligner is bwa-mem2
     DRAGMAP_HASHTABLE(fasta) // If aligner is dragmap
@@ -99,6 +104,7 @@ workflow PREPARE_GENOME {
     }
 
     // Gather versions of all tools used
+    ch_versions = ch_versions.mix(AUTOINDEX_GFA.out.versions)
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
@@ -113,9 +119,13 @@ workflow PREPARE_GENOME {
     emit:
         bwa                              = BWAMEM1_INDEX.out.index                                             // path: bwa/*
         bwamem2                          = BWAMEM2_INDEX.out.index                                             // path: bwamem2/*
+        giraffe                          = [AUTOINDEX_GFA.out.giraffe, AUTOINDEX_GFA.out.giraffe_dist, AUTOINDEX_GFA.out.giraffe_min, AUTOINDEX_GFA.out.giraffe]
+        giraffe_snarls                   = AUTOINDEX_GFA.out.giraffe_snarls
+        giraffe_contig_lengths           = AUTOINDEX_GFA.out.contig_lengths
         hashtable                        = DRAGMAP_HASHTABLE.out.hashmap                                       // path: dragmap/*
         dbsnp_tbi                        = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()             // path: dbsnb.vcf.gz.tbi
         dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                             // path: genome.fasta.dict
+        fasta                            = fasta
         fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }                    // path: genome.fasta.fai
         germline_resource_tbi            = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect() // path: germline_resource.vcf.gz.tbi
         known_snps_tbi                   = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: {known_indels*}.vcf.gz.tbi

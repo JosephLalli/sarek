@@ -7,3 +7,13 @@ results/
 testing/
 testing*
 *.pyc
+Homo_sapiens_assembly38.fasta
+Homo_sapiens_assembly38.fasta.fai
+interleaved.fastq
+local_references/*
+ref.metadata.txt
+test_1.fastq.gz
+test_2.fastq.gz
+test_619_R1_001.fastq.gz
+test_619_R2_001.fastq.gz
+subworkflows/local/create_panel_vcf.txt

@@ -8,13 +8,14 @@ process DEEPVARIANT {
     }
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'google/deepvariant:1.3.0' :
-        'google/deepvariant:1.3.0' }"
+        'google/deepvariant:1.4.0' :
+        'google/deepvariant:1.4.0' }"
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
-    path(fasta)
-    path(fai)
+    path (fasta)
+    path (fai)
+    tuple path(model_data), path(model_index), path(model_meta)
 
     output:
     tuple val(meta), path("${prefix}.vcf.gz") ,  emit: vcf
@@ -28,11 +29,13 @@ process DEEPVARIANT {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     def regions = intervals ? "--regions ${intervals}" : ""
+    def model_args = model_data ? "--customized_model='./${model_meta.simpleName}" : ''
 
     """
     /opt/deepvariant/bin/run_deepvariant \\
         --ref=${fasta} \\
         --reads=${input} \\
+        ${model_args}' \\
         --output_vcf=${prefix}.vcf.gz \\
         --output_gvcf=${prefix}.g.vcf.gz \\
         ${args} \\
@@ -46,7 +49,10 @@ process DEEPVARIANT {
     """
 
     stub:
+    def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
+    def regions = intervals ? "--regions ${intervals}" : ""
+    def model_args = model_data ? "--customized_model='./${model_meta.simpleName}" : ''
     """
     touch ${prefix}.vcf.gz
     touch ${prefix}.g.vcf.gz

@@ -18,6 +18,7 @@ workflow GERMLINE_VARIANT_CALLING {
         bwa                               // channel: [mandatory] bwa
         dbsnp                             // channel: [mandatory] dbsnp
         dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
+        deepvariant_model_files           // channel: [optional]
         dict                              // channel: [mandatory] dict
         fasta                             // channel: [mandatory] fasta
         fasta_fai                         // channel: [mandatory] fasta_fai
@@ -40,6 +41,7 @@ workflow GERMLINE_VARIANT_CALLING {
     genotype_gvcf       = Channel.empty()
     haplotypecaller_vcf = Channel.empty()
     manta_vcf           = Channel.empty()
+    pangenie_vcf        = Channel.empty()
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
 
@@ -122,7 +124,8 @@ workflow GERMLINE_VARIANT_CALLING {
             cram_recalibrated_intervals,
             dict,
             fasta,
-            fasta_fai
+            fasta_fai,
+            deepvariant_model_files
         )
 
         deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)

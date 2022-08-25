@@ -32,4 +32,16 @@ process UNZIP {
         7za: \$(echo \$(7za --help) | sed 's/.*p7zip Version //; s/(.*//')
     END_VERSIONS
     """
+    
+    stub:
+    def args = task.ext.args ?: ''
+    if ( archive instanceof List && archive.name.size > 1 ) { exit 1, "[UNZIP] error: 7za only accepts a single archive as input. Please check module input." }
+    """
+    mkdir ${archive.baseName}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        7za: \$(echo \$(7za --help) | sed 's/.*p7zip Version //; s/(.*//')
+    END_VERSIONS
+    """
 }

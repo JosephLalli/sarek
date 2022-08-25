@@ -47,4 +47,18 @@ process SNPEFF {
         snpeff: \$(echo \$(snpEff -version 2>&1) | cut -f 2 -d ' ')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.ann.vcf
+    touch ${prefix}.csv
+    touch ${prefix}.html
+    touch ${prefix}.genes.txt
+    
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        snpeff: \$(echo \$(snpEff -version 2>&1) | cut -f 2 -d ' ')
+    END_VERSIONS
+    """
 }

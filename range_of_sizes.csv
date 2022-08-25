@@ -1,0 +1,5 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2
+HSB340_small_AA,XY,0,HSB340,1,/mnt/data/lalli/nf_stage/brainvar_dna_reads/340_S6_R1_001.fastq.gz,/mnt/data/lalli/nf_stage/brainvar_dna_reads/340_S6_R2_001.fastq.gz
+HSB565_small_Asian,XX,0,HSB565,1,/mnt/data/lalli/nf_stage/brainvar_dna_reads/565_R1_001.fastq.gz,/mnt/data/lalli/nf_stage/brainvar_dna_reads/565_R2_001.fastq.gz
+HSB100_mod_AA,XX,0,HSB100,1,/mnt/data/lalli/nf_stage/brainvar_dna_reads/100_S2_R1_001.fastq.gz,/mnt/data/lalli/nf_stage/brainvar_dna_reads/100_S2_R2_001.fastq.gz
+HSB222_lg_wht,XX,0,HSB222,1,/mnt/data/lalli/nf_stage/brainvar_dna_reads/222_S19_R1_001.fastq.gz,/mnt/data/lalli/nf_stage/brainvar_dna_reads/222_S19_R2_001.fastq.gz

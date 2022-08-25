@@ -89,7 +89,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, HaplotypeCaller, mpileup, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|snpeff|strelka|tiddit|vep)*,?)*$"
+                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|expansionhunter|giraffe|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|pangenie|snpeff|strelka|tiddit|vep)*,?)*$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -194,7 +194,7 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap"],
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "giraffe"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
                     "help_text": "`Sarek` will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf `DragMap` is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n",
                     "hidden": true
@@ -606,6 +606,55 @@
                     "fa_icon": "fas fa-file",
                     "description": "Path to GATK Mutect2 Germline Resource Index.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\n> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.",
+                    "hidden": true
+                },
+                "graph": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "filler",
+                    "help_text": "filler",
+                    "hidden": true
+                },
+                "giraffe": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "filler",
+                    "help_text": "filler",
+                    "hidden": true
+                },
+                "giraffe_chr_names": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "filler",
+                    "help_text": "filler",
+                    "hidden": true
+                },
+                "giraffe_dict": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "filler",
+                    "help_text": "filler",
+                    "hidden": true
+                },
+                "giraffe_min": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "filler",
+                    "help_text": "filler",
+                    "hidden": true
+                },
+                "giraffe_snarls": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "filler",
+                    "help_text": "filler",
+                    "hidden": true
+                },
+                "giraffe_xg_index": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "filler",
+                    "help_text": "filler",
                     "hidden": true
                 },
                 "known_indels": {

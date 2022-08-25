@@ -23,7 +23,6 @@ process SAMTOOLS_CONVERT {
     def args = task.ext.args  ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def output_extension = input.getExtension() == "bam" ? "cram" : "bam"
-
     """
     samtools view \\
         --threads ${task.cpus} \\
@@ -33,6 +32,21 @@ process SAMTOOLS_CONVERT {
         -o ${prefix}.${output_extension}
 
     samtools index -@${task.cpus} ${prefix}.${output_extension}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def args = task.ext.args  ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def output_extension = input.getExtension() == "bam" ? "cram" : "bam"
+    def output_index_extension = input.getExtension() == "bam" ? "crai" : "bai"
+    """
+    touch ${prefix}.${output_extension}
+    touch ${prefix}.${output_extension}.${output_index_extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

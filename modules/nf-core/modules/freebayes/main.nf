@@ -70,4 +70,22 @@ process FREEBAYES {
         END_VERSIONS
         """
     }
+    
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def input            = input_2        ? "${input_1} ${input_2}"        : "${input_1}"
+    def targets_file     = target_bed     ? "--target ${target_bed}"       : ""
+    def samples_file     = samples        ? "--samples ${samples}"         : ""
+    def populations_file = populations    ? "--populations ${populations}" : ""
+    def cnv_file         = cnv            ? "--cnv-map ${cnv}"             : ""
+
+    """
+    touch ${prefix}.vcf.gz
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        freebayes: \$(echo \$(freebayes --version 2>&1) | sed 's/version:\s*v//g' )
+    END_VERSIONS
+    """
 }

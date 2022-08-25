@@ -44,4 +44,26 @@ process GATK4_MERGEVCFS {
         gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
     END_VERSIONS
     """
+    
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def input_list = vcf.collect{ "--INPUT $it"}.join(' ')
+    def reference_command = dict ? "--SEQUENCE_DICTIONARY $dict" : ""
+
+    def avail_mem = 3
+    if (!task.memory) {
+        log.info '[GATK MergeVcfs] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
+    """
+    touch ${prefix}.vcf.gz
+    touch ${prefix}.tbi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
+    """
 }

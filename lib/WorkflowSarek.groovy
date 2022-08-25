@@ -10,8 +10,11 @@ class WorkflowSarek {
     public static void initialise(params, log) {
         genomeExistsError(params, log)
 
-        if (!params.fasta) {
-            log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
+        if (!params.fasta && params.aligner != 'giraffe') {
+            log.error "Linear reference aligner specified, but no reference fasta file specified with e.g. '--fasta genome.fa' or via a detectable config file."
+            System.exit(1)
+        } else if (!params.graph && params.aligner == 'giraffe') {
+            log.error "Graphical reference aligner \"giraffe\" specified, but no reference gfa file specified with e.g. '--graph genome.gfa' or via a detectable config file."
             System.exit(1)
         }
     }

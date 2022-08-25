@@ -26,6 +26,8 @@ process GATK4_CREATESEQUENCEDICTIONARY {
     } else {
         avail_mem = task.memory.giga
     }
+    
+
     """
     gatk --java-options "-Xmx${avail_mem}g" CreateSequenceDictionary \\
         --REFERENCE $fasta \\

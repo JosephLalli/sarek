@@ -44,4 +44,23 @@ process MSISENSORPRO_MSI_SOMATIC {
         msisensor-pro: \$(msisensor-pro 2>&1 | sed -nE 's/Version:\\sv([0-9]\\.[0-9])/\\1/ p')
     END_VERSIONS
     """
+
+    stub:
+    def args = task.ext.args   ?: ''
+    prefix   = task.ext.prefix ?: "${meta.id}"
+    def fasta = fasta ? "-g ${fasta}" : ""
+    def intervals = intervals ? " -e ${intervals} " : ""
+    """
+
+    touch ${prefix}
+    touch ${prefix}_dis
+    touch ${prefix}_germline
+    touch ${prefix}_somatic
+
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        msisensor-pro: \$(msisensor-pro 2>&1 | sed -nE 's/Version:\\sv([0-9]\\.[0-9])/\\1/ p')
+    END_VERSIONS
+    """
 }

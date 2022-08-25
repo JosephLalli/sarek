@@ -53,4 +53,20 @@ process ENSEMBLVEP {
         ensemblvep: \$( echo \$(vep --help 2>&1) | sed 's/^.*Versions:.*ensembl-vep : //;s/ .*\$//')
     END_VERSIONS
     """
+    
+    stub:
+    def args = task.ext.args ?: ''
+    def file_extension = args.contains("--vcf") ? 'vcf' : args.contains("--json")? 'json' : args.contains("--tab")? 'tab' : 'vcf'
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def dir_cache = cache ? "\${PWD}/${cache}" : "/.vep"
+    def reference = fasta ? "--fasta $fasta" : ""
+    """
+    touch ${prefix}.ann.${file_extension}
+    touch ${prefix}.summary.html
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        ensemblvep: \$( echo \$(vep --help 2>&1) | sed 's/^.*Versions:.*ensembl-vep : //;s/ .*\$//')
+    END_VERSIONS
+    """
 }

@@ -9,6 +9,9 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 // Validate input parameters
 WorkflowSarek.initialise(params, log)
 
+// Graph: can either provide an unindexed reference (--graph *.gfa),
+// or provide autoindexed gfa files (--giraffe, --giraffe_dist, --giraffe_min)
+
 // Check input path parameters to see if they exist
 def checkPathParamList = [
     params.ascat_alleles,
@@ -22,10 +25,21 @@ def checkPathParamList = [
     params.dbnsfp_tbi,
     params.dbsnp,
     params.dbsnp_tbi,
+    params.deepvariant_model_data,
+    params.deepvariant_model_meta,
+    params.deepvariant_model_index,
     params.dict,
     params.dragmap,
     params.fasta,
     params.fasta_fai,
+    params.giraffe,
+    params.giraffe_dist,
+    params.giraffe_min,
+    params.giraffe_snarls,
+    params.giraffe_chr_names,
+    params.giraffe_xg_index,
+    params.giraffe_gbwtgraph,
+    params.giraffe_gbwt,
     params.germline_resource,
     params.germline_resource_tbi,
     params.input,
@@ -36,6 +50,9 @@ def checkPathParamList = [
     params.known_indels_tbi,
     params.mappability,
     params.multiqc_config,
+    params.pangenie_model,
+    params.panel_vcf,
+    params.panel_vcf_bi,
     params.pon,
     params.pon_tbi,
     params.snpeff_cache,
@@ -43,6 +60,7 @@ def checkPathParamList = [
     params.spliceai_indel_tbi,
     params.spliceai_snv,
     params.spliceai_snv_tbi,
+    params.str_variant_catalog,
     params.vep_cache
 ]
 
@@ -64,6 +82,9 @@ if (params.wes && !params.step == 'annotate') {
 
 if(params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))){
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
+}
+if(params.step == 'mapping' && params.aligner.contains("giraffe") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))){
+    log.warn("vg-Giraffe was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using vg-Giraffe (Source: baserecalibration is bad, and should not be used unless otherwise indicated.")
 }
 
 // Fails or warns when missing files or params for ascat
@@ -147,20 +168,39 @@ if (anno_readme && file(anno_readme).exists()) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()            : Channel.empty()
-ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.empty()
-ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
-ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
-chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
-fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
-mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
+ascat_alleles       = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()            : Channel.empty()
+ascat_loci          = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.empty()
+ascat_loci_gc       = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
+ascat_loci_rt       = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
+chr_dir             = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
+dbsnp               = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
+known_snps          = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
+graph               = params.graph              ? Channel.fromPath(params.graph).collect()                    : Channel.value([])
+giraffe_chr_names   = params.graph              ? Channel.fromPath(params.giraffe_chr_names).collect()        : Channel.value([])
+giraffe             = params.giraffe            ? Channel.fromPath(params.giraffe).collect()                  : Channel.value([])
+giraffe_dist        = params.giraffe            ? Channel.fromPath(params.giraffe_dist).collect()             : Channel.value([])
+giraffe_min         = params.giraffe            ? Channel.fromPath(params.giraffe_min).collect()              : Channel.value([])
+giraffe_snarls      = params.giraffe            ? Channel.fromPath(params.giraffe_snarls).collect()           : Channel.value([])
+giraffe_xg_index    = params.giraffe            ? Channel.fromPath(params.giraffe_xg_index).collect()         : Channel.value([])
+giraffe_gbwtgraph   = params.giraffe_gbwtgraph  ? Channel.fromPath(params.giraffe_gbwtgraph).collect()        : Channel.value([])
+giraffe_gbwt_index  = params.giraffe_gbwtgraph  ? Channel.fromPath(params.giraffe_gbwt).collect()             : Channel.value([])
+fasta               = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
+fasta_fai           = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
+germline_resource   = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
+known_indels        = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
+known_snps          = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
+mappability         = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
+pangenie_model      = params.panel_vcf          ? Channel.fromPath(params.pangenie_model).collect()           : Channel.value([])
+panel_vcf           = params.pangenie_model     ? Channel.fromPath(params.panel_vcf).collect()                : Channel.value([])
+panel_vcf_bi        = params.panel_vcf          ? Channel.fromPath(params.panel_vcf_bi).collect()             : Channel.value([])
+pon                 = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
+
+// tool specific references/model specs
+deepvariant_model   = params.tools.split(',').contains('deepvariant')     ? Channel.fromPath([params.deepvariant_model_data, 
+                                                                                              params.deepvariant_model_index, 
+                                                                                              params.deepvariant_model_meta]).collect() : Channel.value([])
+
+str_variant_catalog = params.tools.split(',').contains('expansionhunter') ? Channel.fromPath(params.str_variant_catalog).collect()      : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
@@ -195,6 +235,7 @@ umi_read_structure = params.umi_read_structure ? "${params.umi_read_structure}" 
     IMPORT LOCAL/NF-CORE MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+print('importing other modules/subworkflows')
 
 // Create samplesheets to restart from different steps
 include { MAPPING_CSV                                          } from '../subworkflows/local/mapping_csv'
@@ -227,6 +268,8 @@ include { CREATE_UMI_CONSENSUS                                 } from '../subwor
 
 // Map input reads to reference genome
 include { GATK4_MAPPING                                        } from '../subworkflows/nf-core/gatk4/mapping/main'
+// Map input reads to reference genome
+include { VG_GIRAFFE_MAP                                       } from '../subworkflows/local/giraffe_mapping'
 
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM                                      } from '../subworkflows/nf-core/merge_index_bam'
@@ -242,6 +285,9 @@ include { MARKDUPLICATES                                       } from '../subwor
 
 // Mark Duplicates SPARK (+QC)
 include { MARKDUPLICATES_SPARK                                 } from '../subworkflows/nf-core/gatk4/markduplicates_spark/main'
+
+// Realign indels
+include { REALIGN_INDELS                                       } from '../subworkflows/local/realign_indels'
 
 // Convert to CRAM (+QC)
 include { BAM_TO_CRAM                                          } from '../subworkflows/nf-core/bam_to_cram'
@@ -260,6 +306,12 @@ include { RECALIBRATE                                          } from '../subwor
 
 // Create recalibrated cram files to use for variant calling (+QC)
 include { RECALIBRATE_SPARK                                    } from '../subworkflows/nf-core/gatk4/recalibrate_spark/main'
+
+// SV calling using Pangenie's pangenome approach
+include { PANGENIE_CALL_STRUCTURAL_VARIANTS                    } from '../subworkflows/local/pangenie_map_and_call'
+
+// STR calling using Illumina's expansion hunter
+include { EXPANSIONHUNTER                                      } from '../modules/local/expansionhunter/main'
 
 // Variant calling on a single normal sample
 include { GERMLINE_VARIANT_CALLING                             } from '../subworkflows/local/germline_variant_calling'
@@ -286,7 +338,7 @@ include { MULTIQC                                              } from '../module
     CONFIG FILES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
+print ('importing multiqc config files')
 ch_multiqc_config        = [
                             file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
                             file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true)
@@ -301,7 +353,7 @@ def multiqc_report = []
 */
 
 workflow SAREK {
-
+    print ('starting workflow')
     // To gather all QC reports for MultiQC
     ch_reports  = Channel.empty()
     // To gather used softwares versions for MultiQC
@@ -314,6 +366,8 @@ workflow SAREK {
         ascat_loci,
         ascat_loci_gc,
         ascat_loci_rt,
+        graph,
+        giraffe_chr_names,
         chr_dir,
         dbsnp,
         fasta,
@@ -330,7 +384,8 @@ workflow SAREK {
     chr_files              = PREPARE_GENOME.out.chr_files
     dragmap                = params.fasta                   ? params.dragmap                    ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                       ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
-    fasta_fai              = params.fasta                   ? params.fasta_fai                  ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
+    fasta                  = params.graph                   ? params.fasta                      ? Channel.fromPath(params.fasta).collect()                 : PREPARE_GENOME.out.fasta                 : []
+    fasta_fai              = (params.graph || params.fasta) ? params.fasta_fai                  ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
     dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi                  ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
     gc_file                = PREPARE_GENOME.out.gc_file
     germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi      ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
@@ -341,11 +396,27 @@ workflow SAREK {
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
     rt_file                = PREPARE_GENOME.out.rt_file
 
+    // Set up giraffe index
+    giraffe_snarls         = params.graph                   ? params.giraffe                    ? Channel.fromPath(params.giraffe_snarls).collect()        : PREPARE_GENOME.out.giraffe_snarls        : []
+    // giraffe                = params.giraffe                 ? params.giraffe                    ? Channel.fromPath([params.giraffe, 
+    //                                                                                                                 params.giraffe_dist, 
+    //                                                                                                                 params.giraffe_min, 
+    //                                                                                                                 params.giraffe_xg_index, [], []]).collect()    : PREPARE_GENOME.out.giraffe               : Channel.value([])
+    // index can be specified as either a gbz graph (default), or a combo of gbwt and gbwtgraph.
+    giraffe                = params.giraffe_gbwtgraph       ? params.giraffe                    ? Channel.fromPath([params.giraffe,
+                                                                                                                    params.giraffe_dist, 
+                                                                                                                    params.giraffe_min, 
+                                                                                                                    params.giraffe_xg_index,
+                                                                                                                    params.giraffe_gbwt,
+                                                                                                                    params.giraffe_gbwtgraph]).collect()    : PREPARE_GENOME.out.giraffe               : Channel.value([])
+
+    // giraffe.view()
     // Gather index for mapping given the chosen aligner
-    ch_map_index = params.aligner == "bwa-mem" ? bwa :
+    ch_map_index = params.aligner == "giraffe" ? giraffe :
+        params.aligner == "bwa-mem" ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
         dragmap
-
+    
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
     known_sites_indels     = dbsnp.concat(known_indels).collect()
@@ -392,7 +463,7 @@ workflow SAREK {
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
         ch_input_fastq = ch_input_sample_type.fastq.mix(ALIGNMENT_TO_FASTQ_INPUT.out.reads)
-
+        // ch_input_fastq.view()
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
         // trim only with `--trim_fastq`
@@ -429,10 +500,10 @@ workflow SAREK {
         } else {
             ch_reads_fastp = ch_input_fastq
         }
+        // ch_reads_fastp.view()
 
         // Trimming and/or splitting
         if (params.trim_fastq || params.split_fastq > 0) {
-
             save_trimmed_fail = false
             save_merged = false
             FASTP(ch_reads_fastp, save_trimmed_fail, save_merged)
@@ -459,7 +530,7 @@ workflow SAREK {
                         ],
                         read_files]
                     }.transpose()
-            }else{
+            } else {
                 ch_reads_to_map = FASTP.out.reads
             }
 
@@ -467,10 +538,10 @@ workflow SAREK {
         } else {
             ch_reads_to_map = ch_reads_fastp
         }
-
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
-        ch_reads_to_map = ch_reads_to_map.map{ meta, reads ->
+        // ch_versions.view()
+        ch_sorted_reads_to_map = ch_reads_to_map.map{ meta, reads ->
             // update ID when no multiple lanes or splitted fastqs
             new_id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
 
@@ -489,10 +560,27 @@ workflow SAREK {
         }
 
         sort_bam = true
-        GATK4_MAPPING(ch_reads_to_map, ch_map_index, sort_bam)
+        if (params.aligner != 'giraffe') {
+            GATK4_MAPPING(ch_sorted_reads_to_map, ch_map_index, sort_bam)
+            mapped_bams = GATK4_MAPPING.out.bam
+            ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
+        } else {
+            VG_GIRAFFE_MAP(ch_sorted_reads_to_map, ch_map_index, giraffe_chr_names, sort_bam)
+            mapped_bams = VG_GIRAFFE_MAP.out.bam
+            ch_versions = ch_versions.mix(VG_GIRAFFE_MAP.out.versions)
+            ch_reports  = ch_reports.mix(VG_GIRAFFE_MAP.out.logs)
+
+            // giraffe-deepvariant pipeline realigns indels. We'll do that here.
+            REALIGN_INDELS (mapped_bams, fasta, fasta_fai, dict, giraffe_chr_names)
+            mapped_bams = REALIGN_INDELS.out.bam
+            ch_versions = ch_versions.mix(REALIGN_INDELS.out.versions)
+        }
+        // print ('mapped_bams')
+        // ch_versions.view()
+        // mapped_bams.view()
 
         // Grouping the bams from the same samples not to stall the workflow
-        ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
+        ch_bam_mapped = mapped_bams.map{ meta, bam ->
             numLanes = meta.numLanes ?: 1
             size     = meta.size     ?: 1
 
@@ -532,8 +620,10 @@ workflow SAREK {
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_INPUT.out.versions)
-        ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
     }
+
+    // print ('ch_bam_mapped')
+    // ch_bam_mapped.view()
 
     if (params.step in ['mapping', 'markduplicates']) {
 
@@ -648,6 +738,8 @@ workflow SAREK {
         // Create CSV to restart from this step
         if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) MARKDUPLICATES_CSV(ch_md_cram_for_restart)
     }
+    // print ('ch_md_cram_for_restart')
+    // ch_md_cram_for_restart.view()
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
 
@@ -675,7 +767,6 @@ workflow SAREK {
             // - crams from markduplicates_spark
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
-            //ch_md_cram_for_restart.view() //contains md.cram.crai
             ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_md_cram_for_restart, ch_input_cram_indexed)
         }
 
@@ -893,6 +984,8 @@ workflow SAREK {
         }else{
             ch_cram_variant_calling_status_normal = ch_cram_variant_calling_status.normal
         }
+        // ch_cram_variant_calling_status_normal.view()
+
 
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
@@ -908,6 +1001,28 @@ workflow SAREK {
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }
 
+        // print ('ch_sorted_reads_to_map2')
+        // ch_sorted_reads_to_map.view()
+
+        // SV VARIANT CALLING WITH PANGENIE
+        if (params.tools.split(',').contains('pangenie')){
+            PANGENIE_CALL_STRUCTURAL_VARIANTS(
+                ch_sorted_reads_to_map,       // channel: [mandatory] meta, reads
+                fasta,                 // channel: [mandatory] fasta
+                panel_vcf,             // channel: [mandatory] panel_vcf
+                panel_vcf_bi,
+                pangenie_model        // channel: [mandatory] pickled file of model used to filter variant calls
+            )
+        }
+
+        // STR VARIANT CALLING WITH EXPANSIONHUNTER
+        if (params.tools.split(',').contains('expansionhunter')){
+            EXPANSIONHUNTER(
+                ch_cram_variant_calling_status_normal, // channel: [mandatory] meta, cram, crai
+                fasta,                                 // channel: [mandatory] fasta
+                str_variant_catalog                   // channel: [mandatory] expansionhunter variant catalog json
+            )
+        }
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
             params.tools,
@@ -915,6 +1030,7 @@ workflow SAREK {
             [], //bwa_index for tiddit; not used here
             dbsnp,
             dbsnp_tbi,
+            deepvariant_model,
             dict,
             fasta,
             fasta_fai,
@@ -977,12 +1093,17 @@ workflow SAREK {
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
+        vcf_to_annotate = vcf_to_annotate.mix(PANGENIE_CALL_STRUCTURAL_VARIANTS.out.pangenie_sv_bcf)
+        vcf_to_annotate = vcf_to_annotate.mix(EXPANSIONHUNTER.out.vcf)
+        // print ('vcf_to_annotate')
+        // vcf_to_annotate.view()
+
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
@@ -995,6 +1116,8 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.tiddit_vcf)
 
         // Gather used softwares versions
+        ch_versions = ch_versions.mix(PANGENIE_CALL_STRUCTURAL_VARIANTS.out.versions)
+        ch_versions = ch_versions.mix(EXPANSIONHUNTER.out.versions)
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
@@ -1088,13 +1211,11 @@ def extract_csv(csv_file) {
             System.exit(1)
         }
     }
-
     // Additional check of sample sheet:
     // 1. If params.step == "mapping", then each row should specify a lane and the same combination of patient, sample and lane shouldn't be present in different rows.
     // 2. The same sample shouldn't be listed for different patients.
     def patient_sample_lane_combinations_in_samplesheet = []
     def sample2patient = [:]
-
     Channel.from(csv_file).splitCsv(header: true)
         .map{ row ->
             if (params.step == "mapping") {
@@ -1117,7 +1238,6 @@ def extract_csv(csv_file) {
                 System.exit(1)
             }
         }
-
     sample_count_all = 0
     sample_count_normal = 0
     sample_count_tumor = 0
@@ -1192,21 +1312,24 @@ def extract_csv(csv_file) {
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
 
             def flowcell    = flowcellLaneFromFastq(fastq_1)
+            def fasta_basename = file(params.fasta).baseName.toString()
+
             //Don't use a random element for ID, it breaks resuming
-            def read_group  = "\"@RG\\tID:${flowcell}.${row.sample}.${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+            def read_group  = "\"@RG\\tID:${flowcell}.${row.sample}.${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${fasta_basename}\\tPL:${params.seq_platform}\""
+
 
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = 'fastq'
 
             meta.size       = 1 // default number of splitted fastq
-
+            
             if (params.step == 'mapping') return [meta, [fastq_1, fastq_2]]
             else {
                 log.error "Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
-
+        
         // start from BAM
         } else if (row.lane && row.bam) {
             if (!row.bai) {
@@ -1236,7 +1359,7 @@ def extract_csv(csv_file) {
             def cram  = file(row.cram,  checkIfExists: true)
             def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
-
+            
             meta.data_type  = 'cram'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai, table]
@@ -1244,7 +1367,7 @@ def extract_csv(csv_file) {
                 log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
-
+        
         // recalibration when skipping MarkDuplicates
         } else if (row.table && row.bam) {
             meta.id   = meta.sample
@@ -1259,7 +1382,7 @@ def extract_csv(csv_file) {
                 log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
-
+        
         // prepare_recalibration or variant_calling
         } else if (row.cram) {
             meta.id = meta.sample
@@ -1273,7 +1396,7 @@ def extract_csv(csv_file) {
                 log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
-
+        
         // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
         } else if (row.bam) {
             meta.id = meta.sample
@@ -1287,7 +1410,7 @@ def extract_csv(csv_file) {
                 log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
-
+        
         // annotation
         } else if (row.vcf) {
             meta.id = meta.sample
@@ -1324,8 +1447,10 @@ def flowcellLaneFromFastq(path) {
     assert line.startsWith('@')
     line = line.substring(1)
     def fields = line.split(':')
+    if (fields.size() == 1){
+        fields = line.split('#')
+    }
     String fcid
-
     if (fields.size() >= 7) {
         // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
         // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"

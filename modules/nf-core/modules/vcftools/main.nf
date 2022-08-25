@@ -120,4 +120,40 @@ process VCFTOOLS {
         vcftools: \$(echo \$(vcftools --version 2>&1) | sed 's/^.*VCFtools (//;s/).*//')
     END_VERSIONS
     """
+
+    
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def args_list = args.tokenize()
+    def bed_arg  = (args.contains('--bed')) ? "--bed ${bed}" :
+        (args.contains('--exclude-bed')) ? "--exclude-bed ${bed}" :
+        (args.contains('--hapcount')) ? "--hapcount ${bed}" : ''
+    args_list.removeIf { it.contains('--bed') }
+    args_list.removeIf { it.contains('--exclude-bed') }
+    args_list.removeIf { it.contains('--hapcount') }
+
+    def diff_variant_arg = (args.contains('--diff')) ? "--diff ${diff_variant_file}" :
+        (args.contains('--gzdiff')) ? "--gzdiff ${diff_variant_file}" :
+        (args.contains('--diff-bcf')) ? "--diff-bcf ${diff_variant_file}" : ''
+    args_list.removeIf { it.contains('--diff') }
+    args_list.removeIf { it.contains('--gzdiff') }
+    args_list.removeIf { it.contains('--diff-bcf') }
+
+    def input_file = ("$variant_file".endsWith(".vcf")) ? "--vcf ${variant_file}" :
+        ("$variant_file".endsWith(".vcf.gz")) ? "--gzvcf ${variant_file}" :
+        ("$variant_file".endsWith(".bcf")) ? "--bcf ${variant_file}" : ''
+
+    """
+    touch ${prefix}.TsTv
+    touch ${prefix}.TsTv.summary
+    touch ${prefix}.TsTv.count
+    touch ${prefix}.TsTv.qual
+    touch ${prefix}.FILTER.summary
+    
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        vcftools: \$(echo \$(vcftools --version 2>&1) | sed 's/^.*VCFtools (//;s/).*//')
+    END_VERSIONS
+    """
 }

@@ -72,4 +72,22 @@ process FASTP {
         END_VERSIONS
         """
     }
+
+    stub:
+    def fail_fastq  = save_trimmed_fail ? "--unpaired1 ${prefix}_1.fail.fastq.gz --unpaired2 ${prefix}_2.fail.fastq.gz" : ''
+    def merge_fastq = save_merged ? "-m --merged_out ${prefix}.merged.fastq.gz" : ''
+    """
+    touch ${prefix}_1.fastp.fastq.gz
+    touch ${prefix}_2.fastp.fastq.gz
+    touch ${prefix}.fastp.json
+    touch ${prefix}.fastp.html
+    touch ${prefix}.fastp.log
+    touch ${prefix}.merged.fastq.gz"
+    touch ${prefix}.fail.fastq.gz"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        fastp: \$(fastp --version 2>&1 | sed -e "s/fastp //g")
+    END_VERSIONS
+    """
 }

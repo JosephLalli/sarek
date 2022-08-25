@@ -24,7 +24,6 @@ process GATK4_MARKDUPLICATES_SPARK {
     prefix = task.ext.prefix ?: "${meta.id}"
     def input_list = bam.collect{"--input $it"}.join(' ')
 
-
     def avail_mem = 3
     if (!task.memory) {
         log.info '[GATK MarkDuplicatesSpark] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
@@ -44,6 +43,27 @@ process GATK4_MARKDUPLICATES_SPARK {
     "${task.process}":
         gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
         openjdk: \$(echo \$(java -version 2>&1) | grep version | sed 's/\"//g' | cut -f3 -d ' ')
+    END_VERSIONS
+    """
+    
+    stub:
+    def args = task.ext.args ?: ''
+    prefix = task.ext.prefix ?: "${meta.id}"
+    def input_list = bam.collect{"--input $it"}.join(' ')
+
+    def avail_mem = 3
+    if (!task.memory) {
+        log.info '[GATK GenotypeGVCFs] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
+    """
+    touch ${prefix}
+    touch ${prefix}.metrics
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
     END_VERSIONS
     """
 }

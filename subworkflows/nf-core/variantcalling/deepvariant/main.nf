@@ -11,12 +11,12 @@ workflow RUN_DEEPVARIANT {
     dict                     // channel: [optional]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
+    models                   // channel: [optional]
 
     main:
 
     ch_versions = Channel.empty()
-
-    DEEPVARIANT(cram, fasta, fasta_fai)
+    DEEPVARIANT(cram, fasta, fasta_fai, models)
 
     DEEPVARIANT.out.vcf.branch{
         intervals:    it[0].num_intervals > 1
@@ -33,7 +33,6 @@ workflow RUN_DEEPVARIANT {
     TABIX_VC_DEEPVARIANT_GVCF(deepvariant_gvcf_out.no_intervals)
 
     // Only when using intervals
-
     MERGE_DEEPVARIANT_VCF(
         deepvariant_vcf_out.intervals
             .map{ meta, vcf ->
