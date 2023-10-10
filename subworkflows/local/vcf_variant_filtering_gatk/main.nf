@@ -1,5 +1,6 @@
 include { GATK4_CNNSCOREVARIANTS      as CNNSCOREVARIANTS               } from '../../../modules/nf-core/gatk4/cnnscorevariants/main'
 include { GATK4_FILTERVARIANTTRANCHES as FILTERVARIANTTRANCHES          } from '../../../modules/nf-core/gatk4/filtervarianttranches/main'
+include { GATK4_VARIANTFILTRATION     as DRAGENFILTER			        } from '../../../modules/nf-core/gatk4/variantfiltration/main'
 
 workflow VCF_VARIANT_FILTERING_GATK {
 
@@ -16,16 +17,26 @@ workflow VCF_VARIANT_FILTERING_GATK {
 
     versions = Channel.empty()
 
-    // Don't scatter/gather by intervals, because especially for small regions (targeted or WGS), it easily fails with 0 SNPS in region
-    cnn_in = vcf.combine(intervals_bed_combined).map{ meta, vcf, tbi, intervals -> [ meta, vcf, tbi, [], intervals ] }
+    if ( params.dragen_mode ) {
+        dragen_filter_in = vcf.map{ meta, vcf, tbi, intervals -> [ meta, vcf, tbi ] }
 
-    CNNSCOREVARIANTS(cnn_in, fasta, fasta_fai, dict, [], [])
+        DRAGENFILTER(dragen_filer_in, fasta, fasta_fai, dict)
 
-    FILTERVARIANTTRANCHES(CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi, failOnDuplicate: true, failOnMismatch: true).combine(intervals_bed_combined), known_sites, known_sites_tbi, fasta, fasta_fai, dict)
+        filtered_vcf = DRAGENFILTER.out.vcf
 
-    filtered_vcf = FILTERVARIANTTRANCHES.out.vcf
-        // remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
+    } else {
+        // Don't scatter/gather by intervals, because especially for small regions (targeted or WGS), it easily fails with 0 SNPS in region
+        cnn_in = vcf.combine(intervals_bed_combined).map{ meta, vcf, tbi, intervals -> [ meta, vcf, tbi, [], intervals ] }
+
+        CNNSCOREVARIANTS(cnn_in, fasta, fasta_fai, dict, [], [])
+
+        FILTERVARIANTTRANCHES(CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi, failOnDuplicate: true, failOnMismatch: true).combine(intervals_bed_combined), known_sites, known_sites_tbi, fasta, fasta_fai, dict)
+
+        filtered_vcf = FILTERVARIANTTRANCHES.out.vcf
+    }
+
+    // remove no longer necessary field: num_intervals
+    filtered_vcf = filtered_vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
 
     versions = versions.mix(CNNSCOREVARIANTS.out.versions)
     versions = versions.mix(FILTERVARIANTTRANCHES.out.versions)
