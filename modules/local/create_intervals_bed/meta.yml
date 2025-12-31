@@ -1,0 +1,49 @@
+name: "create_intervals_bed"
+description: |
+  Creates multiple BED interval files from a single intervals file (BED or
+  interval_list format) for parallel processing. Intervals are grouped based
+  on estimated runtime to create balanced chunks for scatter-gather operations.
+  Runtime estimates can be provided in the 5th column of BED files, or are
+  calculated from interval length divided by nucleotides_per_second.
+keywords:
+  - bed
+  - intervals
+  - scatter-gather
+  - parallelization
+tools:
+  - "gawk":
+      description: "GNU awk - pattern scanning and processing language"
+      homepage: "https://www.gnu.org/software/gawk/"
+      documentation: "https://www.gnu.org/software/gawk/manual/"
+      licence: ["GPL v3"]
+      identifier: ""
+input:
+  - - intervals:
+        type: file
+        description: |
+          Intervals file in BED, interval_list, or simple chr:start-end format.
+          For BED format, the optional 5th column can contain runtime estimates.
+        pattern: "*.{bed,interval_list}"
+  - - nucleotides_per_second:
+        type: integer
+        description: |
+          Processing speed in nucleotides per second, used to estimate runtime
+          when not provided in the intervals file. Default is typically 1000.
+output:
+  - bed:
+      - "*.bed":
+          type: file
+          description: |
+            Multiple BED files, each containing grouped intervals optimized
+            for parallel processing with balanced runtimes.
+          pattern: "*.bed"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@maxulysse"
+  - "@FriederikeHanworked by priesgo"
+maintainers:
+  - "@maxulysse"

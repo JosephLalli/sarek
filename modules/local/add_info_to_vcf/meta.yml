@@ -1,0 +1,47 @@
+name: "add_info_to_vcf"
+description: |
+  Adds a SOURCE field to the INFO column of a VCF file, indicating the origin
+  filename of each variant. This is useful for tracking variant provenance when
+  merging or processing VCF files from multiple sources.
+keywords:
+  - vcf
+  - variant calling
+  - annotation
+  - info field
+tools:
+  - "gawk":
+      description: "GNU awk - pattern scanning and processing language"
+      homepage: "https://www.gnu.org/software/gawk/"
+      documentation: "https://www.gnu.org/software/gawk/manual/"
+      licence: ["GPL v3"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - vcf_gz:
+        type: file
+        description: Gzip-compressed VCF file to annotate
+        pattern: "*.vcf.gz"
+output:
+  - vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - "*.added_info.vcf":
+          type: file
+          description: VCF file with SOURCE info added
+          pattern: "*.added_info.vcf"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@FriederikeHanworked by priesgo"
+maintainers:
+  - "@maxulysse"
