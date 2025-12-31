@@ -24,7 +24,7 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     }
 
     // Only when using intervals
-    MERGE_CRAM(cram_to_merge.multiple, fasta.map { it -> [[id: 'fasta'], it] }, fasta_fai.map { it -> [[id: 'fasta_fai'], it] })
+    MERGE_CRAM(cram_to_merge.multiple, fasta.map { fastaFile -> [[id: 'fasta'], fastaFile] }, fasta_fai.map { faiFile -> [[id: 'fasta_fai'], faiFile] })
 
     // Mix intervals and no_intervals channels together
     cram_all = MERGE_CRAM.out.cram.mix(cram_to_merge.single)

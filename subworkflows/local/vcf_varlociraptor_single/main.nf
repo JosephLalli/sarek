@@ -85,7 +85,7 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     //
     VARLOCIRAPTOR_CALLVARIANTS(
         VARLOCIRAPTOR_PREPROCESS.out.bcf,
-        ch_scenario_file.map { it -> it[1] }.collect(),
+        ch_scenario_file.map { tuple -> tuple[1] }.collect(),
         val_sampletype,
     )
     ch_versions = ch_versions.mix(VARLOCIRAPTOR_CALLVARIANTS.out.versions)

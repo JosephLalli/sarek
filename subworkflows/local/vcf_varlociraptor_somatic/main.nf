@@ -210,7 +210,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     VARLOCIRAPTOR_CALLVARIANTS(
         ch_vcf_for_callvariants,
-        ch_scenario_file.map { it -> it[1] }.collect(),
+        ch_scenario_file.map { tuple -> tuple[1] }.collect(),
         channel.value(["normal", "tumor"]),
     )
 

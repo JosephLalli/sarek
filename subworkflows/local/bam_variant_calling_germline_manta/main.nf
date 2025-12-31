@@ -18,11 +18,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     versions = channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
-    cram_intervals = cram.combine(intervals).map{ it ->
-        bed_gz = it.size() > 3 ? it[3] : []
-        bed_tbi = it.size() > 3 ? it[4] : []
+    cram_intervals = cram.combine(intervals).map{ tuple ->
+        bed_gz = tuple.size() > 3 ? tuple[3] : []
+        bed_tbi = tuple.size() > 3 ? tuple[4] : []
 
-        [it[0], it[1], it[2], bed_gz, bed_tbi]
+        [tuple[0], tuple[1], tuple[2], bed_gz, bed_tbi]
     }
 
     MANTA_GERMLINE(cram_intervals, fasta, fasta_fai, [])
