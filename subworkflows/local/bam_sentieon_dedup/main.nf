@@ -16,8 +16,8 @@ workflow BAM_SENTIEON_DEDUP {
     versions = channel.empty()
     reports  = channel.empty()
 
-    bam = bam.map{ meta, bam -> [ meta - meta.subMap('data_type'), bam ] }
-    bai = bai.map{ meta, bai -> [ meta - meta.subMap('data_type'), bai ] }
+    bam = bam.map{ meta, _bam -> [ meta - meta.subMap('data_type'), _bam ] }
+    bai = bai.map{ meta, _bai -> [ meta - meta.subMap('data_type'), _bai ] }
     bam_bai = bam.join(bai, failOnMismatch:true, failOnDuplicate:true)
     SENTIEON_DEDUP(bam_bai, fasta, fasta_fai)
 

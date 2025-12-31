@@ -17,10 +17,10 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     versions = channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
-    cram_to_merge = cram.branch { meta, cram ->
-        single: cram.size() <= 1
-        return [meta, cram[0]]
-        multiple: cram.size() > 1
+    cram_to_merge = cram.branch { meta, _cram ->
+        single: _cram.size() <= 1
+        return [meta, _cram[0]]
+        multiple: _cram.size() > 1
     }
 
     // Only when using intervals

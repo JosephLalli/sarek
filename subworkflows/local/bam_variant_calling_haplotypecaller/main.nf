@@ -28,7 +28,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
         // Add interval_name to allow correct merging with interval files
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ interval_name:intervals.baseName, num_intervals:num_intervals, variantcaller:'haplotypecaller' ], cram, crai, intervals, [] ] }
+        .map{ meta, _cram, _crai, _intervals, num_intervals -> [ meta + [ interval_name:_intervals.baseName, num_intervals:num_intervals, variantcaller:'haplotypecaller' ], _cram, _crai, _intervals, [] ] }
 
     GATK4_HAPLOTYPECALLER(
         cram_intervals,
@@ -42,11 +42,11 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     gvcf_tbi_intervals = GATK4_HAPLOTYPECALLER.out.vcf
         .join(GATK4_HAPLOTYPECALLER.out.tbi, failOnMismatch: true)
         .join(cram_intervals, failOnMismatch: true)
-        .map{ meta, gvcf, tbi, cram, crai, intervals, dragstr_model -> [ meta, gvcf, tbi, intervals ] }
+        .map{ meta, gvcf, tbi, _cram, _crai, _intervals, _dragstr_model -> [ meta, gvcf, tbi, _intervals ] }
 
     // Figuring out if there is one or more vcf(s) from the same sample
     haplotypecaller_vcf = GATK4_HAPLOTYPECALLER.out.vcf.map{
-            meta, vcf -> [ meta - meta.subMap('interval_name'), vcf]
+            meta, _vcf -> [ meta - meta.subMap('interval_name'), _vcf]
         }
         .branch{
         // Use meta.num_intervals to asses number of intervals
@@ -73,7 +73,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
         }
 
     // Only when using intervals
-    MERGE_HAPLOTYPECALLER(haplotypecaller_vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple(), dict)
+    MERGE_HAPLOTYPECALLER(haplotypecaller_vcf.intervals.map{ meta, _vcf -> [ groupKey(meta, meta.num_intervals), _vcf ] }.groupTuple(), dict)
 
     haplotypecaller_vcf = channel.empty().mix(
             MERGE_HAPLOTYPECALLER.out.vcf,
@@ -95,8 +95,8 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     versions = versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
 
     // Remove no longer necessary field: num_intervals
-    vcf = haplotypecaller_vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
-    tbi = haplotypecaller_tbi.map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
+    vcf = haplotypecaller_vcf.map{ meta, _vcf -> [ meta - meta.subMap('num_intervals'), _vcf ] }
+    tbi = haplotypecaller_tbi.map{ meta, _tbi -> [ meta - meta.subMap('num_intervals'), _tbi ] }
 
     emit:
     gvcf_tbi_intervals // For joint genotyping

@@ -2,7 +2,7 @@
 
 ## Phase 1: Critical Syntax Updates
 - [x] Task: Refactor `Channel.` to `channel.` in all subworkflows (Scope: ~60+ occurrences)
-- [ ] Task: Refactor implicit `it` to explicit closure parameters in subworkflows (Scope: ~50+ closures)
+- [~] Task: Refactor implicit `it` to explicit closure parameters in subworkflows (Scope: ~50+ closures)
 - [ ] Task: Conductor - User Manual Verification 'Critical Syntax Updates' (Protocol in workflow.md)
 
 ## Phase 2: Local Module Standardization

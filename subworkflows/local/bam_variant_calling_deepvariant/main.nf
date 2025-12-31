@@ -23,7 +23,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ]}
+        .map{ meta, _cram, _crai, _intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], _cram, _crai, _intervals ]}
 
     DEEPVARIANT_RUNDEEPVARIANT(cram_intervals, fasta, fasta_fai, [ [ id:'null' ], [] ], [ [ id:'null' ], [] ])
 
