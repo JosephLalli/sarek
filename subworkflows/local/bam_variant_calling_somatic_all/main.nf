@@ -52,25 +52,25 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // Channels are often remapped to match module/subworkflow
 
     // Gather all versions
-    versions = Channel.empty()
+    versions = channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_indexcov     = Channel.empty()
-    out_msisensorpro = Channel.empty()
-    vcf_freebayes    = Channel.empty()
-    vcf_manta        = Channel.empty()
-    vcf_muse         = Channel.empty()
-    vcf_mutect2      = Channel.empty()
-    vcf_strelka      = Channel.empty()
-    vcf_tiddit       = Channel.empty()
-    vcf_tnscope      = Channel.empty()
-    tbi_freebayes    = Channel.empty()
-    tbi_manta        = Channel.empty()
-    tbi_muse         = Channel.empty()
-    tbi_mutect2      = Channel.empty()
-    tbi_strelka      = Channel.empty()
-    tbi_tiddit       = Channel.empty()
-    tbi_tnscope      = Channel.empty()
+    out_indexcov     = channel.empty()
+    out_msisensorpro = channel.empty()
+    vcf_freebayes    = channel.empty()
+    vcf_manta        = channel.empty()
+    vcf_muse         = channel.empty()
+    vcf_mutect2      = channel.empty()
+    vcf_strelka      = channel.empty()
+    vcf_tiddit       = channel.empty()
+    vcf_tnscope      = channel.empty()
+    tbi_freebayes    = channel.empty()
+    tbi_manta        = channel.empty()
+    tbi_muse         = channel.empty()
+    tbi_mutect2      = channel.empty()
+    tbi_strelka      = channel.empty()
+    tbi_tiddit       = channel.empty()
+    tbi_tnscope      = channel.empty()
 
     if (tools && tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -285,7 +285,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
 
-    vcf_all = Channel.empty()
+    vcf_all = channel.empty()
         .mix(
             vcf_freebayes,
             vcf_manta,
@@ -296,7 +296,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             vcf_tnscope,
         )
 
-    tbi_all = Channel.empty()
+    tbi_all = channel.empty()
         .mix(
             tbi_freebayes,
             tbi_manta,

@@ -15,8 +15,8 @@ workflow BAM_MARKDUPLICATES {
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
 
     main:
-    versions = Channel.empty()
-    reports  = Channel.empty()
+    versions = channel.empty()
+    reports  = channel.empty()
 
     // RUN MARKUPDUPLICATES
     GATK4_MARKDUPLICATES(bam, fasta.map{ meta, fasta -> [ fasta ] }, fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] })

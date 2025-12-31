@@ -17,9 +17,9 @@ workflow BAM_APPLYBQSR_SPARK {
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
-    bam_applybqsr_single = Channel.empty()
-    bam_to_merge = Channel.empty()
+    versions = channel.empty()
+    bam_applybqsr_single = channel.empty()
+    bam_to_merge = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     // Move num_intervals to meta map

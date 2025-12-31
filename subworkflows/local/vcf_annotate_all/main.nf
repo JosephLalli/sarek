@@ -25,11 +25,11 @@ workflow VCF_ANNOTATE_ALL {
     bcftools_header_lines
 
     main:
-    reports = Channel.empty()
-    vcf_ann = Channel.empty()
-    tab_ann = Channel.empty()
-    json_ann = Channel.empty()
-    versions = Channel.empty()
+    reports = channel.empty()
+    vcf_ann = channel.empty()
+    tab_ann = channel.empty()
+    json_ann = channel.empty()
+    versions = channel.empty()
 
     if (tools.split(',').contains('bcfann')) {
         BCFTOOLS_ANNOTATE(

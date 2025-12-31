@@ -14,7 +14,7 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     fasta_fai // channel: [mandatory] fai for fasta
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
     cram_to_merge = cram.branch { meta, cram ->

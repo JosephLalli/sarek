@@ -13,7 +13,7 @@ workflow NORMALIZE_VCFS {
     fasta
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Add additional information to VCF files
     ADD_INFO_TO_VCF(vcfs)

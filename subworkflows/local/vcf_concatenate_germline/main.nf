@@ -14,7 +14,7 @@ workflow CONCATENATE_GERMLINE_VCFS {
     vcfs
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Concatenate vcf-files
     ADD_INFO_TO_VCF(vcfs)

@@ -14,7 +14,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     bwa
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     TIDDIT_SV(cram, fasta, bwa)
 

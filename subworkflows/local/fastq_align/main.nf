@@ -19,8 +19,8 @@ workflow FASTQ_ALIGN {
 
     main:
 
-    versions = Channel.empty()
-    reports = Channel.empty()
+    versions = channel.empty()
+    reports = channel.empty()
 
     // Only one of the following should be run
     BWAMEM1_MEM(reads, index, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem
@@ -31,7 +31,7 @@ workflow FASTQ_ALIGN {
 
     // Get the bam files from the aligner
     // Only one aligner is run
-    bam = Channel.empty()
+    bam = channel.empty()
     bam = bam.mix(BWAMEM1_MEM.out.bam)
     bam = bam.mix(BWAMEM2_MEM.out.bam)
     bam = bam.mix(DRAGMAP_ALIGN.out.bam)

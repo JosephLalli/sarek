@@ -12,8 +12,8 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     val_output_fmt                  // either bam or cram
 
     main:
-    ch_versions = Channel.empty()
-    ch_reports  = Channel.empty()
+    ch_versions = channel.empty()
+    ch_reports  = channel.empty()
 
     ch_reads.map { meta, reads ->
             [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]

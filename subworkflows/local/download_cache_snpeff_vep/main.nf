@@ -17,7 +17,7 @@ workflow DOWNLOAD_CACHE_SNPEFF_VEP {
     snpeff_info
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     ENSEMBLVEP_DOWNLOAD(ensemblvep_info)
     SNPEFF_DOWNLOAD(snpeff_info)

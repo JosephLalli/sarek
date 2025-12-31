@@ -10,7 +10,7 @@ workflow BAM_NGSCHECKMATE {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     ch_input_bed = ch_input.combine(ch_snp_bed)
                         // do something to combine the metas?
                         .map{ input_meta, input_file, _bed_meta, bed_file ->

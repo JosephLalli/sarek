@@ -13,8 +13,8 @@ workflow BAM_SENTIEON_DEDUP {
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
 
     main:
-    versions = Channel.empty()
-    reports  = Channel.empty()
+    versions = channel.empty()
+    reports  = channel.empty()
 
     bam = bam.map{ meta, bam -> [ meta - meta.subMap('data_type'), bam ] }
     bai = bai.map{ meta, bai -> [ meta - meta.subMap('data_type'), bai ] }

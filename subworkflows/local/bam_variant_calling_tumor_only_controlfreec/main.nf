@@ -23,7 +23,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     FREEC_TUMORONLY(controlfreec_input, fasta, fasta_fai, [], dbsnp, dbsnp_tbi, chr_files, mappability, intervals_bed, [])
 

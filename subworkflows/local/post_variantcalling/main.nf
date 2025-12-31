@@ -33,9 +33,9 @@ workflow POST_VARIANTCALLING {
     varlociraptor_scenario_tumor_only
 
     main:
-    versions = Channel.empty()
-    vcfs = Channel.empty()
-    tbis = Channel.empty()
+    versions = channel.empty()
+    vcfs = channel.empty()
+    tbis = channel.empty()
 
     //
     // VARLOCIRAPTOR
@@ -67,13 +67,13 @@ workflow POST_VARIANTCALLING {
         def small_variantcallers = ['deepvariant', 'freebayes', 'haplotypecaller', 'haplotyper',
                                     'dnascope', 'tnscope', 'muse', 'mutect2', 'strelka' ]
 
-        all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
+        all_vcfs = channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
                                 .branch{ meta, vcf ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
 
-        all_tbis = Channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
+        all_tbis = channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
                                 .branch{ meta, tbi ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
