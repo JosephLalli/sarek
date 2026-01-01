@@ -1,37 +1,61 @@
 # Track Plan: Core Pangenome Tools
 
 ## Phase 1: Assessment & Preparation
-- [ ] Task: Review current vg version and API changes
-    - [ ] Compare legacy vg commands vs current vg CLI
-    - [ ] Document breaking changes
-- [ ] Task: Review legacy module implementations
-    - [ ] Audit each vg module from sarek_first_attempt
-    - [ ] Note input/output patterns
-- [ ] Task: Check for existing nf-core vg modules
-    - [ ] Search nf-core/modules for vg tools
-    - [ ] Evaluate adoption vs custom implementation
+- [x] Task: Review current vg version and API changes
+    - [x] Legacy uses vg 1.54.0 (jlalli/vg:1.54.0 container)
+    - [x] Conda references are outdated (1.41.0, 1.51.0)
+    - [x] Need to verify current vg version and update containers
+- [x] Task: Review legacy module implementations
+    - [x] 15 vg modules found in sarek_first_attempt/modules/local/vg/
+    - [x] Common issues: params.* usage, broken stubs, deprecated syntax
+    - [x] VG_HAPLOTYPES module incorrectly named as VG_GIRAFFE
+- [x] Task: Check for existing nf-core vg modules
+    - [x] Only vg/construct, vg/deconstruct, vg/index exist in nf-core
+    - [x] Likely outdated - will implement fresh modules
+
+### Legacy Module Audit Summary
+
+| Module | Status | Issues |
+|--------|--------|--------|
+| vg/giraffe | Review | Broken shell script (orphan `fi`), params.* |
+| vg/giraffe_to_gam | Review | Variant of giraffe outputting GAM |
+| vg/surject | Review | Complex embedded samtools pipeline |
+| vg/stats | OK | Simple, needs cleanup |
+| vg/convert | Review | Stub has wrong variable references |
+| vg/index | Review | Needs strict syntax |
+| vg/gbwt | Review | Multiple use cases (aliased) |
+| vg/minimizer | Review | Needs strict syntax |
+| vg/haplotypes | Review | Incorrectly named as VG_GIRAFFE |
+| vg/paths | Review | Needs strict syntax |
+| vg/pack | SKIP | Not needed per backlog |
+| vg/call | SKIP | Not needed per backlog |
+| vg/snarls | SKIP | Not needed per backlog |
+| vg/autoindex | SKIP | Not needed per backlog |
+| pangenie | Review | Uses jlalli/pangenie:2.1.1 |
 
 ## Phase 2: vg Module Implementation
-- [ ] Task: Implement vg/giraffe
-    - [ ] Create module with strict syntax
-    - [ ] Add meta.yml documentation
-    - [ ] Add environment.yml
-- [ ] Task: Implement vg/surject
-- [ ] Task: Implement vg/stats
-- [ ] Task: Implement vg/convert
-- [ ] Task: Implement vg/index
-- [ ] Task: Implement vg/gbwt
-- [ ] Task: Implement vg/minimizer
-- [ ] Task: Implement vg/haplotypes
-- [ ] Task: Implement vg/paths
-- [ ] Task: Implement vg/deconstruct
+- [x] Task: Implement vg/giraffe (vg 1.70.0, quay.io/vgteam/vg:v1.70.0)
+- [x] Task: Implement vg/surject
+- [x] Task: Implement vg/stats
+- [x] Task: Implement vg/convert
+- [x] Task: Implement vg/index
+- [x] Task: Implement vg/gbwt
+- [x] Task: Implement vg/minimizer
+- [x] Task: Implement vg/haplotypes
+- [x] Task: Implement vg/paths
+- [x] Task: Implement vg/deconstruct
+
+All modules include: main.nf, environment.yml, meta.yml
+Location: modules/local/vg/
 
 ## Phase 3: PanGenie Implementation
-- [ ] Task: Review legacy pangenie module
-- [ ] Task: Implement pangenie module
-    - [ ] Strict syntax compliance
-    - [ ] meta.yml and environment.yml
+- [x] Task: Review legacy pangenie module
+- [x] Task: Implement pangenie module (pangenie 3.0.2)
+    - [x] Strict syntax compliance
+    - [x] meta.yml and environment.yml
 - [ ] Task: Test with sample data
+
+Location: modules/local/pangenie/
 
 ## Phase 4: Subworkflow Integration
 - [ ] Task: Implement giraffe_mapping subworkflow

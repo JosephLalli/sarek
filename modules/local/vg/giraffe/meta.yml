@@ -1,0 +1,73 @@
+name: vg_giraffe
+description: Pangenome-aware short read alignment using vg giraffe
+keywords:
+  - alignment
+  - pangenome
+  - graph
+  - giraffe
+  - vg
+tools:
+  - vg:
+      description: Variation graph toolkit
+      homepage: https://github.com/vgteam/vg
+      documentation: https://github.com/vgteam/vg/wiki
+      licence: ["MIT"]
+      identifier: biotools:vg
+
+input:
+  - - meta:
+        type: map
+        description: Sample metadata (id, single_end, read_group, sample)
+    - reads:
+        type: file
+        description: FASTQ file(s) - single file for SE, two files for PE
+        pattern: "*.{fq,fastq,fq.gz,fastq.gz}"
+  - - meta2:
+        type: map
+        description: Reference metadata
+    - gbz:
+        type: file
+        description: GBZ pangenome graph index
+        pattern: "*.gbz"
+  - - meta3:
+        type: map
+        description: Reference metadata
+    - dist:
+        type: file
+        description: Distance index for giraffe
+        pattern: "*.dist"
+  - - meta4:
+        type: map
+        description: Reference metadata
+    - min:
+        type: file
+        description: Minimizer index for giraffe
+        pattern: "*.min"
+
+output:
+  - gam:
+      - meta:
+          type: map
+          description: Sample metadata
+      - "*.gam":
+          type: file
+          description: Graph alignment map output
+          pattern: "*.gam"
+  - stats:
+      - meta:
+          type: map
+          description: Sample metadata
+      - "*.tsv":
+          type: file
+          description: Giraffe alignment statistics
+          pattern: "*.tsv"
+  - versions:
+      - "versions.yml":
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+
+authors:
+  - "@jlalli"
+maintainers:
+  - "@jlalli"

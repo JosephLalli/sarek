@@ -1,0 +1,70 @@
+name: vg_haplotypes
+description: Sample haplotypes from pangenome graph using k-mers
+keywords:
+  - haplotypes
+  - pangenome
+  - personalized
+  - vg
+tools:
+  - vg:
+      description: Variation graph toolkit
+      homepage: https://github.com/vgteam/vg
+      documentation: https://github.com/vgteam/vg/wiki
+      licence: ["MIT"]
+      identifier: biotools:vg
+
+input:
+  - - meta:
+        type: map
+        description: Sample metadata
+    - gbz:
+        type: file
+        description: GBZ graph file
+        pattern: "*.gbz"
+    - dist:
+        type: file
+        description: Distance index
+        pattern: "*.dist"
+  - - meta2:
+        type: map
+        description: K-mer metadata
+    - kmer_input:
+        type: file
+        description: K-mer counts file (from KMC or jellyfish)
+        pattern: "*.kff"
+  - - hapl_index:
+        type: file
+        description: Existing haplotype index (optional)
+        pattern: "*.hapl"
+  - - r_index:
+        type: file
+        description: R-index (optional)
+        pattern: "*.ri"
+
+output:
+  - personalized_gbz:
+      - meta:
+          type: map
+          description: Sample metadata
+      - "*.gbz":
+          type: file
+          description: Personalized GBZ graph
+          pattern: "*.gbz"
+  - hapl:
+      - meta:
+          type: map
+          description: Sample metadata
+      - "*.hapl":
+          type: file
+          description: Haplotype index
+          pattern: "*.hapl"
+  - versions:
+      - "versions.yml":
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+
+authors:
+  - "@jlalli"
+maintainers:
+  - "@jlalli"

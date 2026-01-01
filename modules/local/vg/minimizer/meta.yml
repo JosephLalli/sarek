@@ -1,0 +1,48 @@
+name: vg_minimizer
+description: Build minimizer index for giraffe alignment
+keywords:
+  - index
+  - minimizer
+  - pangenome
+  - giraffe
+  - vg
+tools:
+  - vg:
+      description: Variation graph toolkit
+      homepage: https://github.com/vgteam/vg
+      documentation: https://github.com/vgteam/vg/wiki
+      licence: ["MIT"]
+      identifier: biotools:vg
+
+input:
+  - - meta:
+        type: map
+        description: Graph metadata
+    - gbz:
+        type: file
+        description: GBZ graph file
+        pattern: "*.gbz"
+    - dist:
+        type: file
+        description: Distance index
+        pattern: "*.dist"
+
+output:
+  - min:
+      - meta:
+          type: map
+          description: Graph metadata
+      - "*.min":
+          type: file
+          description: Minimizer index for giraffe
+          pattern: "*.min"
+  - versions:
+      - "versions.yml":
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+
+authors:
+  - "@jlalli"
+maintainers:
+  - "@jlalli"
