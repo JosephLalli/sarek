@@ -1,0 +1,9 @@
+{
+  "track_id": "config_t2t_pangenome_20251231",
+  "title": "T2T and Pangenome Configuration",
+  "status": "active",
+  "created": "2024-12-31",
+  "priority": "high",
+  "depends_on": ["strict_syntax_upgrade_20251231", "legacy_gap_analysis_20251231"],
+  "tags": ["configuration", "t2t", "pangenome", "chm13"]
+}

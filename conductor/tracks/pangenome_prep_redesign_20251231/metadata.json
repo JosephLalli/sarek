@@ -1,0 +1,29 @@
+{
+  "track_id": "pangenome_prep_redesign_20251231",
+  "title": "Pangenome Preparation Module Redesign",
+  "status": "planned",
+  "created": "2024-12-31",
+  "priority": "medium",
+  "depends_on": ["pangenome_core_20251231"],
+  "tags": ["pangenome", "redesign", "nf-core", "modules"],
+  "legacy_modules": [
+    "make_personalized_gbz.nf",
+    "make_personalized_gfa.nf",
+    "add_paths_to_gfa.nf",
+    "split_by_contig.nf",
+    "split_sample_from_vcf.nf",
+    "split_PARs_off_X.nf",
+    "split_ref_fasta.nf",
+    "split_vcf_by_contig.nf",
+    "unify_insertion_fastas.nf"
+  ],
+  "new_modules": [
+    "split_vcf_by_region",
+    "split_fasta_by_region",
+    "extract_sample_from_vcf",
+    "handle_par_regions",
+    "build_personalized_graph",
+    "add_paths_to_graph",
+    "merge_insertion_sequences"
+  ]
+}

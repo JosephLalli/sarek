@@ -1,0 +1,16 @@
+{
+  "track_id": "phasing_tools_20251231",
+  "title": "Phasing Tools (SHAPEIT5, WhatsHap, HapCUT)",
+  "status": "planned",
+  "created": "2024-12-31",
+  "priority": "high",
+  "depends_on": ["config_t2t_pangenome_20251231"],
+  "tags": ["phasing", "haplotype", "shapeit5", "whatshap", "hapcut"],
+  "modules": [
+    "shapeit5/phase_common", "shapeit5/phase_rare", "shapeit5/ligate", "shapeit5/switch",
+    "shapeit4/phase_common",
+    "whatshap/phase", "whatshap/stats",
+    "hapcut2"
+  ],
+  "subworkflows": ["phase_and_impute"]
+}

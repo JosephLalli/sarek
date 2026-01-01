@@ -1,0 +1,15 @@
+{
+  "track_id": "pangenome_core_20251231",
+  "title": "Core Pangenome Tools (vg, PanGenie)",
+  "status": "planned",
+  "created": "2024-12-31",
+  "priority": "high",
+  "depends_on": ["config_t2t_pangenome_20251231"],
+  "tags": ["pangenome", "vg", "pangenie", "alignment", "genotyping"],
+  "modules": [
+    "vg/giraffe", "vg/surject", "vg/haplotypes", "vg/stats",
+    "vg/deconstruct", "vg/gbwt", "vg/minimizer", "vg/index",
+    "vg/paths", "vg/convert", "pangenie/pangenie"
+  ],
+  "subworkflows": ["giraffe_mapping", "pangenie_map_and_call"]
+}

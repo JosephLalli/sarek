@@ -1,0 +1,23 @@
+{
+  "track_id": "str_analysis_20251231",
+  "title": "STR Analysis Tools",
+  "status": "planned",
+  "created": "2024-12-31",
+  "priority": "medium",
+  "depends_on": ["config_t2t_pangenome_20251231"],
+  "tags": ["str", "tandem-repeat", "expansionhunter", "strling", "gangstr"],
+  "modules": [
+    "expansionhunter",
+    "strling/extract", "strling/merge", "strling/call",
+    "gangstr",
+    "jellyfish/count",
+    "kmc/kmc", "kmc/kmc_dump",
+    "illumina/hap.py",
+    "deepvariant/convert_haploid_regions"
+  ],
+  "references": [
+    "https://github.com/quinlan-lab/STRling-nf",
+    "https://github.com/Illumina/ExpansionHunter",
+    "https://github.com/gymreklab/GangSTR"
+  ]
+}
