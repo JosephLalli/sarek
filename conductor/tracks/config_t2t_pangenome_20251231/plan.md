@@ -33,14 +33,60 @@
 - [x] Task: Add giraffe to aligner options
 
 ## Phase 4: Parabricks Review
-- [ ] Task: Compare implementations
-    - [ ] Review legacy Parabricks module
-    - [ ] Review current Sarek Parabricks
-    - [ ] Document differences
-- [ ] Task: Decision on approach
-    - [ ] Keep current / adopt legacy / hybrid
+- [x] Task: Compare implementations
+    - [x] Review legacy Parabricks module
+    - [x] Review current Sarek Parabricks
+    - [x] Document differences (see below)
+- [x] Task: Decision on approach
+    - [x] **Decision: Keep current nf-core module as-is** (no changes needed)
+
+### Parabricks Implementation Comparison
+
+| Aspect | Current (nf-core) | Legacy (sarek_first_attempt) |
+|--------|-------------------|------------------------------|
+| **Container** | 4.6.0-1 | 4.2.0-1 |
+| **Input Pattern** | Tuple-based with separate meta per input | Flat inputs (path bwa_mem_index, path ref_fasta) |
+| **Read Groups** | Via meta.single_end flag only | Explicit read_groups parameter + loop construction |
+| **GPU Handling** | `task.accelerator` abstraction | Explicit `containerOptions --gpus all` |
+| **Memory Limit** | Not specified | `--memory-limit ${task.memory.giga / 2}` |
+| **Swap Memory** | Not specified | Docker: `--memory-swap ${task.memory.toMega()}m` |
+| **stageInMode** | `'copy'` (explicit) | Commented out, uses default |
+| **Output Format** | Via `val output_fmt` parameter | Via `params.map_to_cram` |
+| **Duplicates** | Via task.ext.args | Hardcoded `--out-duplicate-metrics` |
+| **Labels** | `process_high` + `process_gpu` | `process_gpu` only |
+
+### Key Differences Analysis
+
+1. **Memory Management (CRITICAL)**
+   - Legacy sets `--memory-limit` to half of task memory to prevent OOM
+   - Legacy also sets Docker swap limit to prevent container crashes
+   - Current has no memory guardrails - may OOM on large samples
+
+2. **Container Version**
+   - Current uses 4.6.0-1 (newer, likely better performance)
+   - Legacy uses 4.2.0-1
+
+3. **Input Flexibility**
+   - Legacy supports multi-lane samples via read_groups loop
+   - Current assumes single read pair per invocation
+   - Current subworkflow handles multi-lane at workflow level
+
+4. **GPU Configuration**
+   - Current uses Nextflow's `task.accelerator` (more portable)
+   - Legacy uses explicit `--gpus all` (works but less flexible)
+
+### Recommendation
+
+**Keep current nf-core module** with these potential enhancements:
+- Consider adding `--memory-limit` via task.ext.args in conf/modules.config
+- The current subworkflow handles multi-lane grouping appropriately
+- Container 4.6.0-1 is preferred (newer)
+- Tuple-based inputs are cleaner and follow nf-core patterns
 
 ## Phase 5: Validation
+- [ ] Task: Fill in actual S3 URLs for reference paths (USER ACTION REQUIRED)
+    - [ ] T2T paths in igenomes.config (search for TODO markers)
+    - [ ] Pangenome paths in pangenome.config (search for TODO markers)
 - [ ] Task: Test T2T configuration
 - [ ] Task: Test pangenome v1.1 configuration
 - [ ] Task: Test pangenome v2 configuration
@@ -49,3 +95,4 @@
 - All paths use TODO placeholders - need to fill in actual S3 URLs
 - Pangenome paths follow igenomes pattern: ${params.igenomes_base}/Homo_sapiens/Pangenome/...
 - T2T paths follow igenomes pattern: ${params.igenomes_base}/Homo_sapiens/T2T/CHM13v2/...
+- **ACTION REQUIRED**: User needs to update placeholder paths with actual S3 URLs before validation
