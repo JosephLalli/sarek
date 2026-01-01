@@ -19,6 +19,7 @@ process CREATE_INTERVALS_BED {
     task.ext.when == null || task.ext.when
 
     script:
+    def prefix = task.ext.prefix ?: "${intervals.baseName}"
     // If intervals file is in BED format,
     // Fifth column is interpreted to contain runtime estimates
     // Which is then used to combine short-running jobs

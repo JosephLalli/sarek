@@ -11,16 +11,17 @@ process ADD_INFO_TO_VCF {
     tuple val(meta), path(vcf_gz)
 
     output:
-    tuple val(meta), path("*.added_info.vcf"), emit: vcf
+    tuple val(meta), path("*.added_info.vcf"),  emit: vcf
     path "versions.yml",                       emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     input="input.vcf"
-    output="${vcf_gz.baseName.minus(".vcf")}.added_info.vcf"
+    output="${prefix}.added_info.vcf"
     zcat ${vcf_gz} > \$input
     ## Add info header lines
     grep -E "^##" \$input > \$output

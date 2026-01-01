@@ -33,18 +33,18 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals_for_sentieon = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [
+        .map{ meta, _cram, _crai, _intervals, num_intervals -> [
             meta + [
                 num_intervals:num_intervals,
-                intervals_name:intervals.simpleName,
+                intervals_name:_intervals.simpleName,
                 variantcaller:'sentieon_dnascope'],
-            cram,
-            crai,
-            intervals
+            _cram,
+            _crai,
+            _intervals
             ]
         }
 
-    emit_mode_items = sentieon_dnascope_emit_mode.split(',').each{ it -> it.toLowerCase().trim() }
+    emit_mode_items = sentieon_dnascope_emit_mode.split(',').each{ mode -> mode.toLowerCase().trim() }
     lst = emit_mode_items - 'gvcf'
     emit_vcf = lst.size() > 0 ? lst[0] : ''
 
@@ -52,9 +52,9 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         cram_intervals_for_sentieon,
         fasta,
         fasta_fai,
-        dbsnp.map{it -> [[:], it]},
-        dbsnp_tbi.map{it -> [[:], it]},
-        sentieon_dnascope_model.map{it -> [[:], it]},
+        dbsnp.map{ _vcf -> [[:], _vcf]},
+        dbsnp_tbi.map{ _tbi -> [[:], _tbi]},
+        sentieon_dnascope_model.map{ _model -> [[:], _model]},
         sentieon_dnascope_pcr_indel_model,
         emit_vcf,
         emit_mode_items.any{ it.equals('gvcf') })
@@ -63,12 +63,12 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         genotype_intervals = SENTIEON_DNASCOPE.out.gvcf
             .join(SENTIEON_DNASCOPE.out.gvcf_tbi, failOnMismatch: true)
             .join(cram_intervals_for_sentieon, failOnMismatch: true)
-            .map{ meta, gvcf, tbi, cram, crai, intervals -> [ meta, gvcf, tbi, intervals ] }
+            .map{ meta, _gvcf, _tbi, _cram, _crai, _intervals -> [ meta, _gvcf, _tbi, _intervals ] }
     }
 
     // Figure out if using intervals or no_intervals
     dnascope_vcf_branch = SENTIEON_DNASCOPE.out.vcf.map{
-            meta, vcf -> [ meta - meta.subMap('interval_name'), vcf]
+            meta, _vcf -> [ meta - meta.subMap('interval_name'), _vcf]
         }
         .branch{
             intervals:    it[0].num_intervals > 1
@@ -76,7 +76,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         }
 
     dnascope_vcf_tbi_branch = SENTIEON_DNASCOPE.out.vcf_tbi.map{
-            meta, vcf_tbi -> [ meta - meta.subMap('interval_name'), vcf_tbi]
+            meta, _vcf_tbi -> [ meta - meta.subMap('interval_name'), _vcf_tbi]
         }
         .branch{
             intervals:    it[0].num_intervals > 1
@@ -84,7 +84,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         }
 
     haplotyper_gvcf_branch = SENTIEON_DNASCOPE.out.gvcf.map{
-            meta, gvcf -> [ meta - meta.subMap('interval_name'), gvcf]
+            meta, _gvcf -> [ meta - meta.subMap('interval_name'), _gvcf]
         }
         .branch{
             intervals:    it[0].num_intervals > 1
@@ -92,7 +92,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         }
 
     haplotyper_gvcf_tbi_branch = SENTIEON_DNASCOPE.out.gvcf_tbi.map{
-            meta, gvcf_tbi -> [ meta - meta.subMap('interval_name'), gvcf_tbi]
+            meta, _gvcf_tbi -> [ meta - meta.subMap('interval_name'), _gvcf_tbi]
         }
         .branch{
             intervals:    it[0].num_intervals > 1
@@ -100,12 +100,12 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         }
 
     vcfs_for_merging = dnascope_vcf_branch.intervals.map{
-        meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}
+        meta, _vcf -> [ groupKey(meta, meta.num_intervals), _vcf ]}
 
     vcfs_for_merging = vcfs_for_merging.map{
-        meta, vcf -> [
+        meta, _vcf -> [
             meta - meta.subMap('intervals_name'),
-            vcf]}.groupTuple()
+            _vcf]}.groupTuple()
 
     // VCFs
     // Only when using intervals
@@ -120,16 +120,16 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         dnascope_vcf_tbi_branch.no_intervals)
 
     // Remove no longer necessary field: num_intervals
-    vcf = dnascope_vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
-    vcf_tbi = haplotyper_tbi.map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
+    vcf = dnascope_vcf.map{ meta, _vcf -> [ meta - meta.subMap('num_intervals'), _vcf ] }
+    vcf_tbi = haplotyper_tbi.map{ meta, _tbi -> [ meta - meta.subMap('num_intervals'), _tbi ] }
 
-    // GVFs
+    // GVCFs
     // Only when using intervals
     gvcfs_for_merging = haplotyper_gvcf_branch.intervals.map{
-        meta, vcf -> [groupKey(meta, meta.num_intervals), vcf]}
+        meta, _gvcf -> [groupKey(meta, meta.num_intervals), _gvcf]}
 
     gvcfs_for_merging = gvcfs_for_merging.map{
-        meta, vcf -> [ meta - meta.subMap('intervals_name'), vcf ]
+        meta, _gvcf -> [ meta - meta.subMap('intervals_name'), _gvcf ]
     }.groupTuple()
 
     MERGE_SENTIEON_DNASCOPE_GVCFS(gvcfs_for_merging, dict)

@@ -4,5 +4,10 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Upgrade codebase to strict Nextflow DSL2 syntax, adhering to the "Zazzy Rolling Stearns" plan, to eliminate deprecations and ensure style compliance.
-*Link: [./conductor/tracks/strict_syntax_upgrade_20251231/](./conductor/tracks/strict_syntax_upgrade_20251231/)*
+## [ ] Track: Pangenome Feature Audit & Architecture
+*Link: [./conductor/tracks/pangenome_audit_20251231/](./conductor/tracks/pangenome_audit_20251231/)*
+
+---
+
+## [~] Track: Legacy Feature Gap Analysis
+*Link: [./conductor/tracks/legacy_gap_analysis_20251231/](./conductor/tracks/legacy_gap_analysis_20251231/)*

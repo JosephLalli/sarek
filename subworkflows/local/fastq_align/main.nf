@@ -35,9 +35,9 @@ workflow FASTQ_ALIGN {
     bam = bam.mix(BWAMEM1_MEM.out.bam)
     bam = bam.mix(BWAMEM2_MEM.out.bam)
     bam = bam.mix(DRAGMAP_ALIGN.out.bam)
-    bam = bam.mix(SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bam ] })
+    bam = bam.mix(SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, _bam, _bai -> [ meta, _bam ] })
 
-    bai = SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bai ] }
+    bai = SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, _bam, _bai -> [ meta, _bai ] }
 
     // Gather reports of all tools used
     reports = reports.mix(DRAGMAP_ALIGN.out.log)

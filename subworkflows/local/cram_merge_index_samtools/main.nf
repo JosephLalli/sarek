@@ -17,14 +17,14 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     versions = channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
-    cram_to_merge = cram.branch { meta, cram ->
-        single: cram.size() <= 1
-        return [meta, cram[0]]
-        multiple: cram.size() > 1
+    cram_to_merge = cram.branch { meta, _cram ->
+        single: _cram.size() <= 1
+        return [meta, _cram[0]]
+        multiple: _cram.size() > 1
     }
 
     // Only when using intervals
-    MERGE_CRAM(cram_to_merge.multiple, fasta.map { it -> [[id: 'fasta'], it] }, fasta_fai.map { it -> [[id: 'fasta_fai'], it] })
+    MERGE_CRAM(cram_to_merge.multiple, fasta.map { fastaFile -> [[id: 'fasta'], fastaFile] }, fasta_fai.map { faiFile -> [[id: 'fasta_fai'], faiFile] })
 
     // Mix intervals and no_intervals channels together
     cram_all = MERGE_CRAM.out.cram.mix(cram_to_merge.single)
