@@ -3,6 +3,7 @@
 ## Core Workflow Engine
 *   **Platform:** Nextflow (DSL2)
 *   **Language:** Groovy (Nextflow DSL)
+*   **Note:** strict-syntax upgrade completed. However, running with `NXF_SYNTAX_PARSER=v2` is currently **broken for test runs**. Recommend running tests without this environment variable.
 
 ## Environment & Containerization
 *   **Container Runtime:** Docker, Singularity (Apptainer)

@@ -1,8 +1,0 @@
-{
-  "track_id": "strict_syntax_upgrade_20251231",
-  "type": "refactor",
-  "status": "new",
-  "created_at": "2025-12-31T00:00:00Z",
-  "updated_at": "2025-12-31T00:00:00Z",
-  "description": "Upgrade codebase to strict Nextflow DSL2 syntax, adhering to the \"Zazzy Rolling Stearns\" plan, to eliminate deprecations and ensure style compliance."
-}

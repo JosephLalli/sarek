@@ -14,9 +14,9 @@ To engineer a future-proof, high-precision variant calling pipeline. The immedia
 ## Core Goals
 1.  **Modernize Architecture (Strict Syntax Upgrade):** Execute the "Zazzy Rolling Stearns" plan to ensure full compliance with modern Nextflow style guides.
     *   *Complete:* Replace deprecated capitalized `Channel.` with `channel.`.
-    *   *Pending:* Refactor implicit `it` closures to explicit parameters.
-    *   *Pending:* Standardize local modules with `task.ext.args`, `prefix`, and `meta.yml` documentation.
-    *   *Pending:* Address missing resource labels and environments in nf-core modules.
+    *   *Complete:* Refactor implicit `it` closures to explicit parameters.
+    *   *Complete:* Standardize local modules with `task.ext.args`, `prefix`, and `meta.yml` documentation.
+    *   *Complete:* Address missing resource labels and environments in nf-core modules.
 2.  **Regression Validation:** Rigorous verification using existing Sarek test datasets (`test_full`, `test_full_germline`) to ensure the syntax upgrade preserves exact functionality.
 3.  **Advanced Feature Integration:** Implement Graph alignment, T2T reference support, STR calling, and Pangenie SV imputation.
 4.  **Benchmarking:** Evaluate the new features using standard Trio datasets (GIAB) to quantify precision/recall gains.
