@@ -58,13 +58,15 @@ Location: modules/local/vg/
 Location: modules/local/pangenie/
 
 ## Phase 4: Subworkflow Integration
-- [ ] Task: Implement giraffe_mapping subworkflow
-    - [ ] Input channel design
-    - [ ] Integration with existing alignment paths
-    - [ ] Output to variant calling
-- [ ] Task: Implement pangenie_map_and_call subworkflow
-    - [ ] Input from aligned reads or raw FASTQ
-    - [ ] VCF output formatting
+- [x] Task: Implement giraffe_mapping subworkflow
+    - [x] Input channel design (reads, gbz, dist, min, ref_paths)
+    - [x] VG_GIRAFFE -> VG_SURJECT -> SAMTOOLS_SORT/INDEX pipeline
+    - [x] Output: gam, bam, bai, bam_bai, reports, versions
+- [x] Task: Implement pangenie_genotyping subworkflow
+    - [x] Input from reads + reference + panel VCF
+    - [x] VCF output with index
+
+Location: subworkflows/local/giraffe_mapping/, subworkflows/local/pangenie_genotyping/
 
 ## Phase 5: Main Workflow Integration
 - [ ] Task: Add pangenome aligner option to main.nf
