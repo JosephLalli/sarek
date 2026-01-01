@@ -29,6 +29,7 @@ include { CRAM_SAMPLEQC                                     } from '../../subwor
 // Preprocessing
 include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk'
 include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks'
+include { FASTQ_PREPROCESS_GIRAFFE                          } from '../../subworkflows/local/fastq_preprocess_giraffe'
 
 // CRAM_TO_BAM conversion
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../modules/nf-core/samtools/convert'
@@ -107,6 +108,10 @@ workflow SAREK {
     pon
     pon_tbi
     sentieon_dnascope_model
+    pangenome_gbz
+    pangenome_dist
+    pangenome_min
+    pangenome_ref_paths
     varlociraptor_scenario_germline
     varlociraptor_scenario_somatic
     varlociraptor_scenario_tumor_only
@@ -226,8 +231,30 @@ workflow SAREK {
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         }
+        else if (aligner == 'giraffe') {
+            // PREPROCESSING WITH GIRAFFE (pangenome alignment)
+            FASTQ_PREPROCESS_GIRAFFE(
+                input_fastq,
+                input_sample,
+                fasta,
+                fasta_fai,
+                pangenome_gbz,
+                pangenome_dist,
+                pangenome_min,
+                pangenome_ref_paths,
+                intervals_for_preprocessing,
+            )
+
+            // Gather preprocessing output
+            cram_variant_calling = channel.empty()
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GIRAFFE.out.cram_variant_calling)
+
+            // Gather used softwares versions
+            reports = reports.mix(FASTQ_PREPROCESS_GIRAFFE.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_GIRAFFE.out.versions)
+        }
         else {
-            // PREPROCESSING
+            // PREPROCESSING WITH GATK (bwa-mem, bwa-mem2, dragmap, sentieon-bwamem)
             FASTQ_PREPROCESS_GATK(
                 input_fastq,
                 input_sample,
