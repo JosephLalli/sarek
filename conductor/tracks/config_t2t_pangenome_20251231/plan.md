@@ -1,36 +1,36 @@
 # Track Plan: T2T and Pangenome Configuration
 
 ## Phase 1: Audit Existing Configuration
-- [ ] Task: Review current `conf/` structure
-    - [ ] Identify where genome-specific configs live
-    - [ ] Review igenomes.config pattern
-- [ ] Task: Locate legacy T2T configuration
-    - [ ] Find T2T settings in sarek_first_attempt
-    - [ ] Document what was configured
-- [ ] Task: Locate legacy pangenome configuration
-    - [ ] Find pangenome settings in sarek_first_attempt
-    - [ ] Document v1.1 requirements
+- [x] Task: Review current `conf/` structure
+    - [x] Identify where genome-specific configs live
+    - [x] Review igenomes.config pattern
+- [x] Task: Locate legacy T2T configuration
+    - [x] Find T2T settings in sarek_first_attempt
+    - [x] Document what was configured
+- [x] Task: Locate legacy pangenome configuration
+    - [x] Find pangenome settings in sarek_first_attempt
+    - [x] Document v1.1 requirements
 
 ## Phase 2: T2T Reference Configuration
-- [ ] Task: Add T2T genome to igenomes config
-    - [ ] Reference FASTA path
-    - [ ] BWA/BWA-MEM2 index paths
-    - [ ] Known sites (dbSNP, Mills, etc.)
-- [ ] Task: Configure snpEff for CHM13v2
-    - [ ] Database setup
-    - [ ] Config file modifications
-- [ ] Task: Configure VEP for T2T
-    - [ ] Cache paths
-    - [ ] Species/assembly settings
+- [x] Task: Add T2T genome to igenomes config
+    - [x] Reference FASTA path (placeholder)
+    - [x] BWA/BWA-MEM2 index paths (placeholder)
+    - [x] Known sites (dbSNP, Mills, etc.) (placeholder)
+- [x] Task: Configure snpEff for CHM13v2
+    - [x] snpeff_db = 'CHM13v2.0'
+- [x] Task: Configure VEP for T2T
+    - [x] vep_genome = 'T2T-CHM13v2.0'
 
 ## Phase 3: Pangenome Configuration
-- [ ] Task: Create pangenome.config
-    - [ ] v1.1 index paths (GBZ, minimizer, distance, etc.)
-    - [ ] v2 index paths
-    - [ ] Version selection parameter
-- [ ] Task: Add pangenome parameters to schema
-    - [ ] Document new parameters
-    - [ ] Add validation
+- [x] Task: Create pangenome.config
+    - [x] v1.1 index paths (GBZ, minimizer, distance, etc.) - placeholder
+    - [x] v2 index paths - placeholder
+    - [x] v1.1-grch38 for GRCh38 compatibility
+    - [x] Version selection parameter (pangenome_version)
+    - [x] PanGenie panel resources
+    - [x] Phasing resources (T2T and GRCh38)
+- [x] Task: Include pangenome.config in nextflow.config
+- [x] Task: Add giraffe to aligner options
 
 ## Phase 4: Parabricks Review
 - [ ] Task: Compare implementations
@@ -44,3 +44,8 @@
 - [ ] Task: Test T2T configuration
 - [ ] Task: Test pangenome v1.1 configuration
 - [ ] Task: Test pangenome v2 configuration
+
+## Notes
+- All paths use TODO placeholders - need to fill in actual S3 URLs
+- Pangenome paths follow igenomes pattern: ${params.igenomes_base}/Homo_sapiens/Pangenome/...
+- T2T paths follow igenomes pattern: ${params.igenomes_base}/Homo_sapiens/T2T/CHM13v2/...
