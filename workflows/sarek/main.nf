@@ -31,6 +31,9 @@ include { FASTQ_PREPROCESS_GATK                             } from '../../subwor
 include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks'
 include { FASTQ_PREPROCESS_GIRAFFE                          } from '../../subworkflows/local/fastq_preprocess_giraffe'
 
+// PanGenie direct genotyping (bypasses alignment)
+include { PANGENIE_GENOTYPING                               } from '../../subworkflows/local/pangenie_genotyping'
+
 // CRAM_TO_BAM conversion
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../modules/nf-core/samtools/convert'
 
@@ -112,6 +115,7 @@ workflow SAREK {
     pangenome_dist
     pangenome_min
     pangenome_ref_paths
+    pangenie_panel_vcf
     varlociraptor_scenario_germline
     varlociraptor_scenario_somatic
     varlociraptor_scenario_tumor_only
@@ -130,6 +134,9 @@ workflow SAREK {
     ch_multiqc_files = channel.empty()
     multiqc_report = channel.empty()
     reports = channel.empty()
+
+    // For pangenie VCFs (when aligner == 'none')
+    pangenie_vcfs = channel.empty()
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -253,6 +260,29 @@ workflow SAREK {
             reports = reports.mix(FASTQ_PREPROCESS_GIRAFFE.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_GIRAFFE.out.versions)
         }
+        else if (aligner == 'none') {
+            // NO ALIGNMENT - PANGENIE DIRECT GENOTYPING
+            // Skip alignment entirely, run pangenie from FASTQs
+            // Pangenie outputs VCFs directly, bypassing BAM-based variant calling
+
+            PANGENIE_GENOTYPING(
+                input_fastq,
+                fasta.map { _meta, fa -> [[id: 'reference'], fa] },
+                pangenie_panel_vcf,
+            )
+
+            // No CRAM output - pangenie produces VCFs directly
+            cram_variant_calling = channel.empty()
+
+            // Pangenie VCFs will be mixed into vcf_to_annotate later
+            pangenie_vcfs = PANGENIE_GENOTYPING.out.vcf
+                .join(PANGENIE_GENOTYPING.out.vcf_tbi, failOnDuplicate: true, failOnMismatch: true)
+                .map { meta, vcf, tbi -> [meta + [variantcaller: 'pangenie'], vcf] }
+
+            // Gather used softwares versions
+            reports = reports.mix(PANGENIE_GENOTYPING.out.reports)
+            versions = versions.mix(PANGENIE_GENOTYPING.out.versions)
+        }
         else {
             // PREPROCESSING WITH GATK (bwa-mem, bwa-mem2, dragmap, sentieon-bwamem)
             FASTQ_PREPROCESS_GATK(
@@ -276,6 +306,25 @@ workflow SAREK {
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
+        }
+
+        // Run pangenie in parallel with alignment when pangenie is in tools (and aligner != 'none')
+        // When aligner == 'none', pangenie was already run above
+        if (aligner != 'none' && tools && tools.split(',').contains('pangenie')) {
+            PANGENIE_GENOTYPING(
+                input_fastq,
+                fasta.map { _meta, fa -> [[id: 'reference'], fa] },
+                pangenie_panel_vcf,
+            )
+
+            // Pangenie VCFs will be mixed into vcf_to_annotate later
+            pangenie_vcfs = PANGENIE_GENOTYPING.out.vcf
+                .join(PANGENIE_GENOTYPING.out.vcf_tbi, failOnDuplicate: true, failOnMismatch: true)
+                .map { meta, vcf, tbi -> [meta + [variantcaller: 'pangenie'], vcf] }
+
+            // Gather used softwares versions
+            reports = reports.mix(PANGENIE_GENOTYPING.out.reports)
+            versions = versions.mix(PANGENIE_GENOTYPING.out.versions)
         }
     }
 
@@ -564,6 +613,9 @@ workflow SAREK {
         // Gather vcf files for annotation and QC
         // POST_VARIANTCALLING always outputs VCFs - either processed or pass-through originals
         vcf_to_annotate = POST_VARIANTCALLING.out.vcfs
+
+        // Mix in pangenie VCFs (when aligner == 'none', pangenie bypasses BAM-based variant calling)
+        vcf_to_annotate = vcf_to_annotate.mix(pangenie_vcfs)
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 

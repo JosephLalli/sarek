@@ -276,6 +276,7 @@ workflow NFCORE_SAREK {
         params.pangenome_dist ? channel.fromPath(params.pangenome_dist).map { dist -> [[id: 'pangenome'], dist] }.collect() : channel.value([[id: 'pangenome'], []]),
         params.pangenome_min ? channel.fromPath(params.pangenome_min).map { min -> [[id: 'pangenome'], min] }.collect() : channel.value([[id: 'pangenome'], []]),
         params.pangenome_ref_paths ? channel.fromPath(params.pangenome_ref_paths).collect() : channel.value([]),
+        params.pangenie_panel_vcf ? channel.fromPath(params.pangenie_panel_vcf).map { vcf -> [[id: 'pangenie_panel'], vcf] }.collect() : channel.value([[id: 'pangenie_panel'], []]),
         params.varlociraptor_scenario_germline ? channel.fromPath(params.varlociraptor_scenario_germline).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
         params.varlociraptor_scenario_somatic ? channel.fromPath(params.varlociraptor_scenario_somatic).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
         params.varlociraptor_scenario_tumor_only ? channel.fromPath(params.varlociraptor_scenario_tumor_only).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),

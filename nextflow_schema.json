@@ -280,9 +280,9 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem", "parabricks"],
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem", "parabricks", "giraffe", "none"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
-                    "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)."
+                    "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode).\nUse `giraffe` for pangenome-aware alignment with vg giraffe (requires pangenome indices).\nUse `none` to skip alignment entirely (requires `pangenie` in --tools)."
                 },
                 "save_mapped": {
                     "type": "boolean",
@@ -311,6 +311,41 @@
                     "fa_icon": "fas fa-tape",
                     "description": "Generate consensus reads with Sentieon dedup rather than choosing one best read.",
                     "help_text": "If set, the Sentieon dedup output will combine duplicate reads into single consensus read. This is only relevant if `--tools` contains `sentieon_dedup`."
+                },
+                "pangenome_gbz": {
+                    "type": "string",
+                    "format": "file-path",
+                    "fa_icon": "fas fa-project-diagram",
+                    "description": "Path to GBZ graph index for vg giraffe pangenome alignment.",
+                    "help_text": "Required when using `--aligner giraffe`. The GBZ file contains the pangenome graph in a compressed format."
+                },
+                "pangenome_dist": {
+                    "type": "string",
+                    "format": "file-path",
+                    "fa_icon": "fas fa-ruler",
+                    "description": "Path to distance index for vg giraffe pangenome alignment.",
+                    "help_text": "Required when using `--aligner giraffe`. The distance index enables efficient seed clustering."
+                },
+                "pangenome_min": {
+                    "type": "string",
+                    "format": "file-path",
+                    "fa_icon": "fas fa-compress-arrows-alt",
+                    "description": "Path to minimizer index for vg giraffe pangenome alignment.",
+                    "help_text": "Required when using `--aligner giraffe`. The minimizer index enables fast seed finding."
+                },
+                "pangenome_ref_paths": {
+                    "type": "string",
+                    "format": "file-path",
+                    "fa_icon": "fas fa-route",
+                    "description": "Path to reference paths file for vg surject.",
+                    "help_text": "Optional file listing reference paths in the graph to project alignments onto."
+                },
+                "pangenie_panel_vcf": {
+                    "type": "string",
+                    "format": "file-path",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to panel VCF for PanGenie genotyping.",
+                    "help_text": "Required when using `pangenie` in --tools. Contains the variants to be genotyped directly from FASTQs."
                 }
             }
         },

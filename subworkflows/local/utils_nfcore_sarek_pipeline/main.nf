@@ -248,6 +248,7 @@ workflow PIPELINE_COMPLETION {
 def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
+    pangenieRequirements()
 }
 
 // Exit pipeline if incorrect --genome key provided
@@ -262,6 +263,26 @@ def genomeExistsError() {
 def sparkAndBam() {
     if (params.use_gatk_spark && params.save_mapped && params.save_output_as_bam) {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.\n" + "  If you want to save your bam files please swap to the normal gatk implementation.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        System.err.println(error_string)
+        error(error_string)
+    }
+}
+
+// Validate pangenie requirements
+def pangenieRequirements() {
+    def tools_list = params.tools ? params.tools.split(',').collect { it.trim().toLowerCase() } : []
+    def has_pangenie = tools_list.contains('pangenie')
+
+    // If aligner is 'none', pangenie must be in tools
+    if (params.aligner == 'none' && !has_pangenie) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  When using --aligner none, you must include 'pangenie' in --tools.\n" + "  The 'none' aligner skips alignment and requires pangenie for direct genotyping from FASTQs.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        System.err.println(error_string)
+        error(error_string)
+    }
+
+    // If pangenie is in tools, pangenie_panel_vcf must be provided
+    if (has_pangenie && !params.pangenie_panel_vcf) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  When using 'pangenie' in --tools, you must provide --pangenie_panel_vcf.\n" + "  The panel VCF contains the variants to be genotyped directly from FASTQs.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         System.err.println(error_string)
         error(error_string)
     }

@@ -69,12 +69,15 @@ Location: modules/local/pangenie/
 Location: subworkflows/local/giraffe_mapping/, subworkflows/local/pangenie_genotyping/
 
 ## Phase 5: Main Workflow Integration
-- [ ] Task: Add pangenome aligner option to main.nf
-    - [ ] Parameter: --aligner giraffe
-    - [ ] Conditional workflow paths
+- [x] Task: Add pangenome aligner option to main.nf
+    - [x] Parameter: --aligner giraffe
+    - [x] Conditional workflow paths (parabricks/giraffe/GATK branches)
+    - [x] Added FASTQ_PREPROCESS_GIRAFFE subworkflow
+    - [x] Added pangenome parameters to nextflow.config
+    - [x] Added VG_GIRAFFE/SURJECT/STATS configs to aligner.config
 - [ ] Task: Add pangenie calling option
     - [ ] Parameter: --tools pangenie
-- [ ] Task: Update nextflow_schema.json
+- [ ] Task: Update nextflow_schema.json with pangenome parameters
 
 ## Phase 6: Testing
 - [ ] Task: Create test data subset
