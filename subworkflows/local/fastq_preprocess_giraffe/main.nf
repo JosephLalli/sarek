@@ -28,6 +28,7 @@ workflow FASTQ_PREPROCESS_GIRAFFE {
     ch_input_sample          // channel: input samples for restart
     ch_fasta                 // channel: [mandatory] meta, fasta
     ch_fasta_fai             // channel: [mandatory] meta, fasta_fai
+    ch_dict                  // channel: [mandatory] meta, dict
     ch_gbz                   // channel: [mandatory] meta, gbz
     ch_dist                  // channel: [mandatory] meta, dist
     ch_min                   // channel: [mandatory] meta, min
@@ -57,6 +58,7 @@ workflow FASTQ_PREPROCESS_GIRAFFE {
         }
 
         // STEP 1: GIRAFFE ALIGNMENT
+        // sort_bam=true, run_fixmate=true, run_markdup=false (markdup handled separately)
         GIRAFFE_MAPPING(
             ch_reads_for_alignment,
             ch_gbz,
@@ -64,7 +66,11 @@ workflow FASTQ_PREPROCESS_GIRAFFE {
             ch_min,
             ch_ref_paths,
             ch_fasta,
-            ch_fasta_fai
+            ch_fasta_fai,
+            ch_dict,
+            true,   // sort_bam
+            true,   // run_fixmate
+            false   // run_markdup - handled by BAM_MARKDUPLICATES later
         )
 
         ch_versions = ch_versions.mix(GIRAFFE_MAPPING.out.versions)

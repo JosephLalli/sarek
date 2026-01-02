@@ -245,6 +245,7 @@ workflow SAREK {
                 input_sample,
                 fasta,
                 fasta_fai,
+                dict,
                 pangenome_gbz,
                 pangenome_dist,
                 pangenome_min,

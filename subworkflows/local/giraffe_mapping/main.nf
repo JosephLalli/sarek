@@ -2,13 +2,11 @@
 // GIRAFFE MAPPING
 //
 // Pangenome-aware alignment using vg giraffe
-// Produces BAM files compatible with downstream variant calling
+// Produces BAM/CRAM files compatible with downstream variant calling
 
 include { VG_GIRAFFE  } from '../../../modules/local/vg/giraffe/main'
 include { VG_SURJECT  } from '../../../modules/local/vg/surject/main'
 include { VG_STATS    } from '../../../modules/local/vg/stats/main'
-include { SAMTOOLS_SORT  } from '../../../modules/nf-core/samtools/sort/main'
-include { SAMTOOLS_INDEX } from '../../../modules/nf-core/samtools/index/main'
 
 workflow GIRAFFE_MAPPING {
     take:
@@ -17,8 +15,12 @@ workflow GIRAFFE_MAPPING {
     ch_dist            // channel: [mandatory] [ meta, dist ]
     ch_min             // channel: [mandatory] [ meta, min ]
     ch_ref_paths       // channel: [optional]  ref_paths.txt for surjection
-    ch_fasta           // channel: [optional]  [ meta, fasta ] for CRAM output
-    ch_fasta_fai       // channel: [optional]  [ meta, fasta_fai ]
+    ch_fasta           // channel: [mandatory] [ meta, fasta ] for sorting/CRAM
+    ch_fasta_fai       // channel: [mandatory] [ meta, fasta_fai ]
+    ch_dict            // channel: [mandatory] [ meta, dict ]
+    sort_bam           // val: whether to sort BAM
+    run_fixmate        // val: whether to run fixmate
+    run_markdup        // val: whether to run markdup
 
     main:
     ch_versions = channel.empty()
@@ -43,37 +45,40 @@ workflow GIRAFFE_MAPPING {
     ch_reports = ch_reports.mix(VG_STATS.out.stats)
     ch_versions = ch_versions.mix(VG_STATS.out.versions.first())
 
-    // Surject GAM to BAM (project onto reference paths)
+    // Surject GAM to BAM/CRAM (project onto reference paths)
+    // Includes reheader, fixmate, sort, markdup, and indexing
     VG_SURJECT(
         ch_gam,
         ch_gbz,
-        ch_ref_paths.collect()
+        ch_ref_paths.collect(),
+        ch_fasta,
+        ch_fasta_fai,
+        ch_dict,
+        sort_bam,
+        run_fixmate,
+        run_markdup
     )
 
     ch_versions = ch_versions.mix(VG_SURJECT.out.versions.first())
 
-    // Sort BAM
-    SAMTOOLS_SORT(
-        VG_SURJECT.out.bam,
-        ch_fasta
-    )
+    // Collect markdup stats if available
+    ch_reports = ch_reports.mix(VG_SURJECT.out.markdup_stats)
 
-    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
+    // Combine BAM and BAI (or CRAM and CRAI)
+    ch_bam_bai = VG_SURJECT.out.bam
+        .join(VG_SURJECT.out.bai, failOnDuplicate: true, failOnMismatch: true)
 
-    // Index BAM
-    SAMTOOLS_INDEX(SAMTOOLS_SORT.out.bam)
-
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
-
-    // Combine BAM and BAI
-    ch_bam_bai = SAMTOOLS_SORT.out.bam
-        .join(SAMTOOLS_INDEX.out.bai, failOnDuplicate: true, failOnMismatch: true)
+    ch_cram_crai = VG_SURJECT.out.cram
+        .join(VG_SURJECT.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     emit:
-    gam      = ch_gam                    // channel: [ meta, gam ]
-    bam      = SAMTOOLS_SORT.out.bam     // channel: [ meta, bam ]
-    bai      = SAMTOOLS_INDEX.out.bai    // channel: [ meta, bai ]
-    bam_bai  = ch_bam_bai                // channel: [ meta, bam, bai ]
-    reports  = ch_reports                // channel: [ meta, stats ]
-    versions = ch_versions               // channel: [ versions.yml ]
+    gam       = ch_gam                    // channel: [ meta, gam ]
+    bam       = VG_SURJECT.out.bam        // channel: [ meta, bam ]
+    bai       = VG_SURJECT.out.bai        // channel: [ meta, bai ]
+    bam_bai   = ch_bam_bai                // channel: [ meta, bam, bai ]
+    cram      = VG_SURJECT.out.cram       // channel: [ meta, cram ]
+    crai      = VG_SURJECT.out.crai       // channel: [ meta, crai ]
+    cram_crai = ch_cram_crai              // channel: [ meta, cram, crai ]
+    reports   = ch_reports                // channel: [ meta, stats ]
+    versions  = ch_versions               // channel: [ versions.yml ]
 }
