@@ -75,11 +75,21 @@ Location: subworkflows/local/giraffe_mapping/, subworkflows/local/pangenie_genot
     - [x] Added FASTQ_PREPROCESS_GIRAFFE subworkflow
     - [x] Added pangenome parameters to nextflow.config
     - [x] Added VG_GIRAFFE/SURJECT/STATS configs to aligner.config
-- [ ] Task: Add pangenie calling option
-    - [ ] Parameter: --tools pangenie
-- [ ] Task: Update nextflow_schema.json with pangenome parameters
+- [x] Task: Add pangenie calling option
+    - [x] Parameter: --tools pangenie
+    - [x] Parameter: --aligner none (skip alignment, pangenie only)
+    - [x] Parallel execution: pangenie + alignment when both specified
+    - [x] Validation: aligner=none requires pangenie in tools
+    - [x] Validation: pangenie requires pangenie_panel_vcf
+- [x] Task: Update nextflow_schema.json with pangenome parameters
+    - [x] Added pangenome_gbz, pangenome_dist, pangenome_min, pangenome_ref_paths
+    - [x] Added pangenie_panel_vcf
+    - [x] Added 'giraffe' and 'none' to aligner enum
 
 ## Phase 6: Testing
 - [ ] Task: Create test data subset
+- [x] Task: Write nf-test case for giraffe aligner
+    - [x] Created tests/aligner-giraffe.nf.test
+    - [ ] Pending: Config review for pangenome test data paths
 - [ ] Task: Write nf-test cases for each module
 - [ ] Task: Integration test with full workflow

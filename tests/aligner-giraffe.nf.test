@@ -1,0 +1,43 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "aligner_giraffe"
+
+    def test_scenario = [
+        [
+            name: "-profile test --aligner giraffe --save_reference skip QC/recal/md",
+            params: [
+                aligner: 'giraffe',
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: '',
+                // Pangenome indices - paths to be configured in test config
+                pangenome_gbz: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.gbz",
+                pangenome_dist: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.dist",
+                pangenome_min: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.min"
+            ]
+        ],
+        [
+            name: "-profile test --aligner giraffe --save_reference skip QC/recal/md -stub",
+            params: [
+                aligner: 'giraffe',
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: '',
+                // Pangenome indices - paths to be configured in test config
+                pangenome_gbz: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.gbz",
+                pangenome_dist: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.dist",
+                pangenome_min: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.min"
+            ],
+            stub: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}
