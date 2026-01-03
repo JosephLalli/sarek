@@ -14,10 +14,14 @@ nextflow_pipeline {
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: '',
-                // Pangenome indices - paths to be configured in test config
-                pangenome_gbz: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.gbz",
-                pangenome_dist: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.dist",
-                pangenome_min: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.min"
+                // Pangenome indices from vg haplotype-sampling test data
+                pangenome_gbz: "${params.pangenome_test_data_base}/micb-kir3dl1.giraffe.gbz",
+                pangenome_dist: "${params.pangenome_test_data_base}/micb-kir3dl1.dist",
+                pangenome_min: "${params.pangenome_test_data_base}/micb-kir3dl1.shortread.withzip.min",
+                // Use GRCh38 reference extracted from pangenome
+                fasta: "${params.pangenome_test_data_base}/micb-kir3dl1.GRCh38.fa",
+                fasta_fai: "${params.pangenome_test_data_base}/micb-kir3dl1.GRCh38.fa.fai",
+                dict: "${params.pangenome_test_data_base}/micb-kir3dl1.GRCh38.dict"
             ]
         ],
         [
@@ -27,10 +31,14 @@ nextflow_pipeline {
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: '',
-                // Pangenome indices - paths to be configured in test config
-                pangenome_gbz: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.gbz",
-                pangenome_dist: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.dist",
-                pangenome_min: "${params.modules_testdata_base_path}genomics/homo_sapiens/pangenome/hprc.min"
+                // Pangenome indices from vg haplotype-sampling test data
+                pangenome_gbz: "${params.pangenome_test_data_base}/micb-kir3dl1.giraffe.gbz",
+                pangenome_dist: "${params.pangenome_test_data_base}/micb-kir3dl1.dist",
+                pangenome_min: "${params.pangenome_test_data_base}/micb-kir3dl1.shortread.withzip.min",
+                // Use GRCh38 reference extracted from pangenome
+                fasta: "${params.pangenome_test_data_base}/micb-kir3dl1.GRCh38.fa",
+                fasta_fai: "${params.pangenome_test_data_base}/micb-kir3dl1.GRCh38.fa.fai",
+                dict: "${params.pangenome_test_data_base}/micb-kir3dl1.GRCh38.dict"
             ],
             stub: true
         ]
