@@ -88,9 +88,9 @@
     - [x] T2T paths in igenomes.config (FASTA updated, FAI/Dict set to null for generation)
     - [x] Pangenome v1.1 paths in pangenome.config (S3/Zenodo links added)
     - [x] Pangenome v2 paths in pangenome.config (Partial - GBZ/HAPL known, DIST/MIN need generation)
-- [ ] Task: Test T2T configuration
-- [ ] Task: Test pangenome v1.1 configuration
-- [ ] Task: Test pangenome v2 configuration
+- [x] Task: Test T2T configuration [8fa16c2]
+- [x] Task: Test pangenome v1.1 configuration [8fa16c2]
+- [x] Task: Test pangenome v2 configuration [8fa16c2]
 
 ## Notes
 - **HPRC v1.1**: Fully configured with S3 bucket and Zenodo VCFs.
