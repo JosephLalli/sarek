@@ -84,15 +84,15 @@
 - Tuple-based inputs are cleaner and follow nf-core patterns
 
 ## Phase 5: Validation
-- [ ] Task: Fill in actual S3 URLs for reference paths (USER ACTION REQUIRED)
-    - [ ] T2T paths in igenomes.config (search for TODO markers)
-    - [ ] Pangenome paths in pangenome.config (search for TODO markers)
+- [x] Task: Fill in actual S3 URLs for reference paths (USER ACTION REQUIRED) [8fa16c2]
+    - [x] T2T paths in igenomes.config (FASTA updated, FAI/Dict set to null for generation)
+    - [x] Pangenome v1.1 paths in pangenome.config (S3/Zenodo links added)
+    - [x] Pangenome v2 paths in pangenome.config (Partial - GBZ/HAPL known, DIST/MIN need generation)
 - [ ] Task: Test T2T configuration
 - [ ] Task: Test pangenome v1.1 configuration
 - [ ] Task: Test pangenome v2 configuration
 
 ## Notes
-- All paths use TODO placeholders - need to fill in actual S3 URLs
-- Pangenome paths follow igenomes pattern: ${params.igenomes_base}/Homo_sapiens/Pangenome/...
-- T2T paths follow igenomes pattern: ${params.igenomes_base}/Homo_sapiens/T2T/CHM13v2/...
-- **ACTION REQUIRED**: User needs to update placeholder paths with actual S3 URLs before validation
+- **HPRC v1.1**: Fully configured with S3 bucket and Zenodo VCFs.
+- **HPRC v2.0**: Missing `.dist` and `.min` indices. Requires `pangenome_prep` workflow to generate them from `.gbz` or `.gfa`.
+- **Reference Files**: T2T-CHM13v2.0 FASTA URL updated. FAI and Dict files may need to be generated if not present in S3.
