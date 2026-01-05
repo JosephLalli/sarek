@@ -64,15 +64,15 @@ Location: modules/local/vg/
 
 ## Phase 3: PanGenie Implementation
 - [x] Task: Review legacy pangenie module
-- [x] Task: Implement pangenie module (pangenie 3.0.2)
+- [x] Task: Implement pangenie module (4ccbe4f)
     - [x] Strict syntax compliance
     - [x] meta.yml and environment.yml
 - [x] Task: Implement JELLYFISH_COUNT module (3e17cd8)
     - [x] Required for PanGenie k-mer genotyping.
-- [ ] Task: Test PanGenie with sample data
-- [ ] Task: Implement PanGenie Preprocessing Subworkflow
-    - [ ] Integrate JELLYFISH_COUNT.
-    - [ ] Handle VCF conversion/indexing.
+- [x] Task: Test PanGenie with sample data (4ccbe4f)
+- [x] Task: Implement PanGenie Preprocessing Subworkflow (4ccbe4f)
+    - [x] Integrate JELLYFISH_COUNT.
+    - [x] Handle VCF conversion/indexing.
 
 Location: modules/local/pangenie/
 
@@ -84,11 +84,11 @@ Location: modules/local/pangenie/
     - [ ] Task: Integrate Modular Personalized Flow:
         - [ ] Optional `KMC` -> `VG_HAPLOTYPES` -> `VG_GIRAFFE`.
     - [ ] Task: Make VG_STATS conditional on `--tools vg_stats` (or similar).
-- [~] Task: Implement pangenie_genotyping subworkflow
+- [x] Task: Implement pangenie_genotyping subworkflow (4ccbe4f)
     - [x] Input from reads + reference + panel VCF
-    - [ ] Task: Integrate `JELLYFISH_COUNT` preprocessing.
-    - [ ] Task: Handle VCF output with index and chromosome merging if parallelized.
-    - [ ] (Note: `FILTER_PANGENIE_VARIANTS` removed per user request).
+    - [x] Integrate `JELLYFISH_COUNT` preprocessing.
+    - [x] Handle VCF output with index and chromosome merging if parallelized.
+    - [x] (Note: `FILTER_PANGENIE_VARIANTS` removed per user request).
 
 Location: subworkflows/local/giraffe_mapping/, subworkflows/local/pangenie_genotyping/
 
