@@ -44,6 +44,20 @@
 - [x] Task: Implement vg/haplotypes
 - [x] Task: Implement vg/paths
 - [x] Task: Implement vg/deconstruct
+- [x] Task: Optimize Giraffe Mapping (Direct Surjection)
+    - [x] Research `vg giraffe --output-format` vs `VG_SURJECT` module.
+    - [x] Implement optional direct alignment to CRAM/BAM (skipping GAM on disk).
+    - [x] Ensure reheader/sort/fixmate logic is preserved.
+    - [x] Use `--supplemental` flag for direct CRAM output.
+- [x] Task: Update `vg/surject` configuration
+    - [x] Add `--supplemental` flag to default arguments.
+- [x] Task: Implement KMC module
+    - [x] Generate `.kff.gz` from reads.
+    - [x] Default: min-count 2 (`-ci2`).
+    - [x] Stream output through gzip.
+- [x] Task: Implement VG_HAPLOTYPES module
+    - [x] Standalone module (cleaner than legacy wrap).
+    - [x] Support gzipped k-mer input (decompression/streaming).
 
 All modules include: main.nf, environment.yml, meta.yml
 Location: modules/local/vg/
@@ -53,18 +67,28 @@ Location: modules/local/vg/
 - [x] Task: Implement pangenie module (pangenie 3.0.2)
     - [x] Strict syntax compliance
     - [x] meta.yml and environment.yml
-- [ ] Task: Test with sample data
+- [x] Task: Implement JELLYFISH_COUNT module (3e17cd8)
+    - [x] Required for PanGenie k-mer genotyping.
+- [ ] Task: Test PanGenie with sample data
+- [ ] Task: Implement PanGenie Preprocessing Subworkflow
+    - [ ] Integrate JELLYFISH_COUNT.
+    - [ ] Handle VCF conversion/indexing.
 
 Location: modules/local/pangenie/
 
 ## Phase 4: Subworkflow Integration
-- [x] Task: Implement giraffe_mapping subworkflow
+- [~] Task: Implement giraffe_mapping subworkflow
     - [x] Input channel design (reads, gbz, dist, min, ref_paths)
     - [x] VG_GIRAFFE -> VG_SURJECT -> SAMTOOLS_SORT/INDEX pipeline
-    - [x] Output: gam, bam, bai, bam_bai, reports, versions
-- [x] Task: Implement pangenie_genotyping subworkflow
+    - [x] Output: gam, bam, bai, bam_bai, cram, cram_crai, reports, versions
+    - [ ] Task: Integrate Modular Personalized Flow:
+        - [ ] Optional `KMC` -> `VG_HAPLOTYPES` -> `VG_GIRAFFE`.
+    - [ ] Task: Make VG_STATS conditional on `--tools vg_stats` (or similar).
+- [~] Task: Implement pangenie_genotyping subworkflow
     - [x] Input from reads + reference + panel VCF
-    - [x] VCF output with index
+    - [ ] Task: Integrate `JELLYFISH_COUNT` preprocessing.
+    - [ ] Task: Handle VCF output with index and chromosome merging if parallelized.
+    - [ ] (Note: `FILTER_PANGENIE_VARIANTS` removed per user request).
 
 Location: subworkflows/local/giraffe_mapping/, subworkflows/local/pangenie_genotyping/
 
@@ -86,10 +110,13 @@ Location: subworkflows/local/giraffe_mapping/, subworkflows/local/pangenie_genot
     - [x] Added pangenie_panel_vcf
     - [x] Added 'giraffe' and 'none' to aligner enum
 
-## Phase 6: Testing
-- [ ] Task: Create test data subset
+## Phase 6: Testing & Optimization
+- [x] Task: Create test data subset
 - [x] Task: Write nf-test case for giraffe aligner
     - [x] Created tests/aligner-giraffe.nf.test
-    - [ ] Pending: Config review for pangenome test data paths
-- [ ] Task: Write nf-test cases for each module
+    - [x] Verified execution with local test data
+- [ ] Task: Fix Giraffe Integration Test
+    - [ ] Update `tests/aligner-giraffe.nf.test` to verify CRAM/CRAI existence.
+    - [ ] Ensure `save_mapped` is handled correctly in tests.
+- [~] Task: Write nf-test cases for each module
 - [ ] Task: Integration test with full workflow
