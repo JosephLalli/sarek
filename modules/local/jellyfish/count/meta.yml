@@ -1,0 +1,54 @@
+name: jellyfish_count
+description: Count k-mers in FASTQ reads using Jellyfish
+keywords:
+  - kmer
+  - counting
+  - jellyfish
+  - pangenome
+  - pangenie
+tools:
+  - jellyfish:
+      description: A fast multi-threaded k-mer counter
+      homepage: https://github.com/gmarcais/Jellyfish
+      documentation: https://github.com/gmarcais/Jellyfish/blob/master/doc/Readme.md
+      tool_dev_url: https://github.com/gmarcais/Jellyfish
+      doi: "10.1093/bioinformatics/btr011"
+      licence: ["GPL-3.0"]
+      identifier: biotools:jellyfish
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - reads:
+        type: file
+        description: FASTQ file(s), gzip or zstd compressed
+        pattern: "*.{fastq.gz,fq.gz,fastq.zst,fq.zst}"
+  - - panel_fasta:
+        type: file
+        description: Optional FASTA file containing sequences to filter k-mers (--if option)
+        pattern: "*.{fa,fasta,fa.gz,fasta.gz}"
+
+output:
+  - kmer_file:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*.jf":
+          type: file
+          description: Jellyfish k-mer count database
+          pattern: "*.jf"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+
+authors:
+  - "@jlalli"
+maintainers:
+  - "@jlalli"
