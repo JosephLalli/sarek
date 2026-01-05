@@ -1,22 +1,23 @@
 # Track Plan: Phasing Tools
 
 ## Phase 1: Assessment
-- [ ] Task: Check nf-core/modules for existing implementations
-    - [ ] Search for shapeit5, shapeit4, whatshap, hapcut
-    - [ ] Evaluate quality and compatibility
-- [ ] Task: Review legacy phasing modules
-    - [ ] Audit sarek_first_attempt implementations
-    - [ ] Document input/output patterns
-- [ ] Task: Define phasing strategy options
-    - [ ] Population-based (SHAPEIT5 + panel)
-    - [ ] Read-backed (WhatsHap/HapCUT)
-    - [ ] Hybrid approach
+- [x] Task: Check nf-core/modules for existing implementations [5555555]
+    - [x] Search for shapeit5, shapeit4, whatshap, hapcut
+    - [x] Evaluate quality and compatibility
+- [x] Task: Review legacy phasing modules [5555555]
+    - [x] Audit sarek_first_attempt implementations
+    - [x] Document input/output patterns
+- [x] Task: Define phasing strategy options [5555555]
+    - [x] Population-based (SHAPEIT5 + panel)
+    - [x] Read-backed (WhatsHap/HapCUT)
+    - [x] Read-corrected (SAPPHIRE)
+    - [x] Hybrid approach (WhatsHap -> SHAPEIT4 -> SHAPEIT5)
 
 ## Phase 2: SHAPEIT5 Implementation
-- [ ] Task: Implement shapeit5/phase_common
-    - [ ] Strict syntax compliance
-    - [ ] Chunk-based parallelization
-    - [ ] Reference panel input handling
+- [x] Task: Implement shapeit5/phase_common [12c1277]
+    - [x] Strict syntax compliance
+    - [x] Chunk-based parallelization
+    - [x] Reference panel input handling
 - [ ] Task: Implement shapeit5/phase_rare
     - [ ] Scaffold from phase_common
     - [ ] Rare variant handling
@@ -38,20 +39,24 @@
     - [ ] Create module from scratch
     - [ ] Test with sample data
 
-## Phase 4: Legacy Support
+## Phase 4: Hybrid & Correction Support
 - [ ] Task: Implement shapeit4/phase_common
-    - [ ] For backwards compatibility
-    - [ ] May deprecate in future
+    - [ ] Required for Hybrid flow (scaffolding read-backed blocks)
+    - [ ] Implement from legacy or scratch
+- [ ] Task: Implement sapphire/phase (NEW)
+    - [ ] Research input requirements
+    - [ ] Create module for phase correction
 
 ## Phase 5: Subworkflow Integration
 - [ ] Task: Implement phase_and_impute subworkflow
-    - [ ] Chromosome chunking logic
-    - [ ] Parallel phasing per chunk
-    - [ ] Ligation and merging
-    - [ ] Optional imputation step
+    - [ ] Logic for `--phasing_method` selection
+    - [ ] Path 1: Population (SHAPEIT5 suite)
+    - [ ] Path 2: Read-backed (WhatsHap/HapCUT2)
+    - [ ] Path 3: Read-corrected (SHAPEIT5 -> SAPPHIRE)
+    - [ ] Path 4: Hybrid (WhatsHap -> SHAPEIT4 -> SHAPEIT5_rare)
 - [ ] Task: Integrate with main workflow
-    - [ ] Parameter: --tools phasing
-    - [ ] Parameter: --phasing_method [shapeit5|whatshap|hapcut]
+    - [ ] Add new parameters to schema
+    - [ ] Default to `population`
 
 ## Phase 6: Testing
 - [ ] Task: Create test VCF with known phase
