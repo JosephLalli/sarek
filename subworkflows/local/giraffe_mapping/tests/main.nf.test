@@ -1,0 +1,107 @@
+nextflow_workflow {
+
+    name "Test Subworkflow GIRAFFE_MAPPING"
+    script "../main.nf"
+    workflow "GIRAFFE_MAPPING"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "vg"
+    tag "giraffe_mapping"
+
+    test("Align and Surject short reads (Stub)") {
+        options "-stub"
+        when {
+            params {
+                aligner = 'giraffe'
+            }
+            workflow {
+                """
+                input[0] = channel.of([ [id:'test'], [file("test_1.fq.gz"), file("test_2.fq.gz")] ])
+                input[1] = channel.of([ [id:'pangenome'], file("test.gbz") ])
+                input[2] = channel.of([ [id:'dist'], file("test.dist") ])
+                input[3] = channel.of([ [id:'min'], file("test.min") ])
+                input[4] = channel.empty() // ref_paths
+                input[5] = channel.of([ [id:'ref'], file("ref.fa") ])
+                input[6] = channel.of([ [id:'fai'], file("ref.fa.fai") ])
+                input[7] = channel.of([ [id:'dict'], file("ref.dict") ])
+                input[8] = true // sort
+                input[9] = true // fixmate
+                input[10] = true // markdup
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+    }
+
+    test("Align and Surject short reads (Real Data)") {
+        when {
+            params {
+                aligner = 'giraffe'
+            }
+            workflow {
+                """
+                def test_data_base = "\$projectDir/assets/test_data/pangenome/haplotype-sampling"
+                input[0] = channel.of([ [id:'HG003'], [file(test_data_base + "/HG003_R1.fastq.gz", checkIfExists: true), file(test_data_base + "/HG003_R2.fastq.gz", checkIfExists: true)] ])
+                input[1] = channel.of([ [id:'pangenome'], file(test_data_base + "/micb-kir3dl1.giraffe.gbz", checkIfExists: true) ])
+                input[2] = channel.of([ [id:'dist'], file(test_data_base + "/micb-kir3dl1.dist", checkIfExists: true) ])
+                input[3] = channel.of([ [id:'min'], file(test_data_base + "/micb-kir3dl1.shortread.withzip.min", checkIfExists: true) ])
+                input[4] = channel.of(file(test_data_base + "/micb-kir3dl1.ref_paths.txt", checkIfExists: true))
+                input[5] = channel.of([ [id:'ref'], file(test_data_base + "/micb-kir3dl1.reference.fa", checkIfExists: true) ])
+                input[6] = channel.of([ [id:'fai'], file(test_data_base + "/micb-kir3dl1.reference.fa.fai", checkIfExists: true) ])
+                input[7] = channel.of([ [id:'dict'], file(test_data_base + "/micb-kir3dl1.reference.dict", checkIfExists: true) ])
+                input[8] = true // sort
+                input[9] = true // fixmate
+                input[10] = true // markdup
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.cram.size() > 0
+            assert snapshot(
+                file(workflow.out.cram[0][1]).name,
+                workflow.out.versions
+            ).match()
+        }
+    }
+
+    test("Align and Surject short reads (Personalized Flow)") {
+        when {
+            params {
+                aligner = 'giraffe'
+                pangenome_personalized_flow = true
+            }
+            workflow {
+                """
+                def test_data_base = "\$projectDir/assets/test_data/pangenome/haplotype-sampling"
+                input[0] = channel.of([ [id:'HG003'], [file(test_data_base + "/HG003_R1.fastq.gz", checkIfExists: true), file(test_data_base + "/HG003_R2.fastq.gz", checkIfExists: true)] ])
+                input[1] = channel.of([ [id:'pangenome'], file(test_data_base + "/micb-kir3dl1.giraffe.gbz", checkIfExists: true) ])
+                input[2] = channel.of([ [id:'dist'], file(test_data_base + "/micb-kir3dl1.dist", checkIfExists: true) ])
+                input[3] = channel.of([ [id:'min'], file(test_data_base + "/micb-kir3dl1.shortread.withzip.min", checkIfExists: true) ])
+                input[4] = channel.of(file(test_data_base + "/micb-kir3dl1.ref_paths.txt", checkIfExists: true))
+                input[5] = channel.of([ [id:'ref'], file(test_data_base + "/micb-kir3dl1.reference.fa", checkIfExists: true) ])
+                input[6] = channel.of([ [id:'fai'], file(test_data_base + "/micb-kir3dl1.reference.fa.fai", checkIfExists: true) ])
+                input[7] = channel.of([ [id:'dict'], file(test_data_base + "/micb-kir3dl1.reference.dict", checkIfExists: true) ])
+                input[8] = true // sort
+                input[9] = true // fixmate
+                input[10] = true // markdup
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.cram.size() > 0
+            assert snapshot(
+                file(workflow.out.cram[0][1]).name,
+                workflow.out.versions
+            ).match()
+        }
+    }
+}

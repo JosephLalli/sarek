@@ -1,0 +1,53 @@
+{
+    "Convert graph format (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gfa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    "versions.yml:md5,02d90c876bf6c4d7177bd141d89fb0e5"
+                ],
+                "gbz": [
+                    
+                ],
+                "gfa": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gfa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "pg": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,02d90c876bf6c4d7177bd141d89fb0e5"
+                ],
+                "vg": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T07:11:33.088106864"
+    }
+}

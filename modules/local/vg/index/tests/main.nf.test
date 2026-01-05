@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test Process VG_INDEX"
+    script "../main.nf"
+    process "VG_INDEX"
+
+    tag "modules"
+    tag "modules_local"
+    tag "vg"
+    tag "vg_index"
+
+    test("Create graph indices (Stub)") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [ [id:'test'], file("test.gbz") ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

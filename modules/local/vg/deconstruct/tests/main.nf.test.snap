@@ -1,0 +1,41 @@
+{
+    "Deconstruct graph to VCF (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    "versions.yml:md5,46d1aeaf8d4997d31bf3ff7074fd4ef7"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf_gz": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,46d1aeaf8d4997d31bf3ff7074fd4ef7"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T07:13:56.087512269"
+    }
+}

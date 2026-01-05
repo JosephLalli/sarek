@@ -1,0 +1,53 @@
+{
+    "Run GBWT operations (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gbwt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    "versions.yml:md5,d5a5eca860e5977bdf6ec90075aca045"
+                ],
+                "gbwt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gbwt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "gbz": [
+                    
+                ],
+                "gg": [
+                    
+                ],
+                "translation": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,d5a5eca860e5977bdf6ec90075aca045"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T07:12:16.647781677"
+    }
+}

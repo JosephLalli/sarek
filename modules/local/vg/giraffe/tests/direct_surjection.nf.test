@@ -1,0 +1,44 @@
+nextflow_process {
+
+    name "Test Process VG_GIRAFFE"
+    script "../main.nf"
+    process "VG_GIRAFFE"
+
+    tag "modules"
+    tag "modules_local"
+    tag "vg"
+    tag "vg_giraffe"
+
+    test("Align and Surject direct to BAM (sorted)") {
+        // config "${projectDir}/modules/local/vg/giraffe/tests/direct.config" // Default config (BAM)
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta
+                    [
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                input[1] = [ [id:'pangenome'], file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz", checkIfExists: true) ]
+                input[2] = [ [id:'dist'], file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.dist", checkIfExists: true) ]
+                input[3] = [ [id:'min'], file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.withzip.min", checkIfExists: true) ]
+                input[4] = file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.ref_paths.txt", checkIfExists: true)
+                input[5] = [ [id:'fasta'], file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa", checkIfExists: true) ]
+                input[6] = [ [id:'fai'], file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa.fai", checkIfExists: true) ]
+                input[7] = [ [id:'dict'], file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.dict", checkIfExists: true) ]
+                input[8] = true // sort_bam
+                input[9] = true // run_fixmate
+                input[10] = true // run_markdup
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.versions.size() > 0
+            assert process.out.bam.size() > 0
+        }
+    }
+}

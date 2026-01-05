@@ -1,0 +1,35 @@
+{
+    "Create minimizer index (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.min:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,0feb8bb478281cf0ddcbe5b136650140"
+                ],
+                "min": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.min:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0feb8bb478281cf0ddcbe5b136650140"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T07:12:41.653149871"
+    }
+}

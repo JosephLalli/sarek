@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test Process VG_STATS"
+    script "../main.nf"
+    process "VG_STATS"
+
+    tag "modules"
+    tag "modules_local"
+    tag "vg"
+    tag "vg_stats"
+
+    test("Calculate alignment/graph stats (Stub)") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [ [id:'test'], file("test.gam") ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

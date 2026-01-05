@@ -10,7 +10,7 @@ process VG_HAPLOTYPES {
     input:
     tuple val(meta), path(gbz), path(dist)
     tuple val(meta2), path(kmer_input)
-    path hapl_index
+    path hapl_input
     path r_index
 
     output:
@@ -24,20 +24,35 @@ process VG_HAPLOTYPES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def kmer_arg = kmer_input ? "-k ${kmer_input}" : ''
-    def hapl_arg = hapl_index ? "-i ${hapl_index}" : "-H ${prefix}.hapl"
-    def r_arg = r_index ? "-r ${r_index}" : ''
-    def dist_arg = dist ? "-d ${dist}" : ''
+
+    def kmer_prep = ""
+    def kmer_arg = ""
+    if (kmer_input) {
+        if (kmer_input.name.endsWith('.gz')) {
+            kmer_prep = "gzip -cd ${kmer_input} > input.kff"
+            kmer_arg = "-k input.kff"
+        } else {
+            kmer_arg = "-k ${kmer_input}"
+        }
+    }
+
+    def hapl_arg = (hapl_input && !(hapl_input instanceof List && hapl_input.isEmpty())) ? "-i ${hapl_input}" : "-H ${prefix}.hapl"
+    def r_arg = (r_index && !(r_index instanceof List && r_index.isEmpty())) ? "-r ${r_index}" : ''
+    def dist_arg = (dist && !(dist instanceof List && dist.isEmpty())) ? "-d ${dist}" : ''
+
     """
+    ${kmer_prep}
+
     vg haplotypes \\
         -t ${task.cpus} \\
-        -g ${gbz} \\
         ${args} \\
         ${hapl_arg} \\
         ${r_arg} \\
         ${dist_arg} \\
         ${kmer_arg} \\
-        -o ${prefix}.gbz
+        --include-reference \\
+        -g ${prefix}.gbz \\
+        ${gbz}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

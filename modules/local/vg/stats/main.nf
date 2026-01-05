@@ -23,7 +23,6 @@ process VG_STATS {
     """
     vg stats \\
         ${args} \\
-        --threads ${task.cpus} \\
         ${input_file} \\
         > ${prefix}.stats
 

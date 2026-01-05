@@ -1,0 +1,51 @@
+{
+    "Create graph indices (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dist:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.xg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,d41de808a29e0560a805d50d3e110f2b"
+                ],
+                "dist": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dist:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d41de808a29e0560a805d50d3e110f2b"
+                ],
+                "xg": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.xg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T07:11:53.791029583"
+    }
+}

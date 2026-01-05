@@ -1,0 +1,102 @@
+{
+    "List paths in graph (Stub)": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,272e50f44425f36bc493f5751160dd45"
+                ],
+                "fasta": [
+                    
+                ],
+                "fasta_fai": [
+                    
+                ],
+                "path_list": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,272e50f44425f36bc493f5751160dd45"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T07:13:24.323351366"
+    },
+    "Extract FASTA from graph (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fa.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,272e50f44425f36bc493f5751160dd45"
+                ],
+                "fasta": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fasta_fai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fa.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "path_list": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,272e50f44425f36bc493f5751160dd45"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T07:13:34.696079482"
+    }
+}

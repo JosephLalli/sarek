@@ -1,0 +1,72 @@
+{
+    "Count kmers single-end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.kff.gz:md5,011734753ee75f86521117944caaa238"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,a3dce24cc65ac06593f5c2ad4c851e4f"
+                ],
+                "kff": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.kff.gz:md5,011734753ee75f86521117944caaa238"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a3dce24cc65ac06593f5c2ad4c851e4f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T22:42:03.68044048"
+    },
+    "Count kmers paired-end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.kff.gz:md5,6090c569a3aec647a36fe4efe99d1c45"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,bf6b6d8ab1b829a5d3fc30c87a37f40f"
+                ],
+                "kff": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.kff.gz:md5,6090c569a3aec647a36fe4efe99d1c45"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,bf6b6d8ab1b829a5d3fc30c87a37f40f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T22:42:21.932063339"
+    }
+}

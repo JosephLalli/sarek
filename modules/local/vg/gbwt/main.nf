@@ -15,6 +15,7 @@ process VG_GBWT {
     tuple val(meta), path("*.gbz"),  emit: gbz,  optional: true
     tuple val(meta), path("*.gg"),   emit: gg,   optional: true
     tuple val(meta), path("*.txt"),  emit: translation, optional: true
+    tuple val(meta), path("*.ri"),   emit: ri,   optional: true
     path "versions.yml",             emit: versions
 
     when:
@@ -23,13 +24,31 @@ process VG_GBWT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def output_arg = args.contains('-o') || args.contains('--output') ? '' : "-o ${prefix}.gbwt"
+    
+    // Determine input flag if not provided in args
+    def input_arg = ""
+    if (!(args.contains('-Z') || args.contains('--gbz-input') || args.contains('-g') || args.contains('--graph-input'))) {
+        if (input_file.name.endsWith('.gbz')) {
+            input_arg = "-Z ${input_file}"
+        } else {
+            input_arg = "${input_file}"
+        }
+    } else {
+        input_arg = "${input_file}"
+    }
+    
+    // Determine main output argument if not -r (r-index) or -Z (GBZ) or -g (graph)
+    // If just -r is used, we don't need -o
+    def output_arg = ""
+    if (!(args.contains('-r') || args.contains('--r-index') || args.contains('-Z') || args.contains('--gbz-format'))) {
+       output_arg = args.contains('-o') || args.contains('--output') ? '' : "-o ${prefix}.gbwt"
+    }
+
     """
     vg gbwt \\
         ${args} \\
         ${output_arg} \\
-        -t ${task.cpus} \\
-        ${input_file}
+        ${input_arg}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -41,6 +60,7 @@ process VG_GBWT {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.gbwt
+    touch ${prefix}.ri
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

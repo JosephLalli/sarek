@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test Process VG_MINIMIZER"
+    script "../main.nf"
+    process "VG_MINIMIZER"
+
+    tag "modules"
+    tag "modules_local"
+    tag "vg"
+    tag "vg_minimizer"
+
+    test("Create minimizer index (Stub)") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [ [id:'test'], file("test.gbz"), file("test.dist") ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

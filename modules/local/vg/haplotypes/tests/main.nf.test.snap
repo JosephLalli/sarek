@@ -1,0 +1,41 @@
+{
+    "Extract haplotypes (Stub)": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hapl:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,4bbefa6480b846d6d725e453f0ba6bad"
+                ],
+                "hapl": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hapl:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "personalized_gbz": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,4bbefa6480b846d6d725e453f0ba6bad"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-05T01:54:34.157178737"
+    }
+}

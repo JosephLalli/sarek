@@ -1,0 +1,51 @@
+name: kmc
+description: Count k-mers in FASTQ reads using KMC, outputting KFF format for vg haplotypes
+keywords:
+  - kmer
+  - counting
+  - kmc
+  - pangenome
+  - haplotypes
+  - personalized
+tools:
+  - kmc:
+      description: K-mer Counter is a utility for counting k-mers in FASTQ/FASTA files
+      homepage: https://github.com/refresh-bio/KMC
+      documentation: https://github.com/refresh-bio/KMC
+      tool_dev_url: https://github.com/refresh-bio/KMC
+      doi: "10.1093/bioinformatics/btx304"
+      licence: ["GPL-3.0"]
+      identifier: biotools:kmc
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - reads:
+        type: file
+        description: FASTQ file(s), gzip compressed
+        pattern: "*.{fastq.gz,fq.gz}"
+
+output:
+  - kmer_file:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*.kff":
+          type: file
+          description: KMC k-mer database in KFF format (compatible with vg haplotypes)
+          pattern: "*.kff"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+
+authors:
+  - "@jlalli"
+maintainers:
+  - "@jlalli"
