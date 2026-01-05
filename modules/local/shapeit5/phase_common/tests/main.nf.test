@@ -1,0 +1,72 @@
+nextflow_process {
+
+    name "Test Process SHAPEIT5_PHASECOMMON"
+    script "../main.nf"
+    process "SHAPEIT5_PHASECOMMON"
+
+    tag "modules"
+    tag "modules_local"
+    tag "shapeit5"
+    tag "shapeit5_phasecommon"
+
+    test("human - vcf - common - small dataset failure") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test.vcf.gz", checkIfExists: true),
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test.vcf.gz.tbi", checkIfExists: true),
+                    [], // pedigree
+                    'chr1', // region
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/reference.vcf.gz", checkIfExists: true), // reference
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/reference.vcf.gz.tbi", checkIfExists: true), // reference_index
+                    [], // scaffold
+                    [], // scaffold_index
+                    []  // map
+                ]
+                """
+            }
+        }
+
+        then {
+            // SHAPEIT5 enforces a minimum sample size of 50.
+            // Our test data has 12 samples, so we expect a specific failure.
+            // Exit code 1 indicates the tool ran and exited with an error (logic error),
+            // distinguishing it from 127 (command not found) or 125 (container error).
+            assert process.failed
+            assert process.exitStatus == 1
+        }
+
+    }
+
+    test("human - vcf - common - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test.vcf.gz", checkIfExists: true), // input
+                    [], // input_index
+                    [], // pedigree
+                    'chr1', // region
+                    [], // reference
+                    [], // reference_index
+                    [], // scaffold
+                    [], // scaffold_index
+                    []  // map
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}
