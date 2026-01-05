@@ -77,13 +77,13 @@ Location: modules/local/vg/
 Location: modules/local/pangenie/
 
 ## Phase 4: Subworkflow Integration
-- [~] Task: Implement giraffe_mapping subworkflow
+- [x] Task: Implement giraffe_mapping subworkflow (bc74768)
     - [x] Input channel design (reads, gbz, dist, min, ref_paths)
     - [x] VG_GIRAFFE -> VG_SURJECT -> SAMTOOLS_SORT/INDEX pipeline
     - [x] Output: gam, bam, bai, bam_bai, cram, cram_crai, reports, versions
-    - [ ] Task: Integrate Modular Personalized Flow:
-        - [ ] Optional `KMC` -> `VG_HAPLOTYPES` -> `VG_GIRAFFE`.
-    - [ ] Task: Make VG_STATS conditional on `--tools vg_stats` (or similar).
+    - [x] Task: Integrate Modular Personalized Flow:
+        - [x] Optional `KMC` -> `VG_HAPLOTYPES` -> `VG_GIRAFFE`.
+    - [x] Task: Make VG_STATS conditional on `--tools vg_stats` (or similar).
 - [x] Task: Implement pangenie_genotyping subworkflow (4ccbe4f)
     - [x] Input from reads + reference + panel VCF
     - [x] Integrate `JELLYFISH_COUNT` preprocessing.
