@@ -1,0 +1,47 @@
+{
+    "Create PanGenie index (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e27293badfe354dc3dd9cbe31ce23f4f"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e27293badfe354dc3dd9cbe31ce23f4f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T07:14:42.63469792"
+    },
+    "Create PanGenie index": {
+        "content": [
+            [
+                "versions.yml:md5,e27293badfe354dc3dd9cbe31ce23f4f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-05T03:38:45.983413571"
+    }
+}

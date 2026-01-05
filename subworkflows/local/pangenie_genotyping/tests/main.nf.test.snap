@@ -1,0 +1,86 @@
+{
+    "Genotype short reads with PanGenie (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "/mnt/ssd/lalli/nf_stage/sarek_pangenome/.nf-test/tests/7f3d8213c643b71f04220ad9d0deb0ff/work/31/b41d6f60704494536308b8e4696838/test_genotyping.vcf.gz"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_genotyping.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,6da6ebc57d797b36fd67a64827ba4eef",
+                    "versions.yml:md5,b7256edb950a4ae73ebc4c056805759a",
+                    "versions.yml:md5,f4fe9781c9c77241e2b7ec73ce173e51"
+                ],
+                "reports": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "/mnt/ssd/lalli/nf_stage/sarek_pangenome/.nf-test/tests/7f3d8213c643b71f04220ad9d0deb0ff/work/31/b41d6f60704494536308b8e4696838/test_genotyping.vcf.gz"
+                    ]
+                ],
+                "vcf_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_genotyping.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6da6ebc57d797b36fd67a64827ba4eef",
+                    "versions.yml:md5,b7256edb950a4ae73ebc4c056805759a",
+                    "versions.yml:md5,f4fe9781c9c77241e2b7ec73ce173e51"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-05T03:45:46.631608584"
+    },
+    "Genotype short reads with PanGenie (Real Data)": {
+        "content": [
+            "test_genotyping.vcf.gz:md5,54d89b151f04c0a70f18ac40c8dfad59",
+            [
+                "versions.yml:md5,6da6ebc57d797b36fd67a64827ba4eef",
+                "versions.yml:md5,c355b4bd93965038876c105e7c3b2f1d",
+                "versions.yml:md5,d8d64ac4f15f3cf03c36f44eb74afd54"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-05T03:45:21.01199423"
+    }
+}

@@ -1,0 +1,33 @@
+nextflow_process {
+
+    name "Test Process PANGENIE"
+    script "../main.nf"
+    process "PANGENIE"
+
+    tag "modules"
+    tag "modules_local"
+    tag "pangenie"
+
+    test("Genotype with PanGenie") {
+        when {
+            process {
+                """
+                def test_data_dir = "\$projectDir/assets/test_data/pangenie/"
+                input[0] = [ [id:'test', single_end:true], [file(test_data_dir + "test-reads.fq.gz", checkIfExists: true)] ]
+                input[1] = [ [id:'ref'], file(test_data_dir + "test-reference.fa", checkIfExists: true) ]
+                input[2] = [ [id:'panel'], file(test_data_dir + "test-variants.vcf", checkIfExists: true) ]
+                input[3] = [ [id:'index'], [] ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.vcf.size() > 0
+            assert snapshot(
+                process.out.vcf[0][1],
+                process.out.versions
+            ).match()
+        }
+    }
+}

@@ -4,13 +4,14 @@ process PANGENIE {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/pangenie:3.0.2--h4ac6f70_0'
-        : 'quay.io/biocontainers/pangenie:3.0.2--h4ac6f70_0'}"
+        ? 'docker://mgibio/pangenie:v4.2.1-bookworm'
+        : 'docker.io/mgibio/pangenie:v4.2.1-bookworm'}"
 
     input:
     tuple val(meta), path(reads)
     tuple val(meta2), path(reference)
     tuple val(meta3), path(panel_vcf)
+    tuple val(meta4), path(panel_index)
 
     output:
     tuple val(meta), path("*_genotyping.vcf.gz"),     emit: vcf
@@ -24,11 +25,18 @@ process PANGENIE {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reads_arg = reads.collect { "-i ${it}" }.join(' ')
+    def reads_arg = reads.collect { it.name.endsWith(".gz") ? "-i <(gzip -cd ${it})" : "-i ${it}" }.join(' ')
+    
+    // PanGenie-index outputs multiple files. We need to find the prefix used for indexing.
+    // The prefix is usually the base name of the VCF used in indexing.
+    // We assume the index files are passed as a list of paths.
+    def index_prefix = panel_index ? panel_index[0].name.replaceFirst(/(_Graph\.cereal|_UniqueKmersMap\.cereal|_path_segments\.fasta|_kmers\.tsv\.gz)$/, '') : ""
+    def index_arg = panel_index ? "-P ${index_prefix}" : ""
     """
-    pangenie \\
+    PanGenie \\
         ${reads_arg} \\
         -v ${panel_vcf} \\
+        ${index_arg} \\
         -r ${reference} \\
         -o ${prefix} \\
         -s ${meta.sample ?: meta.id} \\
@@ -41,7 +49,7 @@ process PANGENIE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pangenie: \$(pangenie --version 2>&1 | head -n 1 | sed 's/PanGenie version: //')
+        pangenie: \$(PanGenie --version 2>&1 | head -n 1 | sed 's/PanGenie version: //')
     END_VERSIONS
     """
 
@@ -54,7 +62,7 @@ process PANGENIE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pangenie: \$(pangenie --version 2>&1 | head -n 1 | sed 's/PanGenie version: //')
+        pangenie: 4.2.1
     END_VERSIONS
     """
 }

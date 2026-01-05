@@ -1,0 +1,51 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PANGENIE_GENOTYPING"
+    script "../main.nf"
+    workflow "PANGENIE_GENOTYPING"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "pangenie"
+    tag "pangenie_genotyping"
+
+    test("Genotype short reads with PanGenie (Stub)") {
+        options "-stub"
+        when {
+            workflow {
+                """
+                input[0] = channel.of([ [id:'test'], [file("test_1.fq.gz"), file("test_2.fq.gz")] ])
+                input[1] = channel.of([ [id:'ref'], file("ref.fa") ])
+                input[2] = channel.of([ [id:'panel'], file("panel.vcf.gz") ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+    }
+
+    test("Genotype short reads with PanGenie (Real Data)") {
+        when {
+            workflow {
+                """
+                def test_data_dir = "\$projectDir/assets/test_data/pangenie/"
+                input[0] = channel.of([ [id:'test', single_end:true], [file(test_data_dir + "test-reads.fq.gz", checkIfExists: true)] ])
+                input[1] = channel.of([ [id:'ref'], file(test_data_dir + "test-reference.fa", checkIfExists: true) ])
+                input[2] = channel.of([ [id:'panel'], file(test_data_dir + "test-variants.vcf", checkIfExists: true) ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.vcf.size() > 0
+            assert snapshot(
+                workflow.out.vcf[0][1],
+                workflow.out.versions
+            ).match()
+        }
+    }
+}

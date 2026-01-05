@@ -1,0 +1,29 @@
+nextflow_process {
+
+    name "Test Process PANGENIE_INDEX"
+    script "../main.nf"
+    process "PANGENIE_INDEX"
+
+    tag "modules"
+    tag "modules_local"
+    tag "pangenie"
+    tag "pangenie_index"
+
+    test("Create PanGenie index") {
+        when {
+            process {
+                """
+                def test_data_dir = "\$projectDir/assets/test_data/pangenie/"
+                input[0] = [ [id:'test'], file(test_data_dir + "test-variants.vcf", checkIfExists: true) ]
+                input[1] = [ [id:'ref'], file(test_data_dir + "test-reference.fa", checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.index[0].size() > 1
+            assert snapshot(process.out.versions).match()
+        }
+    }
+}

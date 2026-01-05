@@ -1,0 +1,7 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::pangenie=3.0.2
+  - bioconda::htslib=1.21
+  - bioconda::tabix=1.11

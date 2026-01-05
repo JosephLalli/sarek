@@ -1,0 +1,72 @@
+name: pangenie
+description: Genotype structural variants from short reads using a pangenome graph
+keywords:
+  - genotyping
+  - pangenome
+  - structural variants
+  - pangenie
+tools:
+  - pangenie:
+      description: Genotyping based on pangenome graphs
+      homepage: https://github.com/eblerjana/pangenie
+      documentation: https://github.com/eblerjana/pangenie
+      licence: ["MIT"]
+
+input:
+  - - meta:
+        type: map
+        description: Sample metadata (id, sample)
+    - reads:
+        type: file
+        description: FASTQ file(s) or k-mer database
+        pattern: "*.{fq,fastq,fq.gz,fastq.gz,jf,kff}"
+  - - meta2:
+        type: map
+        description: Reference metadata
+    - reference:
+        type: file
+        description: Reference FASTA file
+        pattern: "*.{fa,fasta,fa.gz,fasta.gz}"
+  - - meta3:
+        type: map
+        description: Panel metadata
+    - panel_vcf:
+        type: file
+        description: Panel VCF with variants to genotype
+        pattern: "*.{vcf,vcf.gz}"
+
+output:
+  - vcf:
+      - meta:
+          type: map
+          description: Sample metadata
+      - "*_genotyping.vcf.gz":
+          type: file
+          description: Genotyped VCF
+          pattern: "*_genotyping.vcf.gz"
+  - vcf_tbi:
+      - meta:
+          type: map
+          description: Sample metadata
+      - "*_genotyping.vcf.gz.tbi":
+          type: file
+          description: VCF index
+          pattern: "*_genotyping.vcf.gz.tbi"
+  - log:
+      - meta:
+          type: map
+          description: Sample metadata
+      - "*.log":
+          type: file
+          description: PanGenie log file
+          pattern: "*.log"
+  - versions:
+      - "versions.yml":
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+
+authors:
+  - "@jlalli"
+maintainers:
+  - "@jlalli"

@@ -1,0 +1,80 @@
+{
+    "Genotype with PanGenie (Stub)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "/mnt/ssd/lalli/nf_stage/sarek_pangenome/.nf-test/tests/c899e47090427d71ea039748596e551a/work/96/92a44ae7fbfee22270b1208ef8101a/test_genotyping.vcf.gz"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_genotyping.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,3e3e762debb2301de18378f289081f3b"
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "/mnt/ssd/lalli/nf_stage/sarek_pangenome/.nf-test/tests/c899e47090427d71ea039748596e551a/work/96/92a44ae7fbfee22270b1208ef8101a/test_genotyping.vcf.gz"
+                    ]
+                ],
+                "vcf_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_genotyping.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3e3e762debb2301de18378f289081f3b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-05T02:45:07.364719393"
+    },
+    "Genotype with PanGenie": {
+        "content": [
+            "test_genotyping.vcf.gz:md5,54d89b151f04c0a70f18ac40c8dfad59",
+            [
+                "versions.yml:md5,3e3e762debb2301de18378f289081f3b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-05T03:43:26.9728512"
+    }
+}
