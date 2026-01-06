@@ -43,17 +43,18 @@
 - [x] Task: Implement shapeit4/phase_common [d65ca15]
     - [x] Required for Hybrid flow (scaffolding read-backed blocks)
     - [x] Implement from legacy or scratch
+- [ ] Task: Find container for SAPPHIRE [USER] (Blocking)
 - [ ] Task: Implement sapphire/phase (NEW)
     - [ ] Research input requirements
     - [ ] Create module for phase correction
 
 ## Phase 5: Subworkflow Integration
-- [ ] Task: Implement phase_and_impute subworkflow
-    - [ ] Logic for `--phasing_method` selection
-    - [ ] Path 1: Population (SHAPEIT5 suite)
-    - [ ] Path 2: Read-backed (WhatsHap/HapCUT2)
-    - [ ] Path 3: Read-corrected (SHAPEIT5 -> SAPPHIRE)
-    - [ ] Path 4: Hybrid (WhatsHap -> SHAPEIT4 -> SHAPEIT5_rare)
+- [x] Task: Implement phase_and_impute subworkflow [5cf4044]
+    - [x] Logic for `--phasing_method` selection
+    - [x] Path 1: Population (SHAPEIT5 suite)
+    - [x] Path 2: Read-backed (WhatsHap/HapCUT2)
+    - [x] Path 3: Read-corrected (SHAPEIT5 -> SAPPHIRE)
+    - [x] Path 4: Hybrid (WhatsHap -> SHAPEIT4 -> SHAPEIT5_rare)
 - [ ] Task: Integrate with main workflow
     - [ ] Add new parameters to schema
     - [ ] Default to `population`
