@@ -1,0 +1,6 @@
+name: whatshap_phase
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::whatshap=2.3

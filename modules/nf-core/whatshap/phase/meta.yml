@@ -1,0 +1,84 @@
+name: whatshap_phase
+description: Phase variants in a VCF file using long-read sequencing data
+keywords:
+  - phasing
+  - haplotypes
+  - vcf
+  - long-reads
+  - nanopore
+  - pacbio
+tools:
+  - whatshap:
+      description: Read-backed phasing of variants
+      homepage: https://whatshap.readthedocs.io/
+      documentation: https://whatshap.readthedocs.io/
+      doi: 10.1101/085050
+      licence: ["MIT"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: VCF file with unphased variants (can be gzipped)
+        pattern: "*.{vcf,vcf.gz}"
+    - tbi:
+        type: file
+        description: VCF index file (optional but recommended)
+        pattern: "*.{tbi,csi}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing bam information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: BAM file with aligned reads
+        pattern: "*.bam"
+    - bai:
+        type: file
+        description: BAM index file (optional but recommended)
+        pattern: "*.bai"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: Reference genome in FASTA format
+        pattern: "*.{fa,fasta}"
+    - fai:
+        type: file
+        description: Reference genome index
+        pattern: "*.fai"
+output:
+  - phased_vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz":
+          type: file
+          description: Bgzipped phased VCF file
+          pattern: "*.vcf.gz"
+  - phased_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz.tbi":
+          type: file
+          description: Phased VCF index file
+          pattern: "*.vcf.gz.tbi"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@haidyi"

@@ -1,0 +1,57 @@
+name: whatshap_stats
+description: Compute statistics from phased variant file using Whatshap
+keywords:
+  - vcf
+  - whatshap
+  - stats
+  - phasing
+  - phase
+tools:
+  - whatshap:
+      description: Read-backed phasing of variants
+      homepage: https://whatshap.readthedocs.io/
+      documentation: https://whatshap.readthedocs.io/
+      doi: 10.1101/085050
+      licence: ["MIT"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: Phased variant vcf file
+        pattern: "*.vcf"
+    - tbi:
+        type: file
+        description: VCF index
+        pattern: "*.tbi"
+output:
+  - stats_tsv:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.stats.tsv":
+          type: file
+          description: Whatshap stats output in TSV format
+          pattern: "*.tsv"
+  - blocks_gtf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.blocks.gtf":
+          type: file
+          description: Whatshap stats output in GTF format
+          pattern: "*.gtf"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@eliottBo"
