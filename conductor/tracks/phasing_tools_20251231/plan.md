@@ -21,8 +21,8 @@
 - [x] Task: Implement shapeit5/phase_rare [9e18a95]
     - [x] Scaffold from phase_common
     - [x] Rare variant handling
-- [ ] Task: Implement shapeit5/ligate
-    - [ ] Chunk ligation logic
+- [x] Task: Implement shapeit5/ligate [95bb62a]
+    - [x] Chunk ligation logic
 - [ ] Task: Implement shapeit5/switch
     - [ ] Switch error calculation
     - [ ] QC metrics output
