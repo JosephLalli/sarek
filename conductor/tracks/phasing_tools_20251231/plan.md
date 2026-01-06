@@ -18,9 +18,9 @@
     - [x] Strict syntax compliance
     - [x] Chunk-based parallelization
     - [x] Reference panel input handling
-- [ ] Task: Implement shapeit5/phase_rare
-    - [ ] Scaffold from phase_common
-    - [ ] Rare variant handling
+- [x] Task: Implement shapeit5/phase_rare [9e18a95]
+    - [x] Scaffold from phase_common
+    - [x] Rare variant handling
 - [ ] Task: Implement shapeit5/ligate
     - [ ] Chunk ligation logic
 - [ ] Task: Implement shapeit5/switch
