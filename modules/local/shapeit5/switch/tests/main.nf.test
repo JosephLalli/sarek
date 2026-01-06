@@ -1,0 +1,66 @@
+nextflow_process {
+
+    name "Test Process SHAPEIT5_SWITCH"
+    script "../main.nf"
+    process "SHAPEIT5_SWITCH"
+
+    tag "modules"
+    tag "modules_local"
+    tag "shapeit5"
+    tag "shapeit5_switch"
+
+    test("human - vcf - switch") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz", checkIfExists: true),
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz.tbi", checkIfExists: true),
+                    'chr21:10000000-11000000', // region
+                    [], // pedigree
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/reference_50samples.vcf.gz", checkIfExists: true), // truth
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/reference_50samples.vcf.gz.tbi", checkIfExists: true), // truth_index
+                    [], // freq
+                    []  // freq_index
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("human - vcf - switch - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz", checkIfExists: true), // estimate
+                    [], // estimate_index
+                    'chr21:10000000-11000000', // region
+                    [], // pedigree
+                    [], // truth
+                    [], // truth_index
+                    [], // freq
+                    []  // freq_index
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

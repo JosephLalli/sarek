@@ -1,0 +1,88 @@
+{
+    "human - vcf - switch": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.error.txt.gz.block.switch.txt.gz:md5,d334891809c8e145f270b12d96df19a3",
+                            "test.error.txt.gz.calibration.switch.txt.gz:md5,2881ea7e450a54b3717b204bc67f569b",
+                            "test.error.txt.gz.flipsAndSwitches.txt.gz:md5,89195f45b89c2019a0a63c4d11c8b95f",
+                            "test.error.txt.gz.frequency.switch.txt.gz:md5,ecaa22685506ba5c2412cf8b927c693f",
+                            "test.error.txt.gz.sample.switch.txt.gz:md5,a4fa968117f3df2a0a4ba83aa82491bd",
+                            "test.error.txt.gz.sample.typing.txt.gz:md5,ed9e40bd397cf65d2accafd1fce229ba",
+                            "test.error.txt.gz.type.switch.txt.gz:md5,660a994288db9dc30ed020db4dcd6136",
+                            "test.error.txt.gz.variant.switch.txt.gz:md5,e8d479bf49f78ec3f27e4c25018b9917",
+                            "test.error.txt.gz.variant.typing.txt.gz:md5,250f2959ad5b6a4c3558caddd852eb94"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,2884ee3ad40f044630dd8310e6244a45"
+                ],
+                "error_rate": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.error.txt.gz.block.switch.txt.gz:md5,d334891809c8e145f270b12d96df19a3",
+                            "test.error.txt.gz.calibration.switch.txt.gz:md5,2881ea7e450a54b3717b204bc67f569b",
+                            "test.error.txt.gz.flipsAndSwitches.txt.gz:md5,89195f45b89c2019a0a63c4d11c8b95f",
+                            "test.error.txt.gz.frequency.switch.txt.gz:md5,ecaa22685506ba5c2412cf8b927c693f",
+                            "test.error.txt.gz.sample.switch.txt.gz:md5,a4fa968117f3df2a0a4ba83aa82491bd",
+                            "test.error.txt.gz.sample.typing.txt.gz:md5,ed9e40bd397cf65d2accafd1fce229ba",
+                            "test.error.txt.gz.type.switch.txt.gz:md5,660a994288db9dc30ed020db4dcd6136",
+                            "test.error.txt.gz.variant.switch.txt.gz:md5,e8d479bf49f78ec3f27e4c25018b9917",
+                            "test.error.txt.gz.variant.typing.txt.gz:md5,250f2959ad5b6a4c3558caddd852eb94"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2884ee3ad40f044630dd8310e6244a45"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T01:47:42.344630548"
+    },
+    "human - vcf - switch - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "/mnt/ssd/lalli/nf_stage/sarek_pangenome/.nf-test/tests/7f41823efa825f5e1c727f8f6ba5fc51/work/20/18fdadf367e2e5a397cfb905067249/test.error.txt.gz"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,2884ee3ad40f044630dd8310e6244a45"
+                ],
+                "error_rate": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "/mnt/ssd/lalli/nf_stage/sarek_pangenome/.nf-test/tests/7f41823efa825f5e1c727f8f6ba5fc51/work/20/18fdadf367e2e5a397cfb905067249/test.error.txt.gz"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2884ee3ad40f044630dd8310e6244a45"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T01:48:46.865749755"
+    }
+}
