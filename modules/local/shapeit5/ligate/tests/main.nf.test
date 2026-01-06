@@ -1,0 +1,60 @@
+nextflow_process {
+
+    name "Test Process SHAPEIT5_LIGATE"
+    script "../main.nf"
+    process "SHAPEIT5_LIGATE"
+
+    tag "modules"
+    tag "modules_local"
+    tag "shapeit5"
+    tag "shapeit5_ligate"
+
+    test("human - vcf - ligate") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    [
+                        file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz", checkIfExists: true),
+                        file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/scaffold_50samples.vcf.gz", checkIfExists: true)
+                    ],
+                    [
+                        file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz.tbi", checkIfExists: true),
+                        file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/scaffold_50samples.vcf.gz.tbi", checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("human - vcf - ligate - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    [], // input_list
+                    []  // input_list_index
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

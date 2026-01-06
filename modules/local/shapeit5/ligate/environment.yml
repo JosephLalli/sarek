@@ -1,0 +1,6 @@
+name: shapeit5_ligate
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::shapeit5=5.1.1
