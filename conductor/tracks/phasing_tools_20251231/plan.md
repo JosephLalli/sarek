@@ -23,9 +23,9 @@
     - [x] Rare variant handling
 - [x] Task: Implement shapeit5/ligate [95bb62a]
     - [x] Chunk ligation logic
-- [ ] Task: Implement shapeit5/switch
-    - [ ] Switch error calculation
-    - [ ] QC metrics output
+- [x] Task: Implement shapeit5/switch [5fe57d9]
+    - [x] Switch error calculation
+    - [x] QC metrics output
 
 ## Phase 3: Read-Backed Phasing
 - [ ] Task: Implement whatshap/phase
