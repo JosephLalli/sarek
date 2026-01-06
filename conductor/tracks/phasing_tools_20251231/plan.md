@@ -34,15 +34,15 @@
 - [x] Task: Install nf-core/whatshap/stats [f3a2cc7]
     - [x] Phasing N50 calculation
     - [x] Block statistics
-- [ ] Task: Implement hapcut2 (NEW)
+- [ ] Task: Implement hapcut2 (NEW) [SKIP]
     - [ ] Research current best practices
     - [ ] Create module from scratch
     - [ ] Test with sample data
 
 ## Phase 4: Hybrid & Correction Support
-- [ ] Task: Implement shapeit4/phase_common
-    - [ ] Required for Hybrid flow (scaffolding read-backed blocks)
-    - [ ] Implement from legacy or scratch
+- [x] Task: Implement shapeit4/phase_common [d65ca15]
+    - [x] Required for Hybrid flow (scaffolding read-backed blocks)
+    - [x] Implement from legacy or scratch
 - [ ] Task: Implement sapphire/phase (NEW)
     - [ ] Research input requirements
     - [ ] Create module for phase correction
