@@ -1,0 +1,6 @@
+name: shapeit5_phase_rare
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::shapeit5=5.1.1

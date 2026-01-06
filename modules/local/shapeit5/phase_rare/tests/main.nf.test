@@ -1,0 +1,66 @@
+nextflow_process {
+
+    name "Test Process SHAPEIT5_PHASERARE"
+    script "../main.nf"
+    process "SHAPEIT5_PHASERARE"
+
+    tag "modules"
+    tag "modules_local"
+    tag "shapeit5"
+    tag "shapeit5_phaserare"
+
+    test("human - vcf - rare - valid large cohort") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz", checkIfExists: true),
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz.tbi", checkIfExists: true),
+                    [], // pedigree
+                    'chr21:10000000-11000000', // input_region
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/scaffold_50samples.vcf.gz", checkIfExists: true), // scaffold
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/scaffold_50samples.vcf.gz.tbi", checkIfExists: true), // scaffold_index
+                    'chr21:10000000-11000000', // scaffold_region
+                    []  // map
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("human - vcf - rare - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz", checkIfExists: true),
+                    [], // input_index
+                    [], // pedigree
+                    'chr21:10000000-11000000', // input_region
+                    [], // scaffold
+                    [], // scaffold_index
+                    'chr21:10000000-11000000', // scaffold_region
+                    []  // map
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

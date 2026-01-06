@@ -1,0 +1,100 @@
+{
+    "human - vcf - rare - valid large cohort": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,8b981476f3763de4e1dae2b43a622cf4"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,2a1b14de0171b98678f833487b021b9a"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,34399dc424d55f94a5821fae186a3bd8"
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,2a1b14de0171b98678f833487b021b9a"
+                    ]
+                ],
+                "phased_variant": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,8b981476f3763de4e1dae2b43a622cf4"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,34399dc424d55f94a5821fae186a3bd8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T01:31:32.765987749"
+    },
+    "human - vcf - rare - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,34399dc424d55f94a5821fae186a3bd8"
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "phased_variant": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,34399dc424d55f94a5821fae186a3bd8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T01:29:08.832842552"
+    }
+}
