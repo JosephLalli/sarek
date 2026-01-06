@@ -1,0 +1,79 @@
+name: shapeit4_phasecommon
+description: Haplotype estimation for SNP array and sequencing data.
+keywords:
+  - phasing
+  - haplotype
+  - shapeit4
+tools:
+  - shapeit4:
+      description: SHAPEIT4 is a fast and accurate method for haplotype estimation (phasing) of SNP array and high coverage sequencing data.
+      homepage: https://odelaneau.github.io/shapeit4/
+      documentation: https://odelaneau.github.io/shapeit4/
+      doi: 10.1038/s41467-019-13225-y
+      licence: ["MIT"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: Input genotypes to phase in VCF/BCF format.
+        pattern: "*.{vcf,bcf,vcf.gz,bcf.gz}"
+    - input_index:
+        type: file
+        description: Index for input genotypes.
+        pattern: "*.{tbi,csi}"
+    - reference:
+        type: file
+        description: Reference panel of haplotypes in VCF/BCF format.
+        pattern: "*.{vcf,bcf,vcf.gz,bcf.gz}"
+    - reference_index:
+        type: file
+        description: Index for reference panel.
+        pattern: "*.{tbi,csi}"
+    - map:
+        type: file
+        description: Genetic map.
+        pattern: "*.gmap"
+    - scaffold:
+        type: file
+        description: Scaffold of haplotypes.
+        pattern: "*.{vcf,bcf,vcf.gz,bcf.gz}"
+    - scaffold_index:
+        type: file
+        description: Index for scaffold.
+        pattern: "*.{tbi,csi}"
+  - - region:
+        type: string
+        description: Genomic region to phase.
+output:
+  - phased_variant:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.{vcf,bcf,vcf.gz,bcf.gz}":
+          type: file
+          description: Phased genotypes.
+          pattern: "*.{vcf,bcf,vcf.gz,bcf.gz}"
+  - log:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.log":
+          type: file
+          description: Execution log file.
+          pattern: "*.log"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@LouisLeNezet"
+  - "@lalli"

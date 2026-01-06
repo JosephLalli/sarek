@@ -1,0 +1,67 @@
+nextflow_process {
+
+    name "Test Process SHAPEIT4_PHASECOMMON"
+    script "../main.nf"
+    process "SHAPEIT4_PHASECOMMON"
+
+    tag "modules"
+    tag "modules_local"
+    tag "shapeit4"
+    tag "shapeit4_phasecommon"
+
+    test("human - vcf - common") {
+
+        when {
+            process {
+                """
+                def test_data_base = "\${projectDir}/assets/test_data/pangenome/haplotype-sampling"
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file(test_data_base + '/test_50samples.vcf.gz', checkIfExists: true),
+                    file(test_data_base + '/test_50samples.vcf.gz.tbi', checkIfExists: true),
+                    file(test_data_base + '/reference_50samples.vcf.gz', checkIfExists: true), // reference
+                    file(test_data_base + '/reference_50samples.vcf.gz.tbi', checkIfExists: true), // reference_index
+                    [], // map
+                    [], // scaffold
+                    []  // scaffold_index
+                ]
+                input[1] = 'chr21' // region
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("human - vcf - common - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    [], // input
+                    [], // input_index
+                    [], // reference
+                    [], // reference_index
+                    [], // map
+                    [], // scaffold
+                    []  // scaffold_index
+                ]
+                input[1] = 'chr21'
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

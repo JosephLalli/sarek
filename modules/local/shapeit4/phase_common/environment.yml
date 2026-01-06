@@ -1,0 +1,6 @@
+name: shapeit4_phase_common
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::shapeit4=4.2.2
