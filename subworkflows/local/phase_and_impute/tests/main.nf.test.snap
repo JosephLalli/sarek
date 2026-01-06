@@ -1,0 +1,139 @@
+{
+    "hybrid phasing - chr21": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "phased_vcf": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T03:17:47.372305143"
+    },
+    "population phasing - chr21": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,72ed4dcb63c6cf759412c2bad23a5407"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,1e8f69bb98a3cb3a82f1f3bd931474a3",
+                    "versions.yml:md5,a41e4a47726533fd1a78d9231d119e64"
+                ],
+                "phased_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,72ed4dcb63c6cf759412c2bad23a5407"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1e8f69bb98a3cb3a82f1f3bd931474a3",
+                    "versions.yml:md5,a41e4a47726533fd1a78d9231d119e64"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T03:37:46.893430811"
+    },
+    "population phasing - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,25ed4c7a125b4e6ee0583be43e193190"
+                ],
+                "phased_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,25ed4c7a125b4e6ee0583be43e193190"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T03:08:25.569939387"
+    },
+    "read_backed phasing - stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "phased_vcf": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T03:09:29.527263199"
+    },
+    "read_backed phasing - chr21": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "phased_vcf": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T03:17:33.373395196"
+    }
+}

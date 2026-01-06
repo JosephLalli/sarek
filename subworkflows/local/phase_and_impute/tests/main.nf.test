@@ -1,0 +1,134 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PHASE_AND_IMPUTE"
+    script "../main.nf"
+    workflow "PHASE_AND_IMPUTE"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "phasing"
+    tag "phase_and_impute"
+
+    test("population phasing - chr21") {
+
+        when {
+            params {
+                phasing_method = 'population'
+            }
+            workflow {
+                """
+                def test_data_base = "\${projectDir}/assets/test_data/pangenome/haplotype-sampling"
+                input[0] = channel.of([ 
+                    [ id:'test' ], // meta
+                    file(test_data_base + "/test_50samples.vcf.gz", checkIfExists: true),
+                    file(test_data_base + "/test_50samples.vcf.gz.tbi", checkIfExists: true),
+                    'chr21:10000000-11000000', // region
+                    file(test_data_base + "/reference_50samples.vcf.gz", checkIfExists: true), // reference
+                    file(test_data_base + "/reference_50samples.vcf.gz.tbi", checkIfExists: true), // reference_index
+                    [], // map
+                    [], // scaffold
+                    [], // scaffold_index
+                    file(test_data_base + "/test.bam", checkIfExists: true),
+                    file(test_data_base + "/test.bam.bai", checkIfExists: true)
+                ])
+                input[1] = channel.of([ 
+                    [ id:'genome' ], 
+                    file(test_data_base + "/test.fa", checkIfExists: true)
+                ])
+                input[2] = channel.of([ 
+                    [ id:'genome' ], 
+                    file(test_data_base + "/test.fa.fai", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+    test("read_backed phasing - chr21") {
+        when {
+            params {
+                phasing_method = 'read_backed'
+            }
+            workflow {
+                """
+                def test_data_base = "\${projectDir}/assets/test_data/pangenome/haplotype-sampling"
+                input[0] = channel.of([ 
+                    [ id:'test' ], // meta
+                    file(test_data_base + "/test_50samples.vcf.gz", checkIfExists: true),
+                    file(test_data_base + "/test_50samples.vcf.gz.tbi", checkIfExists: true),
+                    'chr21:10000000-11000000', // region
+                    [], // reference
+                    [], // reference_index
+                    [], // map
+                    [], // scaffold
+                    [], // scaffold_index
+                    file(test_data_base + "/test.bam", checkIfExists: true),
+                    file(test_data_base + "/test.bam.bai", checkIfExists: true)
+                ])
+                input[1] = channel.of([ 
+                    [ id:'genome' ], 
+                    file(test_data_base + "/test.fa", checkIfExists: true)
+                ])
+                input[2] = channel.of([ 
+                    [ id:'genome' ], 
+                    file(test_data_base + "/test.fa.fai", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+    test("hybrid phasing - chr21") {
+        when {
+            params {
+                phasing_method = 'hybrid'
+            }
+            workflow {
+                """
+                def test_data_base = "\${projectDir}/assets/test_data/pangenome/haplotype-sampling"
+                input[0] = channel.of([ 
+                    [ id:'test' ], // meta
+                    file(test_data_base + "/test_50samples.vcf.gz", checkIfExists: true),
+                    file(test_data_base + "/test_50samples.vcf.gz.tbi", checkIfExists: true),
+                    'chr21:10000000-11000000', // region
+                    file(test_data_base + "/reference_50samples.vcf.gz", checkIfExists: true), // reference
+                    file(test_data_base + "/reference_50samples.vcf.gz.tbi", checkIfExists: true), // reference_index
+                    [], // map
+                    [], // scaffold
+                    [], // scaffold_index
+                    file(test_data_base + "/test.bam", checkIfExists: true),
+                    file(test_data_base + "/test.bam.bai", checkIfExists: true)
+                ])
+                input[1] = channel.of([ 
+                    [ id:'genome' ], 
+                    file(test_data_base + "/test.fa", checkIfExists: true)
+                ])
+                input[2] = channel.of([ 
+                    [ id:'genome' ], 
+                    file(test_data_base + "/test.fa.fai", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}
