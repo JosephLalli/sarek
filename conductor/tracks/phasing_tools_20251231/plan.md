@@ -28,12 +28,12 @@
     - [x] QC metrics output
 
 ## Phase 3: Read-Backed Phasing
-- [ ] Task: Implement whatshap/phase
-    - [ ] BAM + VCF input
-    - [ ] Haplotagging output option
-- [ ] Task: Implement whatshap/stats
-    - [ ] Phasing N50 calculation
-    - [ ] Block statistics
+- [x] Task: Install nf-core/whatshap/phase [f3a2cc7]
+    - [x] Use standard module
+    - [x] Preprocessing (subsetting) handled by upstream bcftools/view
+- [x] Task: Install nf-core/whatshap/stats [f3a2cc7]
+    - [x] Phasing N50 calculation
+    - [x] Block statistics
 - [ ] Task: Implement hapcut2 (NEW)
     - [ ] Research current best practices
     - [ ] Create module from scratch
