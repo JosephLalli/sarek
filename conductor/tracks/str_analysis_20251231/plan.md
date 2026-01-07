@@ -33,7 +33,7 @@
 - [x] Task: Research GangSTR requirements [checkpoint: 3337732]
     - [x] Input format requirements
     - [x] Reference panel needs
-- [x] Task: Implement gangstr module [63581]
+- [x] Task: Implement gangstr module [ee37d04]
     - [x] Strict syntax compliance
     - [x] Support for different references
 - [x] Task: Test with sample data [68124]
