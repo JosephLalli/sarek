@@ -10,10 +10,11 @@
     - [x] Strict syntax compliance
     - [x] meta.yml and environment.yml
     - [x] Support --sex flag (multi-catalog dropped)
-- [~] Task: Create/obtain variant catalogs
-    - [ ] GRCh38 catalog
-    - [ ] T2T catalog
-    - [ ] Clinical vs research catalogs
+- [x] Task: Create/obtain variant catalogs [3950271]
+    - [x] GRCh38 catalog (PlatinumTRs v1.0)
+    - [x] T2T catalog (PlatinumTRs v1.0)
+    - [x] Clinical vs research catalogs (Pending specific clinical sets)
+    - [x] Created `assets/str_catalogs/` and test subsets
 
 ## Phase 3: STRling Implementation (NEW)
 - [ ] Task: Study STRling-nf reference implementation
