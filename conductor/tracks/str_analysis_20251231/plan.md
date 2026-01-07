@@ -1,24 +1,16 @@
 # Track Plan: STR Analysis Tools
 
 ## Phase 1: Assessment
-- [ ] Task: Review existing STR tool landscape
-    - [ ] Check nf-core/modules for implementations
-    - [ ] Review STRling-nf pipeline structure
-    - [ ] Document input requirements per tool
-- [ ] Task: Catalog file requirements
-    - [ ] Identify catalogs for GRCh38
-    - [ ] Identify/create catalogs for T2T
-    - [ ] Document catalog format differences
-- [ ] Task: Review legacy ExpansionHunter module
-    - [ ] Audit sarek_first_attempt implementation
-    - [ ] Note configuration patterns
+- [x] Task: Review existing STR tool landscape [checkpoint: 3337732]
+- [x] Task: Catalog file requirements [checkpoint: 3337732]
+- [x] Task: Review legacy ExpansionHunter module [checkpoint: 3337732]
 
 ## Phase 2: ExpansionHunter Implementation
-- [ ] Task: Update ExpansionHunter module
-    - [ ] Strict syntax compliance
-    - [ ] meta.yml and environment.yml
-    - [ ] Support multiple catalog files
-- [ ] Task: Create/obtain variant catalogs
+- [x] Task: Update ExpansionHunter module [checkpoint: 3605300]
+    - [x] Strict syntax compliance
+    - [x] meta.yml and environment.yml
+    - [x] Support --sex flag (multi-catalog dropped)
+- [~] Task: Create/obtain variant catalogs
     - [ ] GRCh38 catalog
     - [ ] T2T catalog
     - [ ] Clinical vs research catalogs
