@@ -25,7 +25,7 @@
     - [x] Outlier detection (single sample)
 - [x] Task: Implement strling/merge module [4176860]
     - [x] Cohort-level merging (see strling-wdl reference)
-- [x] Task: Create STRling subworkflow [42172]
+- [x] Task: Create STRling subworkflow [68fe50b]
     - [x] Implement Joint Calling subworkflow (extract -> merge -> call)
     - [x] Full pipeline integration
 
