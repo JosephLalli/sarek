@@ -1,0 +1,84 @@
+nextflow_process {
+
+    name "Test Process STRLING_CALL"
+    script "modules/local/strling/call/main.nf"
+    process "STRLING_CALL"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "strling"
+    tag "strling/call"
+
+    setup {
+        run("STRLING_EXTRACT") {
+            script "modules/local/strling/extract/main.nf"
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
+                        ]
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                """
+            }
+        }
+    }
+
+    test("strling_test_data - bin, fasta, fai") {
+
+        when {
+            process {
+                """
+                input[0] = STRLING_EXTRACT.out.bin.map { meta, bin -> 
+                    [ 
+                        meta, 
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
+                        bin 
+                    ] 
+                }
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                input[3] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {assert process.success},
+                {assert snapshot(process.out).match("strling_call")}
+            )
+        }
+
+    }
+
+    test("strling_test_data - bin, fasta, fai - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
+                        file('test.bin')
+                        ]
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                input[3] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {assert process.success},
+                {assert snapshot(process.out).match("strling_call_stub")}
+            )
+        }
+
+    }
+
+}

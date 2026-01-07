@@ -17,17 +17,17 @@
     - [x] Created `assets/str_catalogs/` and test subsets
 
 ## Phase 3: STRling Implementation (NEW)
-- [ ] Task: Study STRling-nf reference implementation
-    - [ ] Understand workflow structure
-    - [ ] Identify module requirements
-- [ ] Task: Implement strling/extract module
-    - [ ] Per-sample STR signal extraction
-- [ ] Task: Implement strling/merge module
-    - [ ] Cohort-level merging
-- [ ] Task: Implement strling/call module
-    - [ ] Outlier detection
-- [ ] Task: Create STRling subworkflow
-    - [ ] Full pipeline integration
+- [x] Task: Study STRling-nf reference implementation [checkpoint: 3337732]
+- [x] Task: Implement strling/extract module [4094114]
+    - [x] Per-sample STR signal extraction
+    - [x] strict syntax and tests
+- [x] Task: Implement strling/call module [4162739]
+    - [x] Outlier detection (single sample)
+- [x] Task: Implement strling/merge module [4176860]
+    - [x] Cohort-level merging (see strling-wdl reference)
+- [x] Task: Create STRling subworkflow [42172]
+    - [x] Implement Joint Calling subworkflow (extract -> merge -> call)
+    - [x] Full pipeline integration
 
 ## Phase 4: GangSTR Implementation (NEW)
 - [ ] Task: Research GangSTR requirements

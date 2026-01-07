@@ -1,0 +1,146 @@
+{
+    "strling_single": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-genotype.txt:md5,a4b01cbf028ce70f3009eb5b3acdbac6"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bounds.txt:md5,310708e8777bfde634ff0fb00b1325c4"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,1318307e9e8aac5d34fb0661aa03d2c0",
+                    "versions.yml:md5,eb7b2d39a51a6a30f83c4921702bdc17"
+                ],
+                "bounds": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bounds.txt:md5,310708e8777bfde634ff0fb00b1325c4"
+                    ]
+                ],
+                "genotype": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-genotype.txt:md5,a4b01cbf028ce70f3009eb5b3acdbac6"
+                    ]
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,1318307e9e8aac5d34fb0661aa03d2c0",
+                    "versions.yml:md5,eb7b2d39a51a6a30f83c4921702bdc17"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-07T20:06:33.125329437"
+    },
+    "strling_joint": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1-genotype.txt:md5,a4b01cbf028ce70f3009eb5b3acdbac6"
+                    ],
+                    [
+                        {
+                            "id": "sample2"
+                        },
+                        "sample2-genotype.txt:md5,a4b01cbf028ce70f3009eb5b3acdbac6"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1-bounds.txt:md5,6a13daa4ccbc2f850a7cf55e598029eb"
+                    ],
+                    [
+                        {
+                            "id": "sample2"
+                        },
+                        "sample2-bounds.txt:md5,6a13daa4ccbc2f850a7cf55e598029eb"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,1318307e9e8aac5d34fb0661aa03d2c0",
+                    "versions.yml:md5,1318307e9e8aac5d34fb0661aa03d2c0",
+                    "versions.yml:md5,b28695b4f1b5bafe8fe3073ef474e778",
+                    "versions.yml:md5,eb7b2d39a51a6a30f83c4921702bdc17",
+                    "versions.yml:md5,eb7b2d39a51a6a30f83c4921702bdc17"
+                ],
+                "bounds": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1-bounds.txt:md5,6a13daa4ccbc2f850a7cf55e598029eb"
+                    ],
+                    [
+                        {
+                            "id": "sample2"
+                        },
+                        "sample2-bounds.txt:md5,6a13daa4ccbc2f850a7cf55e598029eb"
+                    ]
+                ],
+                "genotype": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1-genotype.txt:md5,a4b01cbf028ce70f3009eb5b3acdbac6"
+                    ],
+                    [
+                        {
+                            "id": "sample2"
+                        },
+                        "sample2-genotype.txt:md5,a4b01cbf028ce70f3009eb5b3acdbac6"
+                    ]
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,1318307e9e8aac5d34fb0661aa03d2c0",
+                    "versions.yml:md5,1318307e9e8aac5d34fb0661aa03d2c0",
+                    "versions.yml:md5,b28695b4f1b5bafe8fe3073ef474e778",
+                    "versions.yml:md5,eb7b2d39a51a6a30f83c4921702bdc17",
+                    "versions.yml:md5,eb7b2d39a51a6a30f83c4921702bdc17"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-07T20:06:51.955708477"
+    }
+}

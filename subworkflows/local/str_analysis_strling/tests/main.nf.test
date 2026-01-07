@@ -1,0 +1,59 @@
+nextflow_workflow {
+
+    name "Test Subworkflow STR_ANALYSIS_STRLING"
+    script "subworkflows/local/str_analysis_strling/main.nf"
+    workflow "STR_ANALYSIS_STRLING"
+    tag "subworkflows"
+    tag "strling"
+    tag "str_analysis_strling"
+
+    test("Single Sample Calling") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([ [ id:'test' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true)
+                        ])
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                input[3] = false // joint = false
+                """
+            }
+        }
+        then {
+            assertAll(
+                {assert workflow.success},
+                {assert snapshot(workflow.out).match("strling_single")}
+            )
+        }
+    }
+
+    test("Joint Calling") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.fromList([
+                    [ [ id:'sample1' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true)
+                    ],
+                    [ [ id:'sample2' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true)
+                    ]
+                ])
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                input[3] = true // joint = true
+                """
+            }
+        }
+        then {
+            assertAll(
+                {assert workflow.success},
+                {assert snapshot(workflow.out).match("strling_joint")}
+            )
+        }
+    }
+}

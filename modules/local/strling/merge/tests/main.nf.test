@@ -1,0 +1,77 @@
+nextflow_process {
+
+    name "Test Process STRLING_MERGE"
+    script "modules/local/strling/merge/main.nf"
+    process "STRLING_MERGE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "strling"
+    tag "strling/merge"
+
+    setup {
+        run("STRLING_EXTRACT") {
+            script "modules/local/strling/extract/main.nf"
+            process {
+                """
+                input[0] = Channel.fromList([
+                    [ [ id:'sample1' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
+                    ],
+                    [ [ id:'sample2' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
+                    ]
+                ])
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                """
+            }
+        }
+    }
+
+    test("strling_test_data - bins, fasta, fai") {
+
+        when {
+            process {
+                """
+                input[0] = STRLING_EXTRACT.out.bin.map{ it[1] }.collect()
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {assert process.success},
+                {assert snapshot(process.out).match("strling_merge")}
+            )
+        }
+
+    }
+
+    test("strling_test_data - bins, fasta, fai - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of(file('test1.bin'), file('test2.bin')).collect()
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {assert process.success},
+                {assert snapshot(process.out).match("strling_merge_stub")}
+            )
+        }
+
+    }
+
+}

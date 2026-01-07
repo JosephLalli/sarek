@@ -1,0 +1,55 @@
+name: strling_extract
+description: Extract STR signal from BAM file
+keywords:
+  - STR
+  - strling
+  - extract
+tools:
+  - strling:
+      description: STRling is a method to detect large STR expansions from short-read sequencing data.
+      homepage: https://github.com/quinlan-lab/STRling
+      documentation: https://strling.readthedocs.io/en/latest/
+      tool_dev_url: https://github.com/quinlan-lab/STRling
+      doi: "10.1016/j.ajhg.2022.05.013"
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM/CRAM file
+      pattern: "*.{bam,cram}"
+  - bai:
+      type: file
+      description: Index of BAM/CRAM file
+      pattern: "*.{bai,crai}"
+  - fasta:
+      type: file
+      description: Reference genome
+      pattern: "*.{fa,fasta}"
+  - fasta_fai:
+      type: file
+      description: Reference genome index
+      pattern: "*.fai"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', gender:'female' ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bin:
+      type: file
+      description: Binary file containing STR signal
+      pattern: "*.bin"
+
+authors:
+  - "@lalli"

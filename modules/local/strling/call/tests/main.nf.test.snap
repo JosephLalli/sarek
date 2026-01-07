@@ -1,0 +1,122 @@
+{
+    "strling_call": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bounds.txt:md5,310708e8777bfde634ff0fb00b1325c4"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-genotype.txt:md5,a4b01cbf028ce70f3009eb5b3acdbac6"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,51d572b8c541dd2be27efb244a68355f"
+                ],
+                "bounds": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bounds.txt:md5,310708e8777bfde634ff0fb00b1325c4"
+                    ]
+                ],
+                "genotype": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-genotype.txt:md5,a4b01cbf028ce70f3009eb5b3acdbac6"
+                    ]
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,51d572b8c541dd2be27efb244a68355f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-07T19:57:37.956177896"
+    },
+    "strling_call_stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bounds.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-genotype.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,51d572b8c541dd2be27efb244a68355f"
+                ],
+                "bounds": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bounds.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "genotype": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-genotype.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,51d572b8c541dd2be27efb244a68355f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-07T19:54:43.221698817"
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "strling_merge_stub": {
+        "content": [
+            {
+                "0": [
+                    "strling_joint-bounds.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "versions.yml:md5,7220403602e1e2d146b649559e03f4f0"
+                ],
+                "bounds": [
+                    "strling_joint-bounds.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions": [
+                    "versions.yml:md5,7220403602e1e2d146b649559e03f4f0"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-07T19:59:34.882672291"
+    },
+    "strling_merge": {
+        "content": [
+            {
+                "0": [
+                    "strling_joint-bounds.txt:md5,26774e099247af8b8034a9e6c54b5ec0"
+                ],
+                "1": [
+                    "versions.yml:md5,7220403602e1e2d146b649559e03f4f0"
+                ],
+                "bounds": [
+                    "strling_joint-bounds.txt:md5,26774e099247af8b8034a9e6c54b5ec0"
+                ],
+                "versions": [
+                    "versions.yml:md5,7220403602e1e2d146b649559e03f4f0"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-07T19:59:24.241802055"
+    }
+}

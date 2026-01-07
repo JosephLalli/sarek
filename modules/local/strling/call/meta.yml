@@ -1,0 +1,59 @@
+name: strling_call
+description: Call outliers from STRling binary
+keywords:
+  - STR
+  - strling
+  - call
+tools:
+  - strling:
+      description: STRling is a method to detect large STR expansions from short-read sequencing data.
+      homepage: https://github.com/quinlan-lab/STRling
+      documentation: https://strling.readthedocs.io/en/latest/
+      tool_dev_url: https://github.com/quinlan-lab/STRling
+      doi: "10.1016/j.ajhg.2022.05.013"
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bin:
+      type: file
+      description: Binary file from strling extract
+      pattern: "*.bin"
+  - fasta:
+      type: file
+      description: Reference genome
+      pattern: "*.{fa,fasta}"
+  - fasta_fai:
+      type: file
+      description: Reference genome index
+      pattern: "*.fai"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', gender:'female' ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bounds:
+      type: file
+      description: Bounds text file
+      pattern: "*-bounds.txt"
+  - genotype:
+      type: file
+      description: Genotype text file
+      pattern: "*-genotype.txt"
+  - vcf:
+      type: file
+      description: VCF with outliers
+      pattern: "*.vcf.gz"
+
+authors:
+  - "@lalli"

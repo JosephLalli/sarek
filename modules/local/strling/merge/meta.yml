@@ -1,0 +1,41 @@
+name: strling_merge
+description: Merge STRling binary files to estimate empirical bounds
+keywords:
+  - STR
+  - strling
+  - merge
+tools:
+  - strling:
+      description: STRling is a method to detect large STR expansions from short-read sequencing data.
+      homepage: https://github.com/quinlan-lab/STRling
+      documentation: https://strling.readthedocs.io/en/latest/
+      tool_dev_url: https://github.com/quinlan-lab/STRling
+      doi: "10.1016/j.ajhg.2022.05.013"
+      licence: ["MIT"]
+
+input:
+  - bins:
+      type: file
+      description: List of binary files from strling extract
+      pattern: "*.bin"
+  - fasta:
+      type: file
+      description: Reference genome
+      pattern: "*.{fa,fasta}"
+  - fasta_fai:
+      type: file
+      description: Reference genome index
+      pattern: "*.fai"
+
+output:
+  - bounds:
+      type: file
+      description: Bounds text file
+      pattern: "*-bounds.txt"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@lalli"
