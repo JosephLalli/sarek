@@ -6,7 +6,7 @@
 - [x] Task: Review legacy ExpansionHunter module [checkpoint: 3337732]
 
 ## Phase 2: ExpansionHunter Implementation
-- [x] Task: Update ExpansionHunter module [checkpoint: 3605300]
+- [x] Task: Update ExpansionHunter module [c18f087]
     - [x] Strict syntax compliance
     - [x] meta.yml and environment.yml
     - [x] Support --sex flag (multi-catalog dropped)
