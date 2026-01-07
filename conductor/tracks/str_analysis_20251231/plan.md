@@ -30,13 +30,13 @@
     - [x] Full pipeline integration
 
 ## Phase 4: GangSTR Implementation (NEW)
-- [ ] Task: Research GangSTR requirements
-    - [ ] Input format requirements
-    - [ ] Reference panel needs
-- [ ] Task: Implement gangstr module
-    - [ ] Strict syntax compliance
-    - [ ] Support for different references
-- [ ] Task: Test with sample data
+- [x] Task: Research GangSTR requirements [checkpoint: 3337732]
+    - [x] Input format requirements
+    - [x] Reference panel needs
+- [x] Task: Implement gangstr module [63581]
+    - [x] Strict syntax compliance
+    - [x] Support for different references
+- [x] Task: Test with sample data [68124]
 
 ## Phase 5: Supporting Tools
 - [ ] Task: Implement jellyfish/count
