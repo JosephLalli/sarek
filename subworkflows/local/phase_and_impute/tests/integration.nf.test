@@ -1,0 +1,64 @@
+nextflow_workflow {
+
+    name "Integration Test: Variant Calling -> Phasing"
+    script "../main.nf"
+    workflow "PHASE_AND_IMPUTE"
+    config "./nextflow.config"
+
+    tag "integration"
+    tag "phasing"
+    tag "variant_calling"
+    
+    // This test simulates the output of a variant caller (e.g., DeepVariant, GATK)
+    // being passed into the phasing workflow.
+    test("Simulated Variant Calling Integration - Population Phasing") {
+
+        when {
+            params {
+                phasing_method = 'population'
+            }
+            workflow {
+                """
+                // Simulate Variant Caller Output
+                // We reuse the test data but treat it as if it came from a caller workflow
+                def test_data_base = "\${projectDir}/assets/test_data/pangenome/haplotype-sampling"
+                
+                input[0] = channel.of([ 
+                    [ id:'integration_test_sample', sample:'HG002' ], // meta
+                    file(test_data_base + "/test_50samples.vcf.gz", checkIfExists: true),
+                    file(test_data_base + "/test_50samples.vcf.gz.tbi", checkIfExists: true),
+                    'chr21:10000000-11000000', // region
+                    file(test_data_base + "/reference_50samples.vcf.gz", checkIfExists: true), // reference (panel)
+                    file(test_data_base + "/reference_50samples.vcf.gz.tbi", checkIfExists: true), // ref_idx
+                    [], // map
+                    [], // scaffold
+                    [], // scaffold_index
+                    file(test_data_base + "/test.bam", checkIfExists: true),
+                    file(test_data_base + "/test.bam.bai", checkIfExists: true)
+                ])
+                
+                input[1] = channel.of([ 
+                    [ id:'genome' ], 
+                    file(test_data_base + "/test.fa", checkIfExists: true)
+                ])
+                input[2] = channel.of([ 
+                    [ id:'genome' ], 
+                    file(test_data_base + "/test.fa.fai", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            // Verify we got a phased VCF out
+            assert workflow.out.phased_vcf.size() == 1
+            def vcf = workflow.out.phased_vcf.get(0).get(1)
+            assert path(vcf).exists()
+            // Fix: Use getFileName().toString() or convert path to string
+            def vcfName = path(vcf).getFileName().toString()
+            assert vcfName.endsWith('.vcf.gz') || vcfName.endsWith('.bcf')
+        }
+
+    }
+}
