@@ -39,27 +39,33 @@
 - [x] Task: Test with sample data [68124]
 
 ## Phase 5: Supporting Tools
-- [ ] Task: Implement jellyfish/count
-    - [ ] K-mer counting module
-- [ ] Task: Implement kmc/kmc and kmc/kmc_dump
-    - [ ] Alternative k-mer counter
-- [ ] Task: Implement illumina/hap.py
+- [x] Task: Implement strling/index (NEW) [6455ab0]
+    - [x] Generate .str index for reference genome
+    - [x] Integrate into PREPARE_GENOME subworkflow
+    - [x] Pass as -g argument to STRling tools
+- [x] Task: Implement jellyfish/count [pangenome_core]
+    - [x] K-mer counting module
+- [x] Task: Implement kmc/kmc [pangenome_core]
+    - [x] Alternative k-mer counter
+- [ ] Task: Implement kmc/kmc_dump [SKIP]
+    - [ ] Export k-mer database
+- [ ] Task: Implement illumina/hap.py [SKIP]
     - [ ] Variant benchmarking
     - [ ] Useful for STR validation
-- [ ] Task: Review deepvariant/convert_haploid_regions
+- [ ] Task: Review deepvariant/convert_haploid_regions [SKIP]
     - [ ] May not be needed with current DeepVariant
 
 ## Phase 6: Integration
-- [ ] Task: Create STR analysis subworkflow
-    - [ ] Support multiple STR callers
-    - [ ] Merged output format
-- [ ] Task: Add to main workflow
-    - [ ] Parameter: --tools str
-    - [ ] Parameter: --str_caller [expansionhunter|strling|gangstr|all]
-- [ ] Task: Update documentation
+- [x] Task: Create STR analysis subworkflow [bc74768]
+    - [x] Support multiple STR callers
+    - [x] Merged output format
+- [x] Task: Add to main workflow [bc74768]
+    - [x] Parameter: --tools str
+    - [x] Parameter: --str_caller [expansionhunter|strling|gangstr|all]
+- [x] Task: Update documentation [bc74768]
 
 ## Phase 7: Testing
 - [ ] Task: Obtain test samples with known STR expansions
-- [ ] Task: Test each STR caller independently
+- [x] Task: Test each STR caller independently [bc74768]
 - [ ] Task: Validate against known calls
 - [ ] Task: Integration test with full workflow
