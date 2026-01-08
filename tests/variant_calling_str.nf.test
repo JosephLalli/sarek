@@ -1,0 +1,58 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "tool_str"
+
+    test("-profile test --tools str -stub") {
+        options "-stub"
+        when {
+            params {
+                input  = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                step   = 'variant_calling'
+                tools  = 'str'
+                expansionhunter_catalog = "${projectDir}/assets/strling_test_data/expansionhunter_chr22_test.json"
+                gangstr_catalog         = "${projectDir}/assets/strling_test_data/gangstr_chr22_test.bed"
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().any { it.name.contains("STRLING_INDEX") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("STRLING_EXTRACT") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("STRLING_CALL") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("EXPANSIONHUNTER") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("GANGSTR") } }
+            )
+        }
+    }
+
+    test("-profile test --tools str") {
+        when {
+            params {
+                input  = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                step   = 'variant_calling'
+                tools  = 'str'
+                expansionhunter_catalog = "${projectDir}/assets/strling_test_data/expansionhunter_chr22_test.json"
+                gangstr_catalog         = "${projectDir}/assets/strling_test_data/gangstr_chr22_test.bed"
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().any { it.name.contains("STRLING_INDEX") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("STRLING_EXTRACT") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("STRLING_CALL") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("EXPANSIONHUNTER") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("GANGSTR") } },
+                { assert path("$outputDir/variant_calling/expansionhunter/test/test.vcf.gz").exists() },
+                { assert path("$outputDir/variant_calling/strling/test/test-genotype.txt").exists() },
+                { assert path("$outputDir/variant_calling/gangstr/test/test.vcf.gz").exists() }
+            )
+        }
+    }
+}

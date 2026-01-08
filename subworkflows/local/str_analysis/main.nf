@@ -30,6 +30,7 @@ workflow STR_ANALYSIS {
             def new_meta = meta.clone()
             if (meta.sex == 'XX') new_meta.sex = 'female'
             else if (meta.sex == 'XY') new_meta.sex = 'male'
+            else new_meta.sex = null // Remove invalid sex so no --sex flag is passed
             [ new_meta, bam, bai ]
         }
         EXPANSIONHUNTER(
