@@ -65,7 +65,7 @@
 - [x] Task: Update documentation [bc74768]
 
 ## Phase 7: Testing
-- [ ] Task: Obtain test samples with known STR expansions
+- [x] Task: Obtain test samples with known STR expansions [c2f1127]
 - [x] Task: Test each STR caller independently [bc74768]
-- [ ] Task: Validate against known calls
-- [ ] Task: Integration test with full workflow
+- [x] Task: Validate against known calls [c2f1127]
+- [x] Task: Integration test with full workflow [c2f1127]
