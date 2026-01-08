@@ -69,4 +69,4 @@
 - [x] Task: Test each phasing module [53a96e5ac]
     - [x] Verified SHAPEIT5 modules and subworkflow with nf-test.
 - [x] Task: Validate switch error rates [9d55096]
-- [ ] Task: Integration test with variant calling
+- [x] Task: Integration test with variant calling [cb66f16]
