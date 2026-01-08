@@ -1,0 +1,46 @@
+nextflow_process {
+
+    name "Validation Test Process SHAPEIT5_SWITCH"
+    script "../main.nf"
+    process "SHAPEIT5_SWITCH"
+
+    tag "modules"
+    tag "modules_local"
+    tag "shapeit5"
+    tag "shapeit5_switch"
+
+    test("human - vcf - switch - verify version") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_version' ], // meta
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz", checkIfExists: true),
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test_50samples.vcf.gz.tbi", checkIfExists: true),
+                    'chr21:10000000-11000000', // region
+                    [], // pedigree
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/reference_50samples.vcf.gz", checkIfExists: true), // truth
+                    file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/reference_50samples.vcf.gz.tbi", checkIfExists: true), // truth_index
+                    [], // freq
+                    []  // freq_index
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.error_rate.size() == 1
+            
+            // Check version
+            def versionFile = process.out.versions.get(0)
+            def versionText = path(versionFile).getText()
+            println "Versions output:\n" + versionText
+            
+            // Should contain shapeit5 and a version-commit string like 5.1.1-5.1.1 or 5.1.1-c44cd04
+            assert versionText =~ /shapeit5: [0-9.]+-/
+        }
+
+    }
+}

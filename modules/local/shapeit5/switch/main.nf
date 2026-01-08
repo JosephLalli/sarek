@@ -26,30 +26,36 @@ process SHAPEIT5_SWITCH {
     def freq_command = freq ? "--frequency ${freq}" : ""
 
     """
-    SHAPEIT5_switch \
-        --estimation ${estimate} \
-        ${region_command} \
-        ${pedigree_command} \
-        ${truth_command} \
-        ${freq_command} \
-        --output ${prefix}.error.txt.gz \
-        --thread ${task.cpus} \
+    SHAPEIT5_switch \\
+        --estimation ${estimate} \\
+        ${region_command} \\
+        ${pedigree_command} \\
+        ${truth_command} \\
+        ${freq_command} \\
+        --output ${prefix}.error.txt.gz \\
+        --thread ${task.cpus} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
+
     "${task.process}":
-        shapeit5: 
+        shapeit5: \$(SHAPEIT5_switch 2>&1 | sed -n 's|.*Version[[:space:]]*:[[:space:]]*\\([^/]*[^[:space:]]\\)[[:space:]]*/[[:space:]]*commit[[:space:]]*=[[:space:]]*\\([^/]*\\).*|\\1-\\2|p')
     END_VERSIONS
     """
 
+    
+
     stub:
+
     def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    touch ${prefix}.error.txt.gz
+    touch ${prefix}.error.txt.gz    
 
     cat <<-END_VERSIONS > versions.yml
+
     "${task.process}":
-        shapeit5: 
+        shapeit5: \$(SHAPEIT5_switch 2>&1 | sed -n 's|.*Version[[:space:]]*:[[:space:]]*\\([^/]*[^[:space:]]\\)[[:space:]]*/[[:space:]]*commit[[:space:]]*=[[:space:]]*\\([^/]*\\).*|\\1-\\2|p')
     END_VERSIONS
     """
 }
