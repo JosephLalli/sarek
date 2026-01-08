@@ -1,0 +1,55 @@
+nextflow_process {
+
+    name "Test Process STRLING_INDEX"
+    script "modules/local/strling/index/main.nf"
+    process "STRLING_INDEX"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "strling"
+    tag "strling/index"
+
+    test("homo_sapiens - fasta") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                             file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                           ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {assert process.success},
+                {assert snapshot(process.out).match()}
+            )
+        }
+
+    }
+
+    test("homo_sapiens - fasta - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                             file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                           ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {assert process.success},
+                {assert snapshot(process.out).match()}
+            )
+        }
+
+    }
+
+}

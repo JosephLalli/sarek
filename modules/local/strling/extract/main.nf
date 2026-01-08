@@ -10,6 +10,7 @@ process STRLING_EXTRACT {
     tuple val(meta), path(bam), path(bai)
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(fasta_fai)
+    path(str_index)
 
     output:
     tuple val(meta), path("*.bin"), emit: bin
@@ -21,16 +22,18 @@ process STRLING_EXTRACT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def index_arg = str_index ? "-g ${str_index}" : ""
     """
     strling extract \
         $args \
+        $index_arg \
         -f $fasta \
         $bam \
         ${prefix}.bin
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        strling: \$(strling --version | sed "s/^.*strling //")
+        strling: \$(strling 2>&1 | grep 'version:' | sed 's/strling version: // ')
     END_VERSIONS
     """
 
@@ -41,7 +44,7 @@ process STRLING_EXTRACT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        strling: \$(strling --version | sed "s/^.*strling //")
+        strling: 0.6.0
     END_VERSIONS
     """
 }

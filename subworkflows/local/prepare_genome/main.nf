@@ -5,6 +5,7 @@ include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-
 include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-core/gatk4/createsequencedictionary'
 include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan'
 include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx'
+include { STRLING_INDEX                             } from '../../../modules/local/strling/index/main'
 include { TABIX_TABIX as TABIX_BCFTOOLS_ANNOTATIONS } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_DBSNP                } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-core/tabix/tabix'
@@ -85,9 +86,18 @@ workflow PREPARE_GENOME {
         else if (aligner == 'dragmap') {
             index_alignment = channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
         }
+        else if (aligner == 'giraffe' || aligner == 'none') {
+            // Giraffe uses pangenome indices, not traditional alignment indices
+            // 'none' skips alignment entirely
+            index_alignment = channel.value([[id: aligner], []])
+        }
+        else {
+            // Fallback for any other aligner
+            index_alignment = channel.value([[id: 'unknown'], []])
+        }
     }
     else {
-        index_alignment = channel.empty()
+        index_alignment = channel.value([[id: 'none'], []])
     }
 
     if (!dict_in && step != "annotate") {
@@ -112,6 +122,14 @@ workflow PREPARE_GENOME {
     }
     else {
         fasta_fai = channel.empty()
+    }
+
+    // STRling index
+    strling_index = channel.empty()
+    if (tools && (tools.split(',').contains('str') || tools.split(',').contains('strling'))) {
+        STRLING_INDEX(fasta)
+        strling_index = STRLING_INDEX.out.str_index.collect()
+        versions = versions.mix(STRLING_INDEX.out.versions)
     }
 
     // Prepare genome for BBSplit contamination filtering
@@ -324,6 +342,7 @@ workflow PREPARE_GENOME {
     msisensorpro_scan        // Channel: [genome_msi.list]
     pon                      // Channel: [pon]
     pon_tbi                  // Channel: [pon_tbi]
+    strling_index            // Channel: [meta, str_index]
     vep_fasta                // Channel: [meta, vep_fasta]
     versions                 // Channel: [versions.yml]
 }

@@ -13,11 +13,12 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of([ [ id:'test' ], // meta map
                         file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
-                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true)
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam.bai', checkIfExists: true)
                         ])
                 input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
                 input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
-                input[3] = false // joint = false
+                input[3] = channel.empty() // ch_str_index
+                input[4] = false // joint = false
                 """
             }
         }
@@ -36,16 +37,17 @@ nextflow_workflow {
                 input[0] = Channel.fromList([
                     [ [ id:'sample1' ], // meta map
                         file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
-                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true)
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam.bai', checkIfExists: true)
                     ],
                     [ [ id:'sample2' ], // meta map
                         file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
-                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true)
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam.bai', checkIfExists: true)
                     ]
                 ])
                 input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
                 input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
-                input[3] = true // joint = true
+                input[3] = channel.empty() // ch_str_index
+                input[4] = true // joint = true
                 """
             }
         }

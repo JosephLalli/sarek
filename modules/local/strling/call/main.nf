@@ -26,21 +26,17 @@ process STRLING_CALL {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def bounds_arg = bounds ? "-b $bounds" : ""
     """
-    strling call \\
-        $args \\
-        $bounds_arg \\
-        -f $fasta \\
-        -o $prefix \\
-        $bam \\
+    strling call \
+        $args \
+        $bounds_arg \
+        -f $fasta \
+        -o $prefix \
+        $bam \
         $bin
-
-    if [ -f ${prefix}.vcf ]; then
-        gzip ${prefix}.vcf
-    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        strling: \$(strling --version | sed "s/^.*strling //")
+        strling: \$(strling 2>&1 | grep 'version:' | sed 's/strling version: // ')
     END_VERSIONS
     """
 
@@ -53,7 +49,7 @@ process STRLING_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        strling: \$(strling --version | sed "s/^.*strling //")
+        strling: 0.6.0
     END_VERSIONS
     """
 }

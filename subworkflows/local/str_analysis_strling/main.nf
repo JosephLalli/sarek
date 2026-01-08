@@ -11,13 +11,14 @@ workflow STR_ANALYSIS_STRLING {
     ch_bam          // channel: [ val(meta), bam, bai ]
     ch_fasta        // channel: [ val(meta), fasta ]
     ch_fasta_fai    // channel: [ val(meta), fasta_fai ]
+    ch_str_index    // channel: [ val(meta), str_index ]
     val_joint       // boolean: true/false
 
     main:
     ch_versions = channel.empty()
 
     // 1. Extract
-    STRLING_EXTRACT(ch_bam, ch_fasta, ch_fasta_fai)
+    STRLING_EXTRACT(ch_bam, ch_fasta, ch_fasta_fai, ch_str_index.map{ it[1] }.collect().ifEmpty([]))
     ch_versions = ch_versions.mix(STRLING_EXTRACT.out.versions)
 
     // 2. Prepare inputs for calling

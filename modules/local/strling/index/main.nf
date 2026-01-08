@@ -1,42 +1,37 @@
-process STRLING_MERGE {
-    label 'process_medium'
+process STRLING_INDEX {
+    tag "$fasta"
+    label 'process_single'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/strling:0.6.0--h7b50bb2_0' :
         'quay.io/biocontainers/strling:0.6.0--h7b50bb2_0' }"
 
     input:
-    path(bins)
-    tuple val(meta2), path(fasta)
-    tuple val(meta3), path(fasta_fai)
+    tuple val(meta), path(fasta)
 
     output:
-    path("*-bounds.txt"), emit: bounds
-    path "versions.yml" , emit: versions
+    tuple val(meta), path("*.str"), emit: str_index
+    path "versions.yml"           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "strling_joint"
     """
-    strling merge \
+    strling index \
         $args \
-        -f $fasta \
-        -o $prefix \
-        $bins
+        $fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        strling: \$(strling 2>&1 | grep 'version:' | sed 's/strling version: // ')
+        strling: \$(strling 2>&1 | grep 'version:' | sed 's/strling version: //')
     END_VERSIONS
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "strling_joint"
     """
-    touch ${prefix}-bounds.txt
+    touch ${fasta}.str
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

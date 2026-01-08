@@ -34,6 +34,9 @@ include { FASTQ_PREPROCESS_GIRAFFE                          } from '../../subwor
 // PanGenie direct genotyping (bypasses alignment)
 include { PANGENIE_GENOTYPING                               } from '../../subworkflows/local/pangenie_genotyping'
 
+// STR analysis
+include { STR_ANALYSIS                                      } from '../../subworkflows/local/str_analysis'
+
 // CRAM_TO_BAM conversion
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../modules/nf-core/samtools/convert'
 
@@ -116,6 +119,10 @@ workflow SAREK {
     pangenome_min
     pangenome_ref_paths
     pangenie_panel_vcf
+    expansionhunter_catalog
+    gangstr_catalog
+    str_index
+    str_caller
     varlociraptor_scenario_germline
     varlociraptor_scenario_somatic
     varlociraptor_scenario_tumor_only
@@ -137,6 +144,9 @@ workflow SAREK {
 
     // For pangenie VCFs (when aligner == 'none')
     pangenie_vcfs = channel.empty()
+
+    // For STR VCFs
+    ch_str_vcf = channel.empty()
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -203,7 +213,6 @@ workflow SAREK {
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
         input_fastq = fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(one_fastq_gz_from_spring).mix(two_fastq_gz_from_spring)
-
         // QC
         // `--skip_tools fastqc` to skip fastqc
         if (!(skip_tools.split(',').contains('fastqc'))) {
@@ -507,6 +516,30 @@ workflow SAREK {
             sentieon_dnascope_model,
         )
 
+        // STR ANALYSIS
+        if (tools && tools.split(',').contains('str')) {
+            def str_tools = str_caller == 'all' ? ['expansionhunter', 'strling', 'gangstr'] : str_caller.split(',')
+            
+            STR_ANALYSIS(
+                cram_variant_calling_status_normal,
+                fasta,
+                fasta_fai,
+                expansionhunter_catalog,
+                gangstr_catalog,
+                str_index,
+                str_tools,
+                true // val_joint_strling
+            )
+            
+            ch_str_vcf = ch_str_vcf.mix(
+                STR_ANALYSIS.out.vcf_eh.map{ meta, vcf -> [meta + [variantcaller: 'expansionhunter'], vcf] },
+                STR_ANALYSIS.out.vcf_strling.map{ meta, vcf -> [meta + [variantcaller: 'strling'], vcf] },
+                STR_ANALYSIS.out.vcf_gangstr.map{ meta, vcf -> [meta + [variantcaller: 'gangstr'], vcf] }
+            )
+
+            versions = versions.mix(STR_ANALYSIS.out.versions)
+        }
+
         // TUMOR ONLY VARIANT CALLING
         //   No bwa index for TIDDIT
         //   intervals handling
@@ -617,6 +650,9 @@ workflow SAREK {
 
         // Mix in pangenie VCFs (when aligner == 'none', pangenie bypasses BAM-based variant calling)
         vcf_to_annotate = vcf_to_annotate.mix(pangenie_vcfs)
+
+        // Mix in STR VCFs
+        vcf_to_annotate = vcf_to_annotate.mix(ch_str_vcf)
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
