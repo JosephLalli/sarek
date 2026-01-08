@@ -2,7 +2,7 @@
 
 This plan details the steps to replace redundant indexing processes with the built-in `-W` argument in `bcftools` commands throughout the Sarek pipeline.
 
-## Phase 1: Identification and Initial Mapping
+## Phase 1: Identification and Initial Mapping [checkpoint: 2233aad]
 *   **Goal:** Map all `bcftools` module usages and their subsequent indexing steps.
 *   - [x] Task 1.1: Audit BCFTOOLS Modules: Identify all `bcftools` modules in `modules/nf-core` and `modules/local`.
 *   - [x] Task 1.2: Map Workflow Dependencies: Identify every instance in `subworkflows/` and `workflows/` where a `bcftools` command output is immediately piped into an indexing process (e.g., `TABIX`, `BCFTOOLS_INDEX`).
