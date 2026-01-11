@@ -1,0 +1,164 @@
+nextflow_workflow {
+
+    name "Test Subworkflow VG_ALIGN"
+    script "../main.nf"
+    workflow "VG_ALIGN"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "vg"
+    tag "vg_align"
+
+    test("Direct Surjection Mode (Stub)") {
+        options "-stub"
+        
+        config "./direct_surject.config"
+
+        when {
+            params {
+                aligner = 'giraffe'
+            }
+            workflow {
+                """
+                // Reads
+                input[0] = channel.of([ [id:'test', sample:'test_sample'], [file("test_1.fq.gz"), file("test_2.fq.gz")] ])
+                
+                // Index Alignment (bundled)
+                input[1] = channel.of([ 
+                    [id:'giraffe'], 
+                    [
+                        file("test.gbz"), 
+                        file("test.dist"), 
+                        file("test.min"), 
+                        file("test.zipcodes"), 
+                        file("test.ref_paths"), 
+                        file("test.hapl")
+                    ] 
+                ])
+
+                // Reference
+                input[2] = channel.of([ [id:'ref'], file("ref.fa") ])
+                input[3] = channel.of([ [id:'fai'], file("ref.fa.fai") ])
+                input[4] = channel.of([ [id:'dict'], file("ref.dict") ])
+                
+                // Flags
+                input[5] = true // sort_bam
+                input[6] = true // run_markdup
+                input[7] = false // personalized
+                input[8] = false // save_gam
+                input[9] = false // run_vg_stats
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.cram.size() == 1
+            assert workflow.out.versions.size() > 0
+            // reports should have giraffe stats
+            assert workflow.out.reports.size() == 1
+        }
+    }
+
+    test("Classic Mode (Stub)") {
+        options "-stub"
+        
+        config "./classic_mode.config"
+
+        when {
+            params {
+                aligner = 'giraffe'
+            }
+            workflow {
+                """
+                // Reads
+                input[0] = channel.of([ [id:'test_classic', sample:'test_sample'], [file("test_1.fq.gz"), file("test_2.fq.gz")] ])
+                
+                // Index Alignment (bundled)
+                input[1] = channel.of([ 
+                    [id:'giraffe'], 
+                    [
+                        file("test.gbz"), 
+                        file("test.dist"), 
+                        file("test.min"), 
+                        file("test.zipcodes"), 
+                        file("test.ref_paths"), 
+                        file("test.hapl")
+                    ] 
+                ])
+
+                // Reference
+                input[2] = channel.of([ [id:'ref'], file("ref.fa") ])
+                input[3] = channel.of([ [id:'fai'], file("ref.fa.fai") ])
+                input[4] = channel.of([ [id:'dict'], file("ref.dict") ])
+                
+                // Flags
+                input[5] = true // sort_bam
+                input[6] = true // run_markdup
+                input[7] = false // personalized
+                input[8] = true // save_gam
+                input[9] = true // run_vg_stats
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.cram.size() == 1
+            assert workflow.out.versions.size() > 0
+            // reports should have giraffe stats AND vg stats
+            assert workflow.out.reports.size() == 2
+        }
+    }
+
+    test("Personalized Mode (Stub)") {
+        options "-stub"
+        
+        // Use classic mode config to ensure we test the surjection path too
+        config "./classic_mode.config"
+
+        when {
+            params {
+                aligner = 'giraffe'
+            }
+            workflow {
+                """
+                // Reads
+                input[0] = channel.of([ [id:'test_pers', sample:'test_sample'], [file("test_1.fq.gz"), file("test_2.fq.gz")] ])
+                
+                // Index Alignment (bundled)
+                input[1] = channel.of([ 
+                    [id:'giraffe'], 
+                    [
+                        file("test.gbz"), 
+                        file("test.dist"), 
+                        file("test.min"), 
+                        file("test.zipcodes"), 
+                        file("test.ref_paths"), 
+                        file("test.hapl")
+                    ] 
+                ])
+
+                // Reference
+                input[2] = channel.of([ [id:'ref'], file("ref.fa") ])
+                input[3] = channel.of([ [id:'fai'], file("ref.fa.fai") ])
+                input[4] = channel.of([ [id:'dict'], file("ref.dict") ])
+                
+                // Flags
+                input[5] = true // sort_bam
+                input[6] = true // run_markdup
+                input[7] = true // personalized
+                input[8] = true // save_gam
+                input[9] = true // run_vg_stats
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.cram.size() == 1
+            assert workflow.out.versions.size() > 0
+            assert workflow.out.reports.size() == 2
+        }
+    }
+}
