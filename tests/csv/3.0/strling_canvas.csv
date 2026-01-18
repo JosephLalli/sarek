@@ -1,0 +1,3 @@
+patient,sample,sex,status,lane,bam,bai
+CANVAS_patient,CANVAS_400,XX,0,1,/mnt/ssd/lalli/nf_stage/sarek_pangenome/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam,/mnt/ssd/lalli/nf_stage/sarek_pangenome/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam.bai
+CANVAS_patient,CANVAS_0,XX,0,1,/mnt/ssd/lalli/nf_stage/sarek_pangenome/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_0.bam,/mnt/ssd/lalli/nf_stage/sarek_pangenome/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_0.bam.bai
