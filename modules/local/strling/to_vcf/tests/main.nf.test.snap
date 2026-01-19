@@ -1,0 +1,68 @@
+{
+    "Mock data conversion - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,836f4299c1f8e06a21db124fc2f2efda"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,836f4299c1f8e06a21db124fc2f2efda"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-19T06:07:23.274833967"
+    },
+    "Mock data conversion": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1.vcf:md5,afca52210f6c4a8965bbec87e920b361"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,836f4299c1f8e06a21db124fc2f2efda"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1.vcf:md5,afca52210f6c4a8965bbec87e920b361"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,836f4299c1f8e06a21db124fc2f2efda"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-19T06:07:12.396624683"
+    }
+}

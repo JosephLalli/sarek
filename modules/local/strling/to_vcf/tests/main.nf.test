@@ -1,0 +1,79 @@
+nextflow_process {
+
+    name "Test Process STRLING_TO_VCF"
+    script "modules/local/strling/to_vcf/main.nf"
+    process "STRLING_TO_VCF"
+    tag "modules"
+    tag "modules_local"
+    tag "strling"
+    tag "strling/to_vcf"
+
+    test("Mock data conversion") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'sample1' ],
+                    file(projectDir + '/strling.txt')
+                ]
+                input[1] = file(projectDir + '/catalog.bed')
+                """
+            }
+        }
+
+        setup {
+            // Ref length = 21, Motif = 3 -> 7 units
+            path(projectDir + '/catalog.bed').write("chr1\t100\t121\tID=STR1;MOTIFS=CAG;STRUC=(CAG)n\n")
+            
+            path(projectDir + '/strling.txt').write(
+                "#chrom\tleft\tright\trepeatunit\tallele1_est\tallele2_est\tanchored_reads\tspanning_reads\tspanning_pairs\texpected_spanning_pairs\tspanning_pairs_pctl\tleft_clips\tright_clips\tunplaced_pairs\tdepth\tsum_str_counts\n" +
+                "chr1\t100\t121\tCAG\t0.00\t5.00\t10\t20\t0\t0\t0\t0\t0\t0\t30\t100"
+            )
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                {
+                    def vcf = path(process.out.vcf[0][1]).readLines()
+                    assert vcf.any { it.contains("STR1") }
+                    assert vcf.any { it.contains("7.00,12.00") } // Ref (7) + (0, 5)
+                }
+            )
+        }
+
+    }
+
+    test("Mock data conversion - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'sample1' ],
+                    file(projectDir + '/strling_stub.txt')
+                ]
+                input[1] = file(projectDir + '/catalog_stub.bed')
+                """
+            }
+        }
+
+        setup {
+            path(projectDir + '/catalog_stub.bed').write("test")
+            path(projectDir + '/strling_stub.txt').write("test")
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}
