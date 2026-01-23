@@ -1,0 +1,35 @@
+{
+    "Stub run": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1.ensembletr.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,818c0ca7590b25906fce9aa3a82e9ca1"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1.ensembletr.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,818c0ca7590b25906fce9aa3a82e9ca1"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-19T22:01:26.647360824"
+    }
+}

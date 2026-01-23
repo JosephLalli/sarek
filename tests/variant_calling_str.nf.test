@@ -15,6 +15,7 @@ nextflow_pipeline {
                 tools  = 'str'
                 expansionhunter_catalog = "${projectDir}/assets/strling_test_data/expansionhunter_chr22_test.json"
                 gangstr_catalog         = "${projectDir}/assets/strling_test_data/gangstr_chr22_test.bed"
+                strling_catalog         = "${projectDir}/assets/strling_test_data/strling_chr22_test.bed"
                 outdir = "$outputDir"
             }
         }
@@ -38,6 +39,7 @@ nextflow_pipeline {
                 tools  = 'str'
                 expansionhunter_catalog = "${projectDir}/assets/strling_test_data/expansionhunter_chr22_test.json"
                 gangstr_catalog         = "${projectDir}/assets/strling_test_data/gangstr_chr22_test.bed"
+                strling_catalog         = "${projectDir}/assets/strling_test_data/strling_chr22_test.bed"
                 outdir = "$outputDir"
             }
         }
@@ -51,7 +53,8 @@ nextflow_pipeline {
                 { assert workflow.trace.succeeded().any { it.name.contains("GANGSTR") } },
                 { assert path("$outputDir/variant_calling/expansionhunter/test/test.vcf.gz").exists() },
                 { assert path("$outputDir/variant_calling/strling/test/test-genotype.txt").exists() },
-                { assert path("$outputDir/variant_calling/gangstr/test/test.vcf.gz").exists() }
+                { assert path("$outputDir/variant_calling/gangstr/test/test.vcf.gz").exists() },
+                { assert path("$outputDir/variant_calling/str_consensus/test/test.consensus.vcf").exists() }
             )
         }
     }

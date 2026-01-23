@@ -2,14 +2,16 @@ process STRLING_TO_VCF {
     tag "$meta.id"
     label 'process_single'
 
-    container "quay.io/biocontainers/python:3.10.4"
+    container "community.wave.seqera.io/library/pysam_samtools_pip_ensembletr:343f01fd8b77ac0a"
 
     input:
     tuple val(meta), path(genotype)
     path(catalog)
+    path(ref_fai)
 
     output:
-    tuple val(meta), path("*.vcf"), emit: vcf
+    tuple val(meta), path("*.vcf.gz"), emit: vcf
+    tuple val(meta), path("*.vcf.gz.tbi"), emit: tbi
     path "versions.yml"           , emit: versions
 
     when:
@@ -23,23 +25,23 @@ process STRLING_TO_VCF {
         $args \
         --strling $genotype \
         --catalog $catalog \
+        --ref-fai $ref_fai \
         --output ${prefix}.vcf \
         --sample ${meta.id}
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        strling_to_vcf: v0.1
-    END_VERSIONS
+    bgzip -c ${prefix}.vcf > ${prefix}.vcf.gz
+    tabix -p vcf ${prefix}.vcf.gz
+    rm ${prefix}.vcf
+
+    printf '"%s":\n    strling_to_vcf: v0.1\n' "${task.process}" > versions.yml
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.vcf
+    python3 -c 'import gzip; f=gzip.open("'"${prefix}.vcf.gz"'","wt"); f.write(""); f.close()'
+    touch ${prefix}.vcf.gz.tbi
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        strling_to_vcf: v0.1
-    END_VERSIONS
+    printf '"%s":\n    strling_to_vcf: v0.1\n' "${task.process}" > versions.yml
     """
 }

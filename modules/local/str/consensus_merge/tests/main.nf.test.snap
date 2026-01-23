@@ -1,0 +1,35 @@
+{
+    "Mock data consensus merge - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1.consensus.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e173d349a1d24b76092ba9d717eaeb6d"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "sample1"
+                        },
+                        "sample1.consensus.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e173d349a1d24b76092ba9d717eaeb6d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-19T06:26:01.062062568"
+    }
+}

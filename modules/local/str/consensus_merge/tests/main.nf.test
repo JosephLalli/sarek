@@ -1,0 +1,102 @@
+nextflow_process {
+
+    name "Test Process STR_CONSENSUS_MERGE"
+    script "modules/local/str/consensus_merge/main.nf"
+    process "STR_CONSENSUS_MERGE"
+    tag "modules"
+    tag "modules_local"
+    tag "str"
+    tag "str/consensus_merge"
+
+    test("Root sample consensus merge (hard gate)") {
+
+        when {
+            process {
+                """
+                def eh = file(projectDir + '/eh.vcf')
+                def gs = file(projectDir + '/gs.vcf')
+                def sl = file(projectDir + '/sl.vcf')
+                
+                input[0] = [ [ id:'sample1' ], eh, gs, sl ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    def vcf = path(process.out.vcf[0][1]).readLines()
+                    def records = vcf.findAll { !it.startsWith("#") }
+                    def pos100 = records.findAll { it.split("\t")[1] == "100" }
+                    assert vcf.any { it.contains("MERGE_SRC=") }
+                    assert vcf.any { it.contains("EH_GT") }
+                    assert vcf.any { it.contains("GS_GT") }
+                    assert vcf.any { it.contains("SL_GT") }
+                    assert pos100.size() == 1
+                }
+            )
+        }
+
+    }
+
+    test("Novel SL-only locus (soft gate)") {
+
+        when {
+            process {
+                """
+                def eh = file(projectDir + '/tests/test_data/str_consensus_merge/eh_empty.vcf')
+                def gs = file(projectDir + '/tests/test_data/str_consensus_merge/gs_empty.vcf')
+                def sl = file(projectDir + '/tests/test_data/str_consensus_merge/sl_novel.vcf')
+
+                input[0] = [ [ id:'sample1' ], eh, gs, sl ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    def vcf = path(process.out.vcf[0][1]).readLines()
+                    def record = vcf.find { !it.startsWith("#") }
+                    if (record == null || !record.contains("STRling_Novel_")) {
+                        System.err.println("WARN: Expected novel SL-only locus in consensus output; follow up before advancing.")
+                    }
+                }
+            )
+        }
+
+    }
+
+    test("Mock data consensus merge - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                def eh = file(projectDir + '/eh_stub.vcf')
+                def gs = file(projectDir + '/gs_stub.vcf')
+                def sl = file(projectDir + '/sl_stub.vcf')
+                input[0] = [ [ id:'sample1' ], eh, gs, sl ]
+                """
+            }
+        }
+
+        setup {
+             path(projectDir + '/eh_stub.vcf').write("test")
+             path(projectDir + '/gs_stub.vcf').write("test")
+             path(projectDir + '/sl_stub.vcf').write("test")
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

@@ -1,0 +1,62 @@
+name: "ensembletr"
+description: |
+  Runs EnsembleTR to merge STR genotypes from multiple callers into a
+  consensus VCF. HipSTR inputs can be supplied via task.ext.args if needed.
+keywords:
+  - str
+  - consensus
+  - ensembletr
+  - vcf
+tools:
+  - "ensembletr":
+      description: "EnsembleTR consensus STR genotyping"
+      homepage: "https://github.com/gymrek-lab/EnsembleTR"
+      documentation: "https://github.com/gymrek-lab/EnsembleTR"
+      licence: ["MIT"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - eh_vcf:
+        type: file
+        description: ExpansionHunter VCF input
+        pattern: "*.vcf"
+    - gs_vcf:
+        type: file
+        description: GangSTR VCF input
+        pattern: "*.vcf"
+    - sl_vcf:
+        type: file
+        description: STRling VCF input (EnsembleTR-compatible)
+        pattern: "*.vcf"
+    - ref_fasta:
+        type: file
+        description: Reference FASTA used for calling
+        pattern: "*.{fa,fasta}"
+    - ref_fai:
+        type: file
+        description: Reference FASTA index
+        pattern: "*.{fa,fasta}.fai"
+output:
+  - vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - "*.ensembletr.vcf":
+          type: file
+          description: EnsembleTR consensus VCF
+          pattern: "*.ensembletr.vcf"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@maxulysse"
+maintainers:
+  - "@maxulysse"

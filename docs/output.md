@@ -965,8 +965,31 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 - `<tumorsample_vs_normalsample>_germline`
   - Germline sites detected.
 - `<tumorsample_vs_normalsample>_somatic`
-  - Somatic sites detected.
+      - Somatic sites detected.
   </details>
+
+### Short Tandem Repeats (STR)
+
+#### STR Consensus Calling
+
+The pipeline supports merging STR calls from ExpansionHunter, GangSTR, and STRling into a single consensus VCF. This consensus caller uses a priority-based approach (EnsembleTR-style) to select the best call for each locus, prioritizing longer motifs from ExpansionHunter and falling back to others.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/variant_calling/str_consensus/<sample>/`**
+
+- `<sample>.consensus.vcf`
+  - Consensus VCF file containing merged STR calls.
+
+**Key VCF Fields:**
+- `INFO/MERGE_SRC`: The tool that provided the consensus genotype (EH, GS, SL).
+- `INFO/MERGE_RULE`: The logic rule used to select the winner (e.g., `MotifLen>=30`, `Fallback_GS`).
+- `FORMAT/GT`: The consensus genotype.
+- `FORMAT/REPCN`: The consensus repeat copy number.
+- `FORMAT/EH_GT`, `GS_GT`, `SL_GT`: Original genotypes from individual callers.
+- `FORMAT/EH_REPCN`, `GS_REPCN`, `SL_REPCN`: Original repeat copy numbers from individual callers.
+</details>
 
 ## Post Variant Calling
 

@@ -1,0 +1,66 @@
+nextflow_pipeline {
+
+    name "Test Pipeline - STR Enhancement HTT"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "str_enhancement"
+    tag "tool_str"
+
+    test("HTT Joint Calling - nc30_15 & nc190_25") {
+        when {
+            params {
+                input  = "${projectDir}/tests/csv/3.0/str_enhancement.csv"
+                step   = 'variant_calling'
+                tools  = 'str'
+                fasta  = "${projectDir}/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta"
+                fasta_fai = "${projectDir}/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta.fai"
+                expansionhunter_catalog = "${projectDir}/tests/test_data/str_enhancement/expansionhunter_catalog.json"
+                gangstr_catalog         = "${projectDir}/tests/test_data/str_enhancement/gangstr_catalog.bed"
+                strling_catalog         = "${projectDir}/tests/test_data/str_enhancement/strling_catalog.bed"
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                // Check if tools were executed
+                { assert workflow.trace.succeeded().any { it.name.contains("STRLING_CALL") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("EXPANSIONHUNTER") } },
+                { assert workflow.trace.succeeded().any { it.name.contains("GANGSTR") } },
+                
+                // Check if outputs exist
+                { assert path("$outputDir/variant_calling/strling/nc30_15-1/nc30_15-1-genotype.txt").exists() },
+                { assert path("$outputDir/variant_calling/strling/nc190_25-1/nc190_25-1-genotype.txt").exists() },
+                { assert path("$outputDir/variant_calling/expansionhunter/nc30_15-1/nc30_15-1.vcf.gz").exists() },
+                { assert path("$outputDir/variant_calling/expansionhunter/nc190_25-1/nc190_25-1.vcf.gz").exists() },
+                { assert path("$outputDir/variant_calling/gangstr/nc30_15-1/nc30_15-1.vcf.gz").exists() },
+                { assert path("$outputDir/variant_calling/gangstr/nc190_25-1/nc190_25-1.vcf.gz").exists() },
+                { assert path("$outputDir/variant_calling/str_consensus/nc30_15-1/nc30_15-1.consensus.vcf").exists() },
+                { assert path("$outputDir/variant_calling/str_consensus/nc190_25-1/nc190_25-1.consensus.vcf").exists() },
+
+                // Deep check: Verify ExpansionHunter found the expansion in nc190_25
+                {
+                    def vcf = path("$outputDir/variant_calling/expansionhunter/nc190_25-1/nc190_25-1.vcf.gz").vcf
+                    // HTT locus is at chr4:3074876 (1-based in VCF usually, or depends on HTSJDK)
+                    // Let's just check if there are any variants on chr4
+                    def records = vcf.variants.findAll { it.chr == 'chr4' }
+                    assert records.size() > 0
+                },
+                // Deep check: Consensus VCF carries per-caller FORMAT fields
+                {
+                    def lines = path("$outputDir/variant_calling/str_consensus/nc190_25-1/nc190_25-1.consensus.vcf").readLines()
+                    assert lines.any { it.contains("##FORMAT=<ID=EH_GT") }
+                    assert lines.any { it.contains("##FORMAT=<ID=GS_GT") }
+                    assert lines.any { it.contains("##FORMAT=<ID=SL_GT") }
+                    def record = lines.find { !it.startsWith("#") }
+                    assert record != null
+                    def formatField = record.split("\\t")[8]
+                    assert formatField.contains("EH_GT")
+                    assert formatField.contains("GS_GT")
+                    assert formatField.contains("SL_GT")
+                }
+            )
+        }
+    }
+}

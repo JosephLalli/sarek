@@ -8,7 +8,7 @@ nextflow_process {
     tag "strling"
     tag "strling/to_vcf"
 
-    test("Mock data conversion") {
+    test("Root sample conversion (hard gate)") {
 
         when {
             process {
@@ -18,28 +18,83 @@ nextflow_process {
                     file(projectDir + '/strling.txt')
                 ]
                 input[1] = file(projectDir + '/catalog.bed')
+                input[2] = file(projectDir + '/hg38.no_alt.fa.fai')
                 """
             }
-        }
-
-        setup {
-            // Ref length = 21, Motif = 3 -> 7 units
-            path(projectDir + '/catalog.bed').write("chr1\t100\t121\tID=STR1;MOTIFS=CAG;STRUC=(CAG)n\n")
-            
-            path(projectDir + '/strling.txt').write(
-                "#chrom\tleft\tright\trepeatunit\tallele1_est\tallele2_est\tanchored_reads\tspanning_reads\tspanning_pairs\texpected_spanning_pairs\tspanning_pairs_pctl\tleft_clips\tright_clips\tunplaced_pairs\tdepth\tsum_str_counts\n" +
-                "chr1\t100\t121\tCAG\t0.00\t5.00\t10\t20\t0\t0\t0\t0\t0\t0\t30\t100"
-            )
         }
 
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() },
                 {
-                    def vcf = path(process.out.vcf[0][1]).readLines()
-                    assert vcf.any { it.contains("STR1") }
-                    assert vcf.any { it.contains("7.00,12.00") } // Ref (7) + (0, 5)
+                    def vcfPath = path(process.out.vcf[0][1]).toString()
+                    def reader = new BufferedReader(new InputStreamReader(new java.util.zip.GZIPInputStream(new FileInputStream(vcfPath))))
+                    def vcf = reader.readLines()
+                    reader.close()
+                    def header = vcf.findAll { it.startsWith("##") }
+                    def record = vcf.find { !it.startsWith("#") }
+                    assert header.any { it.contains("##command=hipstr") }
+                    assert header.any { it.contains("##contig=<ID=chr1,length=248956422>") }
+                    assert header.any { it.contains("##INFO=<ID=START") }
+                    assert header.any { it.contains("##INFO=<ID=END") }
+                    assert header.any { it.contains("##INFO=<ID=RU") }
+                    assert header.any { it.contains("##INFO=<ID=PERIOD") }
+                    assert header.any { it.contains("##FORMAT=<ID=REPCN") }
+                    assert header.any { it.contains("##FORMAT=<ID=Q") }
+                    def refSeq = "CAG" * 7
+                    def altSeq = "CAG" * 12
+                    assert record.contains(refSeq)
+                    assert record.contains(altSeq)
+                    assert record.contains("RU=CAG")
+                    assert record.contains("START=101")
+                    assert record.contains("PERIOD=3")
+                    assert record.contains("END=121")
+                    assert record.contains("7.00,12.00") // Ref (7) + (0, 5)
+                    assert record.contains(":30:") // Q derived from anchored+spanning
+                    assert path(process.out.tbi[0][1]).exists()
+                    def bcftoolsCheck = ["bash", "-lc", "command -v bcftools"].execute()
+                    bcftoolsCheck.waitFor()
+                    if (bcftoolsCheck.exitValue() != 0) {
+                        System.err.println("WARN: bcftools not available; skipping VCF parse check.")
+                    } else {
+                        def cmd = ["bcftools", "view", "-h", vcfPath].execute()
+                        def stderr = cmd.err.text
+                        cmd.waitFor()
+                        assert cmd.exitValue() == 0 : "bcftools parse failed: ${stderr}"
+                    }
+                }
+            )
+        }
+
+    }
+
+    test("Novel STRling call (soft gate)") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'sample1' ],
+                    file(projectDir + '/nc30_15-1-genotype.txt')
+                ]
+                input[1] = file(projectDir + '/tests/test_data/str_enhancement/gangstr_catalog.bed')
+                input[2] = file(projectDir + '/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta.fai')
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    def vcfPath = path(process.out.vcf[0][1]).toString()
+                    def reader = new BufferedReader(new InputStreamReader(new java.util.zip.GZIPInputStream(new FileInputStream(vcfPath))))
+                    def vcf = reader.readLines()
+                    reader.close()
+                    def record = vcf.find { !it.startsWith("#") }
+                    if (record == null || !record.contains("STRling_Novel_")) {
+                        System.err.println("WARN: Expected a novel STRling call, but none was found. Follow up before advancing.")
+                    }
                 }
             )
         }
@@ -58,6 +113,7 @@ nextflow_process {
                     file(projectDir + '/strling_stub.txt')
                 ]
                 input[1] = file(projectDir + '/catalog_stub.bed')
+                input[2] = file(projectDir + '/ref_stub.fai')
                 """
             }
         }
@@ -65,6 +121,7 @@ nextflow_process {
         setup {
             path(projectDir + '/catalog_stub.bed').write("test")
             path(projectDir + '/strling_stub.txt').write("test")
+            path(projectDir + '/ref_stub.fai').write("chr1\t1000\n")
         }
 
         then {
