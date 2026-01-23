@@ -32,71 +32,47 @@ pangenome_prep_redesign │              │           │
 
 ## Completed Tracks
 
-### [x] Track: Strict Syntax Upgrade
-*Link: [./tracks/strict_syntax_upgrade_20251231/](./tracks/strict_syntax_upgrade_20251231/)*
-
-DSL2 strict syntax compliance (NXF_SYNTAX_PARSER=v2). Replaced deprecated Channel. with channel., added def keywords, fixed variable shadowing, converted if/else to ternary.
-
 ### [x] Track: Legacy Feature Gap Analysis
 *Link: [./tracks/legacy_gap_analysis_20251231/](./tracks/legacy_gap_analysis_20251231/)*
 
 Inventoried ~90 files from sarek_first_attempt. Created feature_backlog.md with Keep/Ignore/Redesign decisions.
 
----
+### [x] Track: Test Adequacy Evaluation (Pangenome & DeepVariant)
+*Link: [./conductor/tracks/test_adequacy_pangenome_20260109/](./conductor/tracks/test_adequacy_pangenome_20260109/)*
 
-## Active Tracks
+Successfully implemented and verified pangenome-aware alignment (VG Giraffe) and variant calling (DeepVariant) using rebased CHM13 test data.
 
-### [ ] Track: T2T and Pangenome Configuration
-*Link: [./tracks/config_t2t_pangenome_20251231/](./tracks/config_t2t_pangenome_20251231/)*
-*Priority: HIGH*
+### [x] Track: STR Consensus Merging (EnsembleTR-style)
+*Link: [./conductor/tracks/str_consensus_merge_20260118/](./conductor/tracks/str_consensus_merge_20260118/)*
 
-- T2T (CHM13) reference configuration
-- Pangenome v1.1 + v2 index paths
-- snpEff CHM13v2 setup
-- Parabricks implementation review
+Implemented production-grade STR consensus merging with format adapters for STRling, coordinate-aware normalization, and EnsembleTR integration.
 
 ---
 
-## Planned Tracks
+## Active & Planned Tracks
 
-### [ ] Track: Core Pangenome Tools
-*Link: [./tracks/pangenome_core_20251231/](./tracks/pangenome_core_20251231/)*
-*Priority: HIGH | Depends on: config_t2t_pangenome*
+## [~] Track: STR Enhancement
+*Link: [./conductor/tracks/str_enhancement_20260109/](./conductor/tracks/str_enhancement_20260109/)*
 
-11 vg modules + 1 PanGenie module + 2 subworkflows:
-- vg/giraffe, surject, haplotypes, stats, deconstruct, gbwt, minimizer, index, paths, convert
-- pangenie/pangenie
-- giraffe_mapping, pangenie_map_and_call subworkflows
+---
 
-### [ ] Track: Phasing Tools
-*Link: [./tracks/phasing_tools_20251231/](./tracks/phasing_tools_20251231/)*
-*Priority: HIGH | Depends on: config_t2t_pangenome*
+## [ ] Track: Phasing Pipeline Separation
+*Link: [./conductor/tracks/phasing_separation_20260109/](./conductor/tracks/phasing_separation_20260109/)*
 
-8 phasing modules + 1 subworkflow:
-- shapeit5/phase_common, phase_rare, ligate, switch
-- shapeit4/phase_common
-- whatshap/phase, stats
-- hapcut2 (NEW)
-- phase_and_impute subworkflow
+---
 
-### [ ] Track: STR Analysis
-*Link: [./tracks/str_analysis_20251231/](./tracks/str_analysis_20251231/)*
-*Priority: MEDIUM | Depends on: config_t2t_pangenome*
+### [ ] Track: Long-read ONT Support
+*Link: [./conductor/tracks/ont_support_20260104/](./conductor/tracks/ont_support_20260104/)*
 
-9 STR/utility modules:
-- expansionhunter, strling (NEW), gangstr (NEW)
-- jellyfish/count, kmc/kmc, kmc/kmc_dump
-- illumina/hap.py, deepvariant/convert_haploid_regions
+Comprehensive support for ONT data: preprocessing, alignment (Minimap2/Giraffe), and variant calling (Pepper-DeepVariant/Clair3).
 
-### [ ] Track: Pangenome Prep Redesign
-*Link: [./tracks/pangenome_prep_redesign_20251231/](./tracks/pangenome_prep_redesign_20251231/)*
-*Priority: MEDIUM | Depends on: pangenome_core*
+---
 
-Redesign 9 "home-grown" modules to nf-core standards:
-- VCF/FASTA splitting utilities
-- PAR region handling
-- Personalized graph building
-- Insertion sequence merging
+## [ ] Track: Long-read PacBio Support
+*Link: [./conductor/tracks/pacbio_support_20260104/](./conductor/tracks/pacbio_support_20260104/)*
+*Priority: LOW | Depends on: strict_syntax_upgrade*
+
+Long-read PacBio support including preprocessing (lima), alignment (Minimap2/Giraffe), and variant calling (DeepVariant/PBSV/TRGT).
 
 ---
 
@@ -104,11 +80,11 @@ Redesign 9 "home-grown" modules to nf-core standards:
 
 | Track | Status | Modules | Subworkflows |
 |-------|--------|---------|--------------|
-| strict_syntax_upgrade | DONE | - | - |
 | legacy_gap_analysis | DONE | - | - |
-| config_t2t_pangenome | ACTIVE | - | - |
-| pangenome_core | PLANNED | 12 | 2 |
-| phasing_tools | PLANNED | 8 | 1 |
-| str_analysis | PLANNED | 9 | 1 |
-| pangenome_prep_redesign | PLANNED | 7 | 1 |
-| **TOTAL** | | **36** | **5** |
+| test_adequacy_pangenome | DONE | - | - |
+| str_enhancement | PLANNED | - | - |
+| str_consensus_merge | DONE | 3 | 1 |
+| phasing_separation | PLANNED | - | - |
+| ont_support | PLANNED | - | - |
+| pacbio_support | PLANNED | - | - |
+| **TOTAL** | | **3** | **1** |
