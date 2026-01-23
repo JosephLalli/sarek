@@ -35,7 +35,7 @@ This plan outlines the development of a production-grade STR consensus merging s
 - [x] Task: Verify that `FORMAT` fields for individual callers (`EH_GT`, etc.) are correctly populated.
 - [x] Task: Conductor - User Manual Verification 'Pipeline Integration' (Protocol in workflow.md)
 
-## Phase 4: Final Validation & Documentation
+## Phase 4: Final Validation & Documentation [checkpoint: e034e02]
 - [x] Task: Update `docs/output.md` to describe the new STR consensus VCF fields.
 - [x] Task: Perform a final regression test using the HPRC test dataset. (Resolved: STRling allele1_est=0.00 anomaly confirmed as artifact of small test datasets)
 - [x] Task: Conductor - User Manual Verification 'Final Validation' (Protocol in workflow.md)
