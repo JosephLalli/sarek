@@ -249,12 +249,22 @@ def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
     pangenieRequirements()
+    validateDeepVariant()
 }
 
 // Exit pipeline if incorrect --genome key provided
 def genomeExistsError() {
     if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        error(error_string)
+    }
+}
+
+// Ensure mutually exclusive DeepVariant options
+def validateDeepVariant() {
+    def tools_list = params.tools ? params.tools.split(',').collect { it.trim().toLowerCase() } : []
+    if (tools_list.contains('deepvariant') && tools_list.contains('deepvariant_pangenome')) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  You have selected both 'deepvariant' and 'deepvariant_pangenome'.\n" + "  Please select only one of these tools.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
 }

@@ -14,9 +14,6 @@ process KMC {
     tuple val(meta), path("*.kff.gz"), emit: kff
     path "versions.yml",               emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
-
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
@@ -44,7 +41,7 @@ process KMC {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        kmc: 
+        kmc: \$(kmc --version | sed 's/KMC version //' | sed 's/ -.*//')
     END_VERSIONS
     """
 
@@ -55,7 +52,7 @@ process KMC {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        kmc: 
+        kmc: \$(kmc --version | sed 's/KMC version //' | sed 's/ -.*//')
     END_VERSIONS
     """
 }

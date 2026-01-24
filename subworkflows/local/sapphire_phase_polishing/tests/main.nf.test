@@ -1,0 +1,96 @@
+nextflow_workflow {
+
+    name "Test Subworkflow SAPPHIRE_PHASE_POLISHING"
+    script "../main.nf"
+    workflow "SAPPHIRE_PHASE_POLISHING"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "sapphire"
+    tag "sapphire_phase_polishing"
+
+    test("human - stub") {
+        options "-stub"
+        when {
+            workflow {
+                """
+                input[0] = channel.of([
+                    [ id:'test' ], // meta
+                    file("test.vcf.gz"),
+                    file("test.vcf.gz.tbi"),
+                    'chr21'
+                ])
+                input[1] = channel.of([
+                    [ id:'test' ], // meta
+                    file("test.bam"),
+                    file("test.bam.bai")
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+    test("human - integration - HG00443") {
+        when {
+            workflow {
+                """
+                input[0] = channel.of([
+                    [ id:'HG00443' ], // meta
+                    file("${projectDir}/assets/test_data/phasing/sapphire/HG00443/test_HG00443.chr21_slice.pp.vcf.gz"),
+                    file("${projectDir}/assets/test_data/phasing/sapphire/HG00443/test_HG00443.chr21_slice.pp.vcf.gz.tbi"),
+                    'chr21:10000000-10100000'
+                ])
+                input[1] = channel.of([
+                    [ id:'HG00443' ], // meta
+                    file("${projectDir}/assets/test_data/phasing/sapphire/HG00443/HG00443.chr21_slice.bam"),
+                    file("${projectDir}/assets/test_data/phasing/sapphire/HG00443/HG00443.chr21_slice.bam.bai")
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            // We check that the output BCF exists and has content
+            assert workflow.out.vcf
+            def vcf_file = workflow.out.vcf.get(0).get(1)
+            assert path(vcf_file).exists()
+        }
+
+    }
+
+    test("human - integration - multi-sample") {
+        when {
+            workflow {
+                """
+                input[0] = channel.of([
+                    [ id:'test_trio' ], // meta
+                    file("${projectDir}/assets/test_data/phasing/sapphire/test_trio.chr21_slice.vcf.gz"),
+                    file("${projectDir}/assets/test_data/phasing/sapphire/test_trio.chr21_slice.vcf.gz.tbi"),
+                    'chr21:10000000-10100000'
+                ])
+                input[1] = channel.of(
+                    [ [ id:'HG00443' ], file("${projectDir}/assets/test_data/phasing/sapphire/HG00443/HG00443.chr21_slice.bam"), file("${projectDir}/assets/test_data/phasing/sapphire/HG00443/HG00443.chr21_slice.bam.bai") ],
+                    [ [ id:'HG00446' ], file("${projectDir}/assets/test_data/phasing/sapphire/HG00446/HG00446.chr21_slice.bam"), file("${projectDir}/assets/test_data/phasing/sapphire/HG00446/HG00446.chr21_slice.bam.bai") ],
+                    [ [ id:'NA12889' ], file("${projectDir}/assets/test_data/phasing/sapphire/NA12889/NA12889.chr21_slice.bam"), file("${projectDir}/assets/test_data/phasing/sapphire/NA12889/NA12889.chr21_slice.bam.bai") ]
+                )
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.vcf
+            def vcf_file = workflow.out.vcf.get(0).get(1)
+            assert path(vcf_file).exists()
+        }
+
+    }
+
+}

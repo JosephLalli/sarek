@@ -1,0 +1,49 @@
+nextflow_workflow {
+
+    name "Test Subworkflow STR_ANALYSIS - STR Enhancement"
+    script "subworkflows/local/str_analysis/main.nf"
+    workflow "STR_ANALYSIS"
+    tag "subworkflows"
+    tag "str"
+    tag "str_analysis"
+    tag "str_enhancement"
+
+    test("GangSTR Test Dataset - chr4 HTT") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [ [ id:'nc30_15', sex:'XY' ],
+                      file("${projectDir}/tests/test_data/str_enhancement/nc30_15.sorted.bam", checkIfExists: true),
+                      file("${projectDir}/tests/test_data/str_enhancement/nc30_15.sorted.bam.bai", checkIfExists: true)
+                    ],
+                    [ [ id:'nc190_25', sex:'XY' ],
+                      file("${projectDir}/tests/test_data/str_enhancement/nc190_25.sorted.bam", checkIfExists: true),
+                      file("${projectDir}/tests/test_data/str_enhancement/nc190_25.sorted.bam.bai", checkIfExists: true)
+                    ]
+                )
+                input[1] = Channel.of([[id:'fasta'], file("${projectDir}/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta", checkIfExists: true)])
+                input[2] = Channel.of([[id:'fasta_fai'], file("${projectDir}/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta.fai", checkIfExists: true)])
+                input[3] = Channel.of([[id:'eh_catalog'], file("${projectDir}/tests/test_data/str_enhancement/expansionhunter_catalog.json", checkIfExists: true)])
+                input[4] = Channel.of([[id:'gangstr_catalog'], file("${projectDir}/tests/test_data/str_enhancement/gangstr_catalog.bed", checkIfExists: true)])
+                input[5] = Channel.of([[id:'strling_catalog'], file("${projectDir}/tests/test_data/str_enhancement/strling_catalog.bed", checkIfExists: true)])
+                input[6] = Channel.of([[id:'str_index'], []])
+                input[7] = Channel.of([[id:'strling_loci'], []])
+                input[8] = ['expansionhunter', 'strling', 'gangstr']
+                input[9] = false // val_joint_strling
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.vcf_eh.size() == 2 },
+                { assert workflow.out.vcf_gangstr.size() == 2 },
+                { assert workflow.out.strling_genotype.size() == 2 },
+                { assert workflow.out.strling_bounds.size() == 2 },
+                { assert workflow.out.vcf_strling.size() == 2 },
+                { assert workflow.out.vcf_consensus.size() == 2 }
+            )
+        }
+    }
+}

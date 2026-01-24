@@ -31,8 +31,12 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     // Index bam
     INDEX_MERGE_BAM(bam_all)
 
+    ch_bai_crai = INDEX_MERGE_BAM.out.bai
+        .mix(INDEX_MERGE_BAM.out.csi)
+        .mix(INDEX_MERGE_BAM.out.crai)
+
     // Join with the bai file
-    bam_bai = bam_all.join(INDEX_MERGE_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true)
+    bam_bai = bam_all.join(ch_bai_crai, failOnDuplicate: true, failOnMismatch: true)
 
     // Gather versions of all tools used
     versions = versions.mix(INDEX_MERGE_BAM.out.versions)

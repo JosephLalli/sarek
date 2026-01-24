@@ -47,5 +47,103 @@
             "nextflow": "25.12.0"
         },
         "timestamp": "2026-01-05T22:25:45.052724687"
+    },
+    "human - vcf - common - valid large cohort": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,b200591852ba52d4d71530898ab04ca1"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,121ffb88d88520440a705be80bb0a9e6"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,c8a2ffc8ede2575a8020b23691f5f015"
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,121ffb88d88520440a705be80bb0a9e6"
+                    ]
+                ],
+                "phased_variant": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,b200591852ba52d4d71530898ab04ca1"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,c8a2ffc8ede2575a8020b23691f5f015"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T04:42:43.622817625"
+    },
+    "human - vcf - common - filtered": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_filtered"
+                        },
+                        "test_filtered.bcf:md5,f6d4bd8b5df5de5628d31f8859e60298"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test_filtered"
+                        },
+                        "test_filtered.log:md5,51c3cbd870f2755d5ecd15ef7045deb7"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,c8a2ffc8ede2575a8020b23691f5f015"
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test_filtered"
+                        },
+                        "test_filtered.log:md5,51c3cbd870f2755d5ecd15ef7045deb7"
+                    ]
+                ],
+                "phased_variant": [
+                    [
+                        {
+                            "id": "test_filtered"
+                        },
+                        "test_filtered.bcf:md5,f6d4bd8b5df5de5628d31f8859e60298"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,c8a2ffc8ede2575a8020b23691f5f015"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-06T04:42:55.186194514"
     }
 }

@@ -8,18 +8,13 @@ process VG_HAPLOTYPES {
         : 'quay.io/vgteam/vg:v1.70.0'}"
 
     input:
-    tuple val(meta), path(gbz), path(dist)
+    tuple val(meta), path(gbz), path(dist), path(hapl_input), path(r_index)
     tuple val(meta2), path(kmer_input)
-    path hapl_input
-    path r_index
 
     output:
-    tuple val(meta), path("*.gbz"),  emit: personalized_gbz, optional: true
+    tuple val(meta2), path("*.gbz"),  emit: personalized_gbz, optional: true
     tuple val(meta), path("*.hapl"), emit: hapl, optional: true
     path "versions.yml",             emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

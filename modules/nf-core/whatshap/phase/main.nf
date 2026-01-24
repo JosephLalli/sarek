@@ -1,11 +1,13 @@
+nextflow.enable.dsl=2
+
 process WHATSHAP_PHASE {
     tag "$meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/whatshap:2.3--py310h30d963c_0' :
-        'quay.io/biocontainers/whatshap:2.3--py310h30d963c_0' }"
+        'https://depot.galaxyproject.org/singularity/whatshap:2.8--py312hf731ba3_0' :
+        'quay.io/biocontainers/whatshap:2.8--py312hf731ba3_0' }"
 
     input:
     tuple val(meta), path(vcf), path(tbi)
@@ -37,9 +39,9 @@ process WHATSHAP_PHASE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        whatshap: 
+        whatshap: \$(whatshap --version | sed "s/WhatsHap //")
     END_VERSIONS
-    ""
+    """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
@@ -49,7 +51,7 @@ process WHATSHAP_PHASE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        whatshap: 
+        whatshap: \$(whatshap --version | sed "s/WhatsHap //")
     END_VERSIONS
-    ""
+    """
 }

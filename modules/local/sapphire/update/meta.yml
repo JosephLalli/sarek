@@ -1,0 +1,41 @@
+name: sapphire_update
+description: Updates a BCF file with polished genotypes from SAPPHIRE.
+keywords:
+  - phasing
+  - sapphire
+  - update
+tools:
+  - sapphire:
+      description: SAPPHIRE suite of tools for phase polishing.
+      homepage: https://github.com/rwk-unil/sapphire
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: Original phased VCF/BCF file.
+  - tbi:
+      type: file
+      description: Index of the VCF/BCF file.
+  - bin:
+      type: file
+      description: Polished binary file from phase-caller.
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bcf:
+      type: file
+      description: Updated BCF file.
+      pattern: "*.phased_corrected.bcf"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@sppearce"

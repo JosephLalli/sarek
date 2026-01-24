@@ -1,0 +1,34 @@
+nextflow_process {
+
+    name "Test Process STRLING_EXTRACT - STR Enhancement"
+    script "../main.nf"
+    process "STRLING_EXTRACT"
+    tag "modules"
+    tag "modules_local"
+    tag "strling"
+    tag "strling_extract"
+    tag "str_enhancement"
+
+    test("nc30_15 - chr4") {
+        when {
+            process {
+                """
+                input[0] = [ [ id:'nc30_15' ],
+                        file("${projectDir}/tests/test_data/str_enhancement/nc30_15.sorted.bam", checkIfExists: true),
+                        file("${projectDir}/tests/test_data/str_enhancement/nc30_15.sorted.bam.bai", checkIfExists: true)
+                        ]
+                input[1] = [[id:'fasta'], file("${projectDir}/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta", checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'], file("${projectDir}/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta.fai", checkIfExists: true)]
+                input[3] = []
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.bin.size() == 1 },
+                { assert file(process.out.bin[0][1]).name == "nc30_15.bin" }
+            )
+        }
+    }
+}

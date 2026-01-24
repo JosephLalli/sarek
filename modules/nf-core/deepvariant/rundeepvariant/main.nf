@@ -22,8 +22,6 @@ process DEEPVARIANT_RUNDEEPVARIANT {
     tuple val(meta), path("${prefix}.g.vcf.gz.{tbi,csi}") , emit: gvcf_index
     path "versions.yml"                                   , emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     // Exit if running this module with -profile conda / -profile mamba

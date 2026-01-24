@@ -286,6 +286,7 @@ workflow NFCORE_SAREK {
         params.pangenie_panel_vcf ? channel.fromPath(params.pangenie_panel_vcf).map { vcf -> [[id: 'pangenie_panel'], vcf] }.collect() : channel.value([[id: 'pangenie_panel'], []]),
         params.expansionhunter_catalog ? channel.fromPath(params.expansionhunter_catalog).map { catalog -> [[id: 'expansionhunter_catalog'], catalog] }.collect() : channel.value([[id: 'expansionhunter_catalog'], []]),
         params.gangstr_catalog ? channel.fromPath(params.gangstr_catalog).map { catalog -> [[id: 'gangstr_catalog'], catalog] }.collect() : channel.value([[id: 'gangstr_catalog'], []]),
+        params.strling_catalog ? channel.fromPath(params.strling_catalog).map { catalog -> [[id: 'strling_catalog'], catalog] }.collect() : channel.value([[id: 'strling_catalog'], []]),
         PREPARE_GENOME.out.strling_index,
         PREPARE_GENOME.out.strling_loci,
         params.str_caller ?: 'all',

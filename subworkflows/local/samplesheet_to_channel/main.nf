@@ -124,11 +124,22 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 meta = meta + [ contamination: contamination]
             }
             if ((meta.lane || meta.lane == 0) && fastq_2) {
-                // mapping from fastq files
+                // mapping from paired-end fastq files
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
 
                 if (step == 'mapping') {
                     return [meta, [fastq_1, fastq_2]]
+                }
+                else {
+                    error("Samplesheet contains fastq files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                }
+            }
+            else if ((meta.lane || meta.lane == 0) && fastq_1 && !fastq_2) {
+                // mapping from single-end fastq files
+                meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1, single_end: true]
+
+                if (step == 'mapping') {
+                    return [meta, [fastq_1]]
                 }
                 else {
                     error("Samplesheet contains fastq files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
@@ -394,8 +405,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
             log.warn("If GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-")
         }
     }
-    if (joint_germline && (!tools || !(tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
-        error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
+    if (joint_germline && ! (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope') || tools.split(',').contains('deepvariant')))) {
+        error("The GATK's Haplotypecaller, Sentieon's Dnascope, Sentieon's Haplotyper or DeepVariant should be specified as one of the tools when doing joint germline variant calling.")
     }
 
     if (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')) && joint_germline && (!dbsnp || !known_indels || !known_snps || no_intervals)) {

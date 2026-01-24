@@ -486,6 +486,12 @@ The Nextflow `-bg` flag launches Nextflow in the background, detached from your 
 Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
 Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
 
+# Pangenome Analysis
+
+Sarek supports graph-based pangenome analysis using VG Giraffe and Pangenome-Aware DeepVariant. 
+
+For detailed information on configuring and running pangenome-aware workflows, please see the [Pangenome Analysis documentation](usage/pangenome.md).
+
 # Custom configuration
 
 ## Resource requests
@@ -904,6 +910,40 @@ You will need to add another column called `contamination` to the samplesheet fo
 Varlociraptor allows the usage of different scenario files, a few examples can be found in the [scenario catalog](https://varlociraptor.github.io/varlociraptor-scenarios/landing/). Currently only scenarios that have information on "normal" (germline case), "normal" and "tumor" (somatic and tumor-only case) are supported. You can use your own scenario file by adding it to the run command with `--varlociraptor_scenario_germline <path/to/germline/scenario/file>`, `--varlociraptor_scenario_somatic <path/to/somatic/scenario/file>` or `--varlociraptor_scenario_tumor_only <path/to/tumor_only/scenario/file>`.
 
 You can control the number of chunks that the candidate VCF file is split into by `--varlociraptor_chunk_size <integer>`, it is set to reasonable default (15) but more chunks might aid in accelerating your workflow run if you can run more processes in parallel.
+
+## STR Analysis
+
+Sarek includes support for Short Tandem Repeat (STR) analysis using ExpansionHunter, STRling, and GangSTR. These tools can be enabled by adding `str` to the `--tools` parameter.
+
+### STR Callers
+
+The following STR callers are available:
+
+- **ExpansionHunter**: Targeted STR genotyping with a variant catalog.
+- **STRling**: Genome-wide STR detection and outlier calling.
+- **GangSTR**: Genome-wide STR profiling.
+
+By default, all three tools are run when `str` is specified in `--tools`. You can limit the callers using the `--str_caller` parameter.
+
+### STR Parameters
+
+| Parameter | Description |
+| --- | --- |
+| `--str_caller` | STR caller to run. Options: `expansionhunter`, `strling`, `gangstr`, `all`. Default: `all`. |
+| `--expansionhunter_catalog` | Path to the variant catalog file for ExpansionHunter (JSON). |
+| `--gangstr_catalog` | Path to the regions file for GangSTR (BED). |
+
+Example command to run STR analysis:
+
+```bash
+nextflow run nf-core/sarek \
+    --input samplesheet.csv \
+    --outdir results \
+    --genome GATK.GRCh38 \
+    --tools str \
+    --expansionhunter_catalog hg38_catalog.json \
+    --gangstr_catalog hg38_regions.bed
+```
 
 ## Spark related issues
 

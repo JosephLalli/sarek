@@ -49,11 +49,12 @@ Depending on the options and samples provided, the pipeline can currently perfor
 - Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
 - _Experimental Feature_: Use GPU-accelerated parabricks implementation as alternative to "Map Reads to Reference" + "Process BAM file" (`--aligner parabricks`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
+- Map Reads to Pangenome (`VG Giraffe`)
 - Variant calling (enabled by `--tools`, see [compatibility](https://nf-co.re/sarek/latest/docs/usage#which-variant-calling-tool-is-implemented-for-which-data-type)):
   - `ASCAT`
   - `CNVkit`
   - `Control-FREEC`
-  - `DeepVariant`
+  - `DeepVariant` (including Pangenome-Aware mode)
   - `freebayes`
   - `GATK HaplotypeCaller`
   - `GATK Mutect2`

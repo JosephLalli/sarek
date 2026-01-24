@@ -29,7 +29,7 @@ include { CRAM_SAMPLEQC                                     } from '../../subwor
 // Preprocessing
 include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk'
 include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks'
-include { FASTQ_PREPROCESS_GIRAFFE                          } from '../../subworkflows/local/fastq_preprocess_giraffe'
+include { FASTQ_PREPROCESS_PANGENOME                        } from '../../subworkflows/local/fastq_preprocess_pangenome'
 
 // PanGenie direct genotyping (bypasses alignment)
 include { PANGENIE_GENOTYPING                               } from '../../subworkflows/local/pangenie_genotyping'
@@ -121,7 +121,9 @@ workflow SAREK {
     pangenie_panel_vcf
     expansionhunter_catalog
     gangstr_catalog
+    strling_catalog
     str_index
+    strling_loci
     str_caller
     varlociraptor_scenario_germline
     varlociraptor_scenario_somatic
@@ -248,27 +250,28 @@ workflow SAREK {
             versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         }
         else if (aligner == 'giraffe') {
-            // PREPROCESSING WITH GIRAFFE (pangenome alignment)
-            FASTQ_PREPROCESS_GIRAFFE(
+            // PREPROCESSING WITH PANGENOME ALIGNMENT (VG Giraffe)
+            FASTQ_PREPROCESS_PANGENOME(
                 input_fastq,
                 input_sample,
+                dict,
                 fasta,
                 fasta_fai,
-                dict,
-                pangenome_gbz,
-                pangenome_dist,
-                pangenome_min,
-                pangenome_ref_paths,
+                index_alignment,
+                intervals_and_num_intervals,
                 intervals_for_preprocessing,
+                known_sites_indels,
+                known_sites_indels_tbi,
+                bbsplit_index,
             )
 
             // Gather preprocessing output
             cram_variant_calling = channel.empty()
-            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GIRAFFE.out.cram_variant_calling)
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PANGENOME.out.cram_variant_calling)
 
             // Gather used softwares versions
-            reports = reports.mix(FASTQ_PREPROCESS_GIRAFFE.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_GIRAFFE.out.versions)
+            reports = reports.mix(FASTQ_PREPROCESS_PANGENOME.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_PANGENOME.out.versions)
         }
         else if (aligner == 'none') {
             // NO ALIGNMENT - PANGENIE DIRECT GENOTYPING
@@ -487,7 +490,6 @@ workflow SAREK {
         BAM_VARIANT_CALLING_GERMLINE_ALL(
             tools,
             skip_tools,
-            bam_variant_calling_status_normal,
             cram_variant_calling_status_normal,
             [[id: 'bwa'], []],
             cnvkit_reference,
@@ -514,6 +516,7 @@ workflow SAREK {
             params.sentieon_dnascope_emit_mode,
             params.sentieon_dnascope_pcr_indel_model,
             sentieon_dnascope_model,
+            pangenome_gbz,
         )
 
         // STR ANALYSIS
@@ -526,15 +529,17 @@ workflow SAREK {
                 fasta_fai,
                 expansionhunter_catalog,
                 gangstr_catalog,
+                strling_catalog,
                 str_index,
+                strling_loci,
                 str_tools,
                 true // val_joint_strling
             )
             
             ch_str_vcf = ch_str_vcf.mix(
                 STR_ANALYSIS.out.vcf_eh.map{ meta, vcf -> [meta + [variantcaller: 'expansionhunter'], vcf] },
-                STR_ANALYSIS.out.vcf_strling.map{ meta, vcf -> [meta + [variantcaller: 'strling'], vcf] },
-                STR_ANALYSIS.out.vcf_gangstr.map{ meta, vcf -> [meta + [variantcaller: 'gangstr'], vcf] }
+                STR_ANALYSIS.out.vcf_gangstr.map{ meta, vcf -> [meta + [variantcaller: 'gangstr'], vcf] },
+                STR_ANALYSIS.out.vcf_consensus.map{ meta, vcf -> [meta + [variantcaller: 'str_consensus'], vcf] }
             )
 
             versions = versions.mix(STR_ANALYSIS.out.versions)

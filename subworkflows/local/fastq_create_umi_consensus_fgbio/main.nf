@@ -18,6 +18,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     reads                     // channel: [mandatory] [ val(meta), [ reads ] ]
     fasta                     // channel: [mandatory] /path/to/reference/fasta
     fai                       // channel: [optional] /path/to/reference/fasta_fai, needed for Sentieon
+    dict                      // channel: [mandatory] /path/to/reference/dict, needed for VG_ALIGN
     map_index                 // channel: [mandatory] Pre-computed mapping index
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
 
@@ -38,7 +39,11 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     // appropriately tagged interleaved FASTQ reads are mapped to the reference
     // bams will not be sorted (hence, sort = false)
     sort = false
-    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai)
+    run_markdup = false
+    personalized = false
+    save_gam = false
+    run_vg_stats = false
+    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai, dict, run_markdup, personalized, save_gam, run_vg_stats)
 
     bams_to_merge = ALIGN_UMI.out.bam
     // id currently includes the lane, so swap to just id=sample and groupKey to avoid blocking

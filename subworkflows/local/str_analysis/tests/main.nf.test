@@ -1,0 +1,41 @@
+nextflow_workflow {
+
+    name "Test Subworkflow STR_ANALYSIS"
+    script "subworkflows/local/str_analysis/main.nf"
+    workflow "STR_ANALYSIS"
+    tag "subworkflows"
+    tag "str"
+    tag "str_analysis"
+
+    test("All tools - chr4") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([ [ id:'test', sex:'XX' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam.bai', checkIfExists: true)
+                        ])
+                input[1] = Channel.of([[id:'fasta'], file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)])
+                input[2] = Channel.of([[id:'fasta_fai'], file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)])
+                input[3] = Channel.of([[id:'eh_catalog'], file(projectDir + '/assets/strling_test_data/expansionhunter_chr4_test.json', checkIfExists: true)])
+                input[4] = Channel.of([[id:'gangstr_catalog'], file(projectDir + '/assets/strling_test_data/gangstr_chr4_test.bed', checkIfExists: true)])
+                input[5] = Channel.of([[id:'strling_catalog'], file(projectDir + '/assets/strling_test_data/strling_chr4_test.bed', checkIfExists: true)])
+                input[6] = Channel.of([[id:'str_index'], []])
+                input[7] = Channel.of([[id:'strling_loci'], []])
+                input[8] = ['expansionhunter', 'strling', 'gangstr']
+                input[9] = false // val_joint_strling
+                """
+            }
+        }
+        then {
+            assertAll(
+                {assert workflow.success},
+                {assert workflow.out.vcf_eh},
+                {assert workflow.out.vcf_gangstr},
+                {assert workflow.out.vcf_strling},
+                {assert workflow.out.vcf_consensus},
+                {assert snapshot(workflow.out.versions).match()}
+            )
+        }
+    }
+}

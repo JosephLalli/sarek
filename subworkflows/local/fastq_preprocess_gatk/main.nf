@@ -83,6 +83,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 input_fastq,
                 fasta,
                 fasta_fai,
+                dict,
                 index_alignment,
                 params.group_by_umi_strategy)
 
@@ -180,7 +181,12 @@ workflow FASTQ_PREPROCESS_GATK {
 
         // reads will be sorted
         sort_bam = true
-        FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
+        run_markdup = params.skip_tools && params.skip_tools.split(',').contains('markduplicates') ? false : true
+        personalized = params.pangenome_personalized_flow
+        save_gam = params.save_mapped
+        run_vg_stats = true
+
+        FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai, dict, run_markdup, personalized, save_gam, run_vg_stats)
 
         aligned_bam = channel.empty()
         aligned_bai = channel.empty()

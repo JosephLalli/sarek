@@ -1,0 +1,44 @@
+nextflow_workflow {
+
+    name "Test Subworkflow BAM_JOINT_CALLING_GERMLINE_GLNEXUS"
+    script "../main.nf"
+    workflow "BAM_JOINT_CALLING_GERMLINE_GLNEXUS"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "bam_joint_calling_germline_glnexus"
+
+    test("human - multi-sample") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of([
+                    [ id:'test_cohort' ], // meta
+                    [ 
+                        file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/sample1.g.vcf.gz"),
+                        file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/sample2.g.vcf.gz")
+                    ],
+                    [] // custom_config
+                ])
+                input[1] = channel.of([ [ id:'no_intervals' ], [] ])
+                input[2] = channel.of([ [ id:'test_fasta' ], file("${projectDir}/assets/test_data/pangenome/haplotype-sampling/test.fa") ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.vcf
+            
+            // Check that the output VCF is normalized (no multiallelic sites)
+            // We can check if any line in the VCF (excluding header) has a comma in the ALT column (column 5)
+            def vcfFile = workflow.out.vcf.get(0).get(1)
+            def process = "bcftools view -H \${vcfFile} | cut -f 5 | grep ','".execute()
+            process.waitFor()
+            assert process.exitValue() != 0 // grep should fail if no commas are found
+        }
+
+    }
+
+}

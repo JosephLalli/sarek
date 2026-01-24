@@ -13,10 +13,28 @@ nextflow_process {
             script "modules/local/strling/extract/main.nf"
             process {
                 """
-                input[0] = [ [ id:'test' ], // meta map
+                input[0] = Channel.fromList([
+                    [ [ id:'sample1' ], // meta map
                         file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
                         file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
-                        ]
+                    ],
+                    [ [ id:'sample2' ], // meta map
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
+                    ]
+                ])
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                input[3] = []
+                """
+            }
+        }
+
+        run("STRLING_MERGE") {
+            script "modules/local/strling/merge/main.nf"
+            process {
+                """
+                input[0] = STRLING_EXTRACT.out.bin.map{ it[1] }.collect()
                 input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
                 input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
                 """
@@ -29,13 +47,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STRLING_EXTRACT.out.bin.map { meta, bin -> 
-                    [ 
-                        meta, 
+                input[0] = STRLING_EXTRACT.out.bin.map { meta, bin ->
+                    [
+                        meta,
                         file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
                         file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
-                        bin 
-                    ] 
+                        bin
+                    ]
                 }
                 input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
                 input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
@@ -48,6 +66,35 @@ nextflow_process {
             assertAll(
                 {assert process.success},
                 {assert snapshot(process.out).match("strling_call")}
+            )
+        }
+
+    }
+
+    test("strling_test_data - joint calling") {
+
+        when {
+            process {
+                """
+                input[0] = STRLING_EXTRACT.out.bin.map { meta, bin ->
+                    [
+                        meta,
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bam', checkIfExists: true),
+                        file(projectDir + '/assets/strling_test_data/CANVAS.chr4-39348425_AAGGG_0_400.bai', checkIfExists: true),
+                        bin
+                    ]
+                }
+                input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
+                input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
+                input[3] = STRLING_MERGE.out.bounds.map{ it[1] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                {assert process.success},
+                {assert snapshot(process.out).match("strling_call_joint")}
             )
         }
 

@@ -1,0 +1,61 @@
+nextflow_process {
+
+    name "Test Process DEEPVARIANT_PANGENOME_AWARE"
+    script "../main.nf"
+    process "DEEPVARIANT_PANGENOME_AWARE"
+    tag "modules"
+    tag "deepvariant"
+    tag "deepvariant_pangenome"
+    config "./nextflow.config"
+
+    test("micb-kir3dl1 - [bam,bai], fasta, fai, gbz") {
+
+        when {
+            params {
+                module_args = '--model_type=WGS'
+            }
+            process {
+                """
+                input[0] = [ [id:'test'], file("${baseDir}/assets/test_data/pangenome/haplotype-sampling/test.bam", checkIfExists:true), file("${baseDir}/assets/test_data/pangenome/haplotype-sampling/test.bam.bai", checkIfExists:true), [] ]
+                input[1] = [ [id:'ref'], file("${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa", checkIfExists:true) ]
+                input[2] = [ [id:'ref'], file("${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa.fai", checkIfExists:true) ]
+                input[3] = [ [id:'null'], [] ] // gzi
+                input[4] = [ [id:'null'], [] ] // par_bed
+                input[5] = [ [id:'pangenome'], file("${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz", checkIfExists:true) ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.vcf[0][1]).exists()
+            assert path(process.out.versions[0]).exists()
+        }
+
+    }
+
+    test("micb-kir3dl1 - [bam,bai], fasta, fai, gbz - stub") {
+        options "-stub"
+        when {
+            params {
+                module_args = '--model_type=WGS'
+            }
+            process {
+                """
+                input[0] = [ [id:'test'], [], [], [] ]
+                input[1] = [ [id:'ref'], [] ]
+                input[2] = [ [id:'ref'], [] ]
+                input[3] = [ [id:'null'], [] ]
+                input[4] = [ [id:'null'], [] ]
+                input[5] = [ [id:'pangenome'], [] ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.vcf[0][1]).exists()
+        }
+
+    }
+}

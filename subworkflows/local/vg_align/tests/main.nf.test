@@ -54,9 +54,14 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert workflow.out.cram.size() == 1
+            assert workflow.out.crai.size() == 1
             assert workflow.out.versions.size() > 0
             // reports should have giraffe stats
             assert workflow.out.reports.size() == 1
+
+            // Direct Surjection: Only VG_GIRAFFE should run
+            assert workflow.trace.succeeded().size() == 1
+            assert workflow.trace.succeeded().any { it.name.contains("VG_GIRAFFE") }
         }
     }
 
@@ -105,9 +110,146 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert workflow.out.cram.size() == 1
+            assert workflow.out.crai.size() == 1
             assert workflow.out.versions.size() > 0
             // reports should have giraffe stats AND vg stats
             assert workflow.out.reports.size() == 2
+
+            // Classic: VG_GIRAFFE, VG_SURJECT, and VG_STATS should run
+            assert workflow.trace.succeeded().size() == 3
+            assert workflow.trace.succeeded().any { it.name.contains("VG_GIRAFFE") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_SURJECT") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_STATS") }
+        }
+    }
+
+    test("Classic Mode (Integration)") {
+        
+        config "./classic_mode.config"
+
+        when {
+            params {
+                aligner = 'giraffe'
+            }
+            workflow {
+                """
+                def test_data_dir = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+                
+                // Reads
+                input[0] = channel.of([ 
+                    [id:'test_integration', sample:'HG003'], 
+                    [
+                        file("\${test_data_dir}/HG003_R1.fastq.gz"), 
+                        file("\${test_data_dir}/HG003_R2.fastq.gz")
+                    ] 
+                ])
+                
+                // Index Alignment (bundled)
+                input[1] = channel.of([ 
+                    [id:'giraffe'], 
+                    [
+                        file("\${test_data_dir}/micb-kir3dl1.giraffe.gbz"), 
+                        file("\${test_data_dir}/micb-kir3dl1.dist"), 
+                        file("\${test_data_dir}/micb-kir3dl1.shortread.withzip.min"), 
+                        file("\${test_data_dir}/micb-kir3dl1.shortread.zipcodes"), 
+                        file("\${test_data_dir}/micb-kir3dl1.ref_paths.txt"), 
+                        file("\${test_data_dir}/micb-kir3dl1.ref_paths.txt") // Dummy for hapl, not used in classic mode
+                    ] 
+                ])
+
+                // Reference
+                input[2] = channel.of([ [id:'ref'], file("\${test_data_dir}/micb-kir3dl1.reference.fa") ])
+                input[3] = channel.of([ [id:'fai'], file("\${test_data_dir}/micb-kir3dl1.reference.fa.fai") ])
+                input[4] = channel.of([ [id:'dict'], file("\${test_data_dir}/micb-kir3dl1.reference.dict") ])
+                
+                // Flags
+                input[5] = true // sort_bam
+                input[6] = true // run_markdup
+                input[7] = false // personalized
+                input[8] = true // save_gam
+                input[9] = true // run_vg_stats
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.cram.size() == 1
+            assert workflow.out.crai.size() == 1
+            assert workflow.out.versions.size() > 0
+            // reports should have giraffe stats AND vg stats
+            assert workflow.out.reports.size() == 2
+
+            // Classic: VG_GIRAFFE, VG_SURJECT, and VG_STATS should run
+            assert workflow.trace.succeeded().size() == 3
+            assert workflow.trace.succeeded().any { it.name.contains("VG_GIRAFFE") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_SURJECT") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_STATS") }
+        }
+    }
+
+    test("Personalized Mode (Integration)") {
+        
+        config "./classic_mode.config"
+
+        when {
+            params {
+                aligner = 'giraffe'
+            }
+            workflow {
+                """
+                def test_data_dir = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+                
+                // Reads
+                input[0] = channel.of([ 
+                    [id:'test_pers_int', sample:'HG003'], 
+                    [
+                        file("\${test_data_dir}/HG003_R1.fastq.gz"), 
+                        file("\${test_data_dir}/HG003_R2.fastq.gz")
+                    ] 
+                ])
+                
+                // Index Alignment (bundled)
+                input[1] = channel.of([ 
+                    [id:'giraffe'], 
+                    [
+                        file("\${test_data_dir}/micb-kir3dl1.giraffe.gbz"), 
+                        file("\${test_data_dir}/micb-kir3dl1.dist"), 
+                        file("\${test_data_dir}/micb-kir3dl1.shortread.withzip.min"), 
+                        file("\${test_data_dir}/micb-kir3dl1.shortread.zipcodes"), 
+                        file("\${test_data_dir}/micb-kir3dl1.ref_paths.txt"), 
+                        file("\${test_data_dir}/micb-kir3dl1.hapl")
+                    ] 
+                ])
+
+                // Reference
+                input[2] = channel.of([ [id:'ref'], file("\${test_data_dir}/micb-kir3dl1.reference.fa") ])
+                input[3] = channel.of([ [id:'fai'], file("\${test_data_dir}/micb-kir3dl1.reference.fa.fai") ])
+                input[4] = channel.of([ [id:'dict'], file("\${test_data_dir}/micb-kir3dl1.reference.dict") ])
+                
+                // Flags
+                input[5] = true // sort_bam
+                input[6] = true // run_markdup
+                input[7] = true // personalized
+                input[8] = true // save_gam
+                input[9] = true // run_vg_stats
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.out.cram.size() == 1
+            assert workflow.out.crai.size() == 1
+            assert workflow.out.versions.size() > 0
+            assert workflow.out.reports.size() == 2
+
+            // Personalized: KMC, VG_HAPLOTYPES, VG_GIRAFFE, VG_SURJECT, and VG_STATS should run
+            assert workflow.trace.succeeded().any { it.name.contains("KMC") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_HAPLOTYPES") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_GIRAFFE") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_SURJECT") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_STATS") }
         }
     }
 
@@ -157,8 +299,17 @@ nextflow_workflow {
         then {
             assert workflow.success
             assert workflow.out.cram.size() == 1
+            assert workflow.out.crai.size() == 1
             assert workflow.out.versions.size() > 0
             assert workflow.out.reports.size() == 2
+
+            // Personalized: KMC, VG_HAPLOTYPES, VG_GIRAFFE, VG_SURJECT, and VG_STATS should run
+            assert workflow.trace.succeeded().size() == 5
+            assert workflow.trace.succeeded().any { it.name.contains("KMC") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_HAPLOTYPES") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_GIRAFFE") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_SURJECT") }
+            assert workflow.trace.succeeded().any { it.name.contains("VG_STATS") }
         }
     }
 }

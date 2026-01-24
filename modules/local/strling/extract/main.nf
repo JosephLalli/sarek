@@ -22,11 +22,13 @@ process STRLING_EXTRACT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def index_arg = str_index ? "-g ${str_index}" : ""
+    // str_index can be a single path or a list of paths
+    def index_list = str_index instanceof List ? str_index : [str_index]
+    def index_args = index_list.findAll { it }.collect { "-g ${it}" }.join(" ")
     """
     strling extract \
         $args \
-        $index_arg \
+        $index_args \
         -f $fasta \
         $bam \
         ${prefix}.bin

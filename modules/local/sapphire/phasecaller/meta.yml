@@ -1,0 +1,51 @@
+name: sapphire_phasecaller
+description: |
+  Performs read-backed phase polishing using SAPPHIRE.
+  Note: Input aligned reads must have quality scores.
+  The `--no-filter` flag must be specified if not using paired reads (e.g. for long-read data).
+  The `--max-distance` parameter should be set to at least the median read length, preferably the 90th percentile read length.
+keywords:
+  - phasing
+  - sapphire
+  - polishing
+tools:
+  - sapphire:
+      description: SAPPHIRE suite of tools for phase polishing.
+      homepage: https://github.com/rwk-unil/sapphire
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: Phased VCF/BCF file.
+  - tbi:
+      type: file
+      description: Index of the VCF/BCF file.
+  - bin:
+      type: file
+      description: Binary file from pp_extractor.
+  - bams:
+      type: list
+      description: List of BAM/CRAM files.
+  - bais:
+      type: list
+      description: List of BAI/CRAI files.
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bin:
+      type: file
+      description: Polished variant binary file.
+      pattern: "*.polished.bin"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@sppearce"

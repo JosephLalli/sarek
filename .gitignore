@@ -17,3 +17,8 @@ test.xml
 modules/nf-core/**/tests/
 subworkflows/nf-core/**/tests/
 assets/strling_test_data/
+CLAUDE.md
+STR_CONSENSUS_REFINEMENT.md
+assets/str_catalogs/*platinumTRs*
+assets/str_catalogs/grch38.adVNTR*
+assets/str_catalogs/human_GRCh38_no_alt_analysis_set.1kgp_poly.illumina_repeat_catalogs.expansionhunter.json

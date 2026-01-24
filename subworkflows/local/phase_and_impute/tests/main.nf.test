@@ -58,27 +58,29 @@ nextflow_workflow {
             }
             workflow {
                 """
-                def test_data_base = "\${projectDir}/assets/test_data/pangenome/haplotype-sampling"
-                input[0] = channel.of([ 
-                    [ id:'test' ], // meta
-                    file(test_data_base + "/test_50samples.vcf.gz", checkIfExists: true),
-                    file(test_data_base + "/test_50samples.vcf.gz.tbi", checkIfExists: true),
-                    'chr21:10000000-11000000', // region
-                    [], // reference
+                // Use SAPPHIRE test data which has BAM reads overlapping the variant positions
+                def sapphire_base = "\${projectDir}/assets/test_data/phasing/sapphire/HG00443"
+                input[0] = channel.of([
+                    [ id:'HG00443' ], // meta - must match VCF sample name
+                    file(sapphire_base + "/test_HG00443.chr21_slice.pp.vcf.gz", checkIfExists: true),
+                    file(sapphire_base + "/test_HG00443.chr21_slice.pp.vcf.gz.tbi", checkIfExists: true),
+                    'chr21:10000000-10100000', // region matching SAPPHIRE test data
+                    [], // reference - not needed for read_backed
                     [], // reference_index
                     [], // map
                     [], // scaffold
                     [], // scaffold_index
-                    file(test_data_base + "/test.bam", checkIfExists: true),
-                    file(test_data_base + "/test.bam.bai", checkIfExists: true)
+                    file(sapphire_base + "/HG00443.chr21_slice.bam", checkIfExists: true),
+                    file(sapphire_base + "/HG00443.chr21_slice.bam.bai", checkIfExists: true)
                 ])
-                input[1] = channel.of([ 
-                    [ id:'genome' ], 
-                    file(test_data_base + "/test.fa", checkIfExists: true)
+                // Meta IDs must match for join operations in the workflow
+                input[1] = channel.of([
+                    [ id:'HG00443' ],
+                    file(sapphire_base + "/chm13v2.0.chr21.fa.gz", checkIfExists: true)
                 ])
-                input[2] = channel.of([ 
-                    [ id:'genome' ], 
-                    file(test_data_base + "/test.fa.fai", checkIfExists: true)
+                input[2] = channel.of([
+                    [ id:'HG00443' ],
+                    file(sapphire_base + "/chm13v2.0.chr21.fa.gz.fai", checkIfExists: true)
                 ])
                 """
             }
@@ -86,6 +88,8 @@ nextflow_workflow {
 
         then {
             assert workflow.success
+            // Verify phasing produced output (not empty)
+            assert workflow.out.phased_vcf.size() > 0 || workflow.out[0].size() > 0, "Read-backed phasing should produce output"
             assert snapshot(workflow.out).match()
         }
 
@@ -95,6 +99,54 @@ nextflow_workflow {
         when {
             params {
                 phasing_method = 'hybrid'
+            }
+            workflow {
+                """
+                // Hybrid uses both read-backed (WhatsHap) and population-based (SHAPEIT5) phasing
+                // Use single-sample SAPPHIRE data for WhatsHap compatibility
+                def sapphire_base = "\${projectDir}/assets/test_data/phasing/sapphire/HG00443"
+                def panel_base = "\${projectDir}/assets/test_data/pangenome/haplotype-sampling"
+                input[0] = channel.of([
+                    [ id:'HG00443' ], // meta - must match VCF sample name
+                    file(sapphire_base + "/test_HG00443.chr21_slice.pp.vcf.gz", checkIfExists: true),
+                    file(sapphire_base + "/test_HG00443.chr21_slice.pp.vcf.gz.tbi", checkIfExists: true),
+                    'chr21:10000000-10100000', // region matching SAPPHIRE test data
+                    file(panel_base + "/reference_50samples.vcf.gz", checkIfExists: true), // reference panel
+                    file(panel_base + "/reference_50samples.vcf.gz.tbi", checkIfExists: true), // reference_index
+                    [], // map
+                    [], // scaffold
+                    [], // scaffold_index
+                    file(sapphire_base + "/HG00443.chr21_slice.bam", checkIfExists: true),
+                    file(sapphire_base + "/HG00443.chr21_slice.bam.bai", checkIfExists: true)
+                ])
+                // Meta IDs must match for join operations in the workflow
+                input[1] = channel.of([
+                    [ id:'HG00443' ],
+                    file(sapphire_base + "/chm13v2.0.chr21.fa.gz", checkIfExists: true)
+                ])
+                input[2] = channel.of([
+                    [ id:'HG00443' ],
+                    file(sapphire_base + "/chm13v2.0.chr21.fa.gz.fai", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            // Verify phasing produced output (not empty)
+            assert workflow.out.phased_vcf.size() > 0 || workflow.out[0].size() > 0, "Hybrid phasing should produce output"
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+    test("population phasing including rare - chr21") {
+
+        when {
+            params {
+                phasing_method = 'population'
+                run_phasing_rare = true
             }
             workflow {
                 """

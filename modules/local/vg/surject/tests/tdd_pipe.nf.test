@@ -1,0 +1,43 @@
+nextflow_process {
+
+    name "Test Process VG_SURJECT (TDD)"
+    script "../main.nf"
+    process "VG_SURJECT"
+
+    tag "modules"
+    tag "modules_local"
+    tag "vg"
+    tag "vg_surject"
+
+    test("TDD: Post-Processing Pipe Logic - Stub") {
+        options "-stub"
+        config "./tdd.config"
+        setup {
+            // Using existing project assets
+            def test_data_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+        }
+        when {
+            process {
+                """
+                def test_data_base = "\${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+                input[0] = [ [ id:'test', single_end:false ], 
+                    file("\${test_data_base}/test.bam", checkIfExists: true) ] // Using BAM as stand-in for GAM
+                input[1] = [ [ id:'graph' ], file("\${test_data_base}/micb-kir3dl1.giraffe.gbz", checkIfExists: true) ]
+                input[2] = [] // ref_paths
+                input[3] = [ [id:'fasta'], file("\${test_data_base}/micb-kir3dl1.CHM13.fa") ]
+                input[4] = [ [id:'fai'], file("\${test_data_base}/micb-kir3dl1.CHM13.fa.fai") ]
+                input[5] = [ [id:'dict'], file("\${test_data_base}/micb-kir3dl1.CHM13.dict") ]
+                input[6] = true  // sort_bam
+                input[7] = true  // run_markdup
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // Assert that CRAM is produced (default for alignment)
+            assert process.out.cram != null
+            assert process.out.cram.size() == 1
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "human - region_string": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "region_id": "chr21_part"
+                        },
+                        "test.chr21_part.vcf.gz:md5,bc5ac082c0e4e82dbda2bc0277550ace",
+                        "test.chr21_part.vcf.gz.tbi:md5,2e4e227ae187fe48383e5de05b038611"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,65cf5857e51094ed15b729b60e7ca656"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "region_id": "chr21_part"
+                        },
+                        "test.chr21_part.vcf.gz:md5,bc5ac082c0e4e82dbda2bc0277550ace",
+                        "test.chr21_part.vcf.gz.tbi:md5,2e4e227ae187fe48383e5de05b038611"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,65cf5857e51094ed15b729b60e7ca656"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-07T06:21:08.175364765"
+    },
+    "human - bed_file": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "region_id": "chr21_bed"
+                        },
+                        "test.chr21_bed.vcf.gz:md5,c9cff20088b847e3cc1f29401f820c6e",
+                        "test.chr21_bed.vcf.gz.tbi:md5,9768f23bb13550c4175b6dc9d905d207"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,65cf5857e51094ed15b729b60e7ca656"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "region_id": "chr21_bed"
+                        },
+                        "test.chr21_bed.vcf.gz:md5,c9cff20088b847e3cc1f29401f820c6e",
+                        "test.chr21_bed.vcf.gz.tbi:md5,9768f23bb13550c4175b6dc9d905d207"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,65cf5857e51094ed15b729b60e7ca656"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-07T06:21:18.934924571"
+    }
+}

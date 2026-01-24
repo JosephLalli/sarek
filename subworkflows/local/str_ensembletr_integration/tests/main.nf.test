@@ -1,0 +1,77 @@
+nextflow_workflow {
+
+    name "Integration Test: STR -> EnsembleTR"
+    script "subworkflows/local/str_ensembletr_integration/main.nf"
+    workflow "STR_ENSEMBLETR_INTEGRATION"
+    tag "integration"
+    tag "str"
+    tag "ensembletr"
+
+    test("EH + GangSTR + STRling -> EnsembleTR (chr4 HTT)") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'nc30_15', sex:'XX' ],
+                    file(projectDir + '/tests/test_data/str_enhancement/nc30_15.sorted.bam', checkIfExists: true),
+                    file(projectDir + '/tests/test_data/str_enhancement/nc30_15.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'fasta' ],
+                    file(projectDir + '/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    [ id:'fasta_fai' ],
+                    file(projectDir + '/tests/test_data/str_enhancement/Homo_sapiens_assembly38.chr4.fasta.fai', checkIfExists: true)
+                ])
+                input[3] = Channel.of([
+                    [ id:'eh_catalog' ],
+                    file(projectDir + '/tests/test_data/str_enhancement/expansionhunter_catalog.json', checkIfExists: true)
+                ])
+                input[4] = Channel.of([
+                    [ id:'gangstr_catalog' ],
+                    file(projectDir + '/tests/test_data/str_enhancement/gangstr_catalog.bed', checkIfExists: true)
+                ])
+                input[5] = Channel.of([
+                    [ id:'nc30_15' ],
+                    file(projectDir + '/nc30_15-1-genotype.txt', checkIfExists: true)
+                ])
+                input[6] = Channel.of([
+                    [ id:'strling_catalog' ],
+                    file(projectDir + '/tests/test_data/str_enhancement/strling_catalog.bed', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.vcf_ensembletr.size() == 1 },
+                {
+                    def vcf = path(workflow.out.vcf_ensembletr[0][1])
+                    def lines = vcf.readLines()
+                    def record = lines.find { !it.startsWith("#") }
+                    assert lines.any { it.contains("##INFO=<ID=METHODS") && it.contains("STRling") }
+                    assert record != null
+                    def info = record.split("\\t")[7]
+                    def methods = info.split(";").find { it.startsWith("METHODS=") }?.split("=")?.getAt(1)
+                    assert methods != null
+                    def parts = methods.split("\\|")
+                    assert parts.size() >= 4
+                    assert parts[1] == "1"  // EH present
+                    assert parts[2] == "1"  // STRling present (post-processed from HipSTR)
+                    assert parts[3] == "1"  // GangSTR present
+                    def formatField = record.split("\\t")[8]
+                    def sampleField = record.split("\\t")[9]
+                    assert formatField.contains("INPUTS")
+                    assert sampleField.contains("eh=")
+                    assert sampleField.contains("gangstr=")
+                    assert sampleField.contains("strling=")
+                }
+            )
+        }
+
+    }
+}

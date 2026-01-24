@@ -1,0 +1,41 @@
+name: sapphire_extractor
+description: Extracts variants from a BCF file for rephasing with SAPPHIRE.
+keywords:
+  - phasing
+  - sapphire
+  - extraction
+tools:
+  - sapphire:
+      description: SAPPHIRE suite of tools for phase polishing.
+      homepage: https://github.com/rwk-unil/sapphire
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: Phased VCF/BCF file.
+  - tbi:
+      type: file
+      description: Index of the VCF/BCF file.
+  - region:
+      type: string
+      description: Genomic region to process.
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bin:
+      type: file
+      description: Extracted variant binary file.
+      pattern: "*.bin"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@sppearce"

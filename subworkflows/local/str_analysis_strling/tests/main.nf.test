@@ -18,7 +18,8 @@ nextflow_workflow {
                 input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
                 input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
                 input[3] = channel.empty() // ch_str_index
-                input[4] = false // joint = false
+                input[4] = channel.empty() // ch_strling_loci
+                input[5] = false // joint = false
                 """
             }
         }
@@ -47,7 +48,8 @@ nextflow_workflow {
                 input[1] = [[id:'fasta'],file(projectDir + '/assets/strling_test_data/chr4.fa', checkIfExists: true)]
                 input[2] = [[id:'fasta_fai'],file(projectDir + '/assets/strling_test_data/chr4.fa.fai', checkIfExists: true)]
                 input[3] = channel.empty() // ch_str_index
-                input[4] = true // joint = true
+                input[4] = channel.empty() // ch_strling_loci
+                input[5] = true // joint = true
                 """
             }
         }

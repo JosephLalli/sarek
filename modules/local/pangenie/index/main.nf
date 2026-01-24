@@ -18,9 +18,6 @@ process PANGENIE_INDEX {
     tuple val(meta), path("*.cereal"), path("*.fasta"), path("*.tsv.gz"), emit: index
     path "versions.yml",                                                 emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
-
     script:
     def args = task.ext.args ?: '' 
     def prefix = task.ext.prefix ?: "${vcf.baseName}"

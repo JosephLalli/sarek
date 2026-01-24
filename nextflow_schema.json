@@ -110,8 +110,8 @@
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for contamination removal, duplicate marking, variant calling and/or for annotation.",
-                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper \n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Lofreq, mpileup, Mutect2, Sentieon TNScope, Strelka\n- Structural Variants: Manta, Sentieon TNScope, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Sentieon TNScope, Strelka2 \n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC, Sentieon TNScope \n- Microsatellite Instability: MSIsensor2, MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepvariant|expansionhunter|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|pangenie|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|strelka|tiddit|vep|varlociraptor)?,?)*(?<!,)$"
+                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper \n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Lofreq, mpileup, Mutect2, Sentieon TNScope, Strelka\n- Structural Variants: Manta, Sentieon TNScope, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Sentieon TNScope, Strelka2 \n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC, Sentieon TNScope \n- Microsatellite Instability: MSIsensor2, MSIsensorpro\n- STR calling: expansionhunter, strling, gangstr (enable all with `str`)\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
+                    "pattern": "^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepvariant|deepvariant_pangenome|expansionhunter|freebayes|gangstr|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|pangenie|samtools_markdup|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|str|strling|strelka|tiddit|vep|varlociraptor)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -1302,6 +1302,71 @@
                     "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
+        },
+        "phasing_options": {
+            "title": "Phasing options",
+            "type": "object",
+            "description": "Configure phasing and imputation tools",
+            "fa_icon": "fas fa-dna",
+            "properties": {
+                "phasing_method": {
+                    "type": "string",
+                    "default": "population",
+                    "description": "Specify the phasing method to be used.",
+                    "help_text": "Choices: population (SHAPEIT5), read_backed (WhatsHap), read_corrected (SHAPEIT5 + SAPPHIRE), hybrid (WhatsHap + SHAPEIT4 + SHAPEIT5).",
+                    "enum": ["population", "read_backed", "read_corrected", "hybrid"]
+                },
+                "sapphire_no_filter": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Disable read filtering in SAPPHIRE.",
+                    "help_text": "This flag MUST be specified if not using paired reads (e.g. when using long-read data like ONT)."
+                },
+                "sapphire_max_distance": {
+                    "type": "integer",
+                    "description": "Maximum distance for SAPPHIRE phase polishing.",
+                    "help_text": "This should be set to at least the median read length, preferably the 90th percentile read length of your input data."
+                }
+            }
+        },
+        "str_analysis_options": {
+            "title": "STR Analysis options",
+            "type": "object",
+            "description": "Configure Short Tandem Repeat (STR) analysis tools",
+            "fa_icon": "fas fa-dna",
+            "properties": {
+                "str_caller": {
+                    "type": "string",
+                    "default": "all",
+                    "description": "Specify the STR caller to be used.",
+                    "help_text": "Multiple callers can be specified, separated by commas. Options: expansionhunter, strling, gangstr, all.",
+                    "pattern": "^((expansionhunter|strling|gangstr|all)?,?)*(?<!,)$"
+                },
+                "expansionhunter_catalog": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to the variant catalog file for ExpansionHunter (JSON).",
+                    "help_text": "Required when using ExpansionHunter. The variant catalog specifies the repeat regions to genotype."
+                },
+                "gangstr_catalog": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to the regions file for GangSTR (BED).",
+                    "help_text": "Required when using GangSTR. The regions file specifies the repeat regions to profile."
+                },
+                "strling_catalog": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to the STR catalog file for STRling-to-VCF conversion (BED).",
+                    "help_text": "Required when using STRling VCF conversion. Expected format: ID/MOTIFS/STRUC in column 4."
+                },
+                "strling_loci": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Annotated bed file specifying additional STR loci to genotype with STRling.",
+                    "help_text": "Optional for STRling. Format is: chr start stop repeatunit [name]"
+                }
+            }
         }
     },
     "allOf": [
@@ -1340,6 +1405,12 @@
         },
         {
             "$ref": "#/$defs/generic_options"
+        },
+        {
+            "$ref": "#/$defs/phasing_options"
+        },
+        {
+            "$ref": "#/$defs/str_analysis_options"
         }
     ]
 }

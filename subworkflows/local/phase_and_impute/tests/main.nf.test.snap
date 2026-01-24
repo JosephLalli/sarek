@@ -30,24 +30,24 @@
                         {
                             "id": "test"
                         },
-                        "test.bcf:md5,72ed4dcb63c6cf759412c2bad23a5407"
+                        "test.phased_common_variants.bcf:md5,ad60a1abb5d34ab19e6c2e7009d94941"
                     ]
                 ],
                 "1": [
                     "versions.yml:md5,1e8f69bb98a3cb3a82f1f3bd931474a3",
-                    "versions.yml:md5,a41e4a47726533fd1a78d9231d119e64"
+                    "versions.yml:md5,25ed4c7a125b4e6ee0583be43e193190"
                 ],
                 "phased_vcf": [
                     [
                         {
                             "id": "test"
                         },
-                        "test.bcf:md5,72ed4dcb63c6cf759412c2bad23a5407"
+                        "test.phased_common_variants.bcf:md5,ad60a1abb5d34ab19e6c2e7009d94941"
                     ]
                 ],
                 "versions": [
                     "versions.yml:md5,1e8f69bb98a3cb3a82f1f3bd931474a3",
-                    "versions.yml:md5,a41e4a47726533fd1a78d9231d119e64"
+                    "versions.yml:md5,25ed4c7a125b4e6ee0583be43e193190"
                 ]
             }
         ],
@@ -55,7 +55,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.12.0"
         },
-        "timestamp": "2026-01-06T03:37:46.893430811"
+        "timestamp": "2026-01-08T22:39:32.185651534"
     },
     "population phasing - stub": {
         "content": [
@@ -117,16 +117,26 @@
         "content": [
             {
                 "0": [
-                    
+                    [
+                        {
+                            "id": "HG00443"
+                        },
+                        "HG00443.phased.vcf.gz:md5,1d44b4ad784172736c7acc2a7a2fb2d7"
+                    ]
                 ],
                 "1": [
-                    
+                    "versions.yml:md5,1af8432037b9310e868590b781a06fdf"
                 ],
                 "phased_vcf": [
-                    
+                    [
+                        {
+                            "id": "HG00443"
+                        },
+                        "HG00443.phased.vcf.gz:md5,1d44b4ad784172736c7acc2a7a2fb2d7"
+                    ]
                 ],
                 "versions": [
-                    
+                    "versions.yml:md5,1af8432037b9310e868590b781a06fdf"
                 ]
             }
         ],
@@ -134,6 +144,43 @@
             "nf-test": "0.9.3",
             "nextflow": "25.12.0"
         },
-        "timestamp": "2026-01-06T03:17:33.373395196"
+        "timestamp": "2026-01-08T19:30:57.056739956"
+    },
+    "population phasing including rare - chr21": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.phased_rare_variants.bcf:md5,ae298652f503a3bea8172ff7b9d43585"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,1e8f69bb98a3cb3a82f1f3bd931474a3",
+                    "versions.yml:md5,25ed4c7a125b4e6ee0583be43e193190",
+                    "versions.yml:md5,f2730095590a730cd2e6b73a0a7e9f5d"
+                ],
+                "phased_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.phased_rare_variants.bcf:md5,ae298652f503a3bea8172ff7b9d43585"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1e8f69bb98a3cb3a82f1f3bd931474a3",
+                    "versions.yml:md5,25ed4c7a125b4e6ee0583be43e193190",
+                    "versions.yml:md5,f2730095590a730cd2e6b73a0a7e9f5d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-08T22:40:35.938053857"
     }
 }

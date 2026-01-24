@@ -3,6 +3,7 @@
 //
 
 include { BAM_JOINT_CALLING_GERMLINE_GATK                                              } from '../bam_joint_calling_germline_gatk/main'
+include { BAM_JOINT_CALLING_GERMLINE_GLNEXUS                                           } from '../bam_joint_calling_germline_glnexus/main'
 include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                          } from '../bam_joint_calling_germline_sentieon/main'
 include { BAM_VARIANT_CALLING_CNVKIT                                                   } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_DEEPVARIANT                                              } from '../bam_variant_calling_deepvariant/main'
@@ -23,7 +24,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
-    bam                               // channel: [mandatory] meta, bam
     cram                              // channel: [mandatory] meta, cram
     bwa                               // channel: [mandatory] meta, bwa
     cnvkit_reference                  // channel: [optional] cnvkit reference
@@ -50,6 +50,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     sentieon_dnascope_emit_mode       // channel: [mandatory] value channel with string
     sentieon_dnascope_pcr_indel_model // channel: [mandatory] value channel with string
     sentieon_dnascope_model           // channel: [mandatory] value channel with string
+    pangenome_gbz                     // channel: [optional]  [ meta, gbz ]
 
     main:
     versions = channel.empty()
@@ -103,18 +104,38 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // DEEPVARIANT
-    if (tools && tools.split(',').contains('deepvariant')) {
+    if (tools && (tools.split(',').contains('deepvariant') || tools.split(',').contains('deepvariant_pangenome'))) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
             cram,
             dict,
             fasta,
             fasta_fai,
-            intervals
+            intervals,
+            pangenome_gbz
         )
 
         vcf_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.vcf
         tbi_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
+
+        if (joint_germline) {
+            // Group gVCFs for GLnexus
+            // GLNEXUS expects: [ [id:cohort], [gvcfs], [] ]
+            ch_gvcfs_for_glnexus = BAM_VARIANT_CALLING_DEEPVARIANT.out.gvcf
+                .map { meta, gvcf -> [ [ id:params.cohort ?: 'joint_germline' ], gvcf ] }
+                .groupTuple()
+                .map { meta, gvcfs -> [ meta, gvcfs, [] ] }
+
+            BAM_JOINT_CALLING_GERMLINE_GLNEXUS(
+                ch_gvcfs_for_glnexus,
+                [ [ id:'no_intervals' ], [] ],
+                fasta
+            )
+
+            vcf_deepvariant = BAM_JOINT_CALLING_GERMLINE_GLNEXUS.out.vcf
+            tbi_deepvariant = BAM_JOINT_CALLING_GERMLINE_GLNEXUS.out.tbi
+            versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_GLNEXUS.out.versions)
+        }
     }
 
     // FREEBAYES

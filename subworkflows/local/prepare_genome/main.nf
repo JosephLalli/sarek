@@ -19,6 +19,7 @@ include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-
 include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_LOCI                       } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-core/unzip'
+include { VG_GBWT                                   } from '../../../modules/local/vg/gbwt/main'
 
 workflow PREPARE_GENOME {
     take:
@@ -49,6 +50,13 @@ workflow PREPARE_GENOME {
     msisensorpro_scan_in        // channel: [optional]  msisensorpro_scan
     pon_in                      // params.pon
     pon_tbi_in                  // params.pon_tbi
+    pangenome_gbz_in            // params.pangenome_gbz
+    pangenome_dist_in           // params.pangenome_dist
+    pangenome_min_in            // params.pangenome_min
+    pangenome_zipcodes_in       // params.pangenome_zipcodes
+    pangenome_ref_paths_in      // params.pangenome_ref_paths
+    pangenome_ri_in             // params.pangenome_ri
+    strling_loci_in             // params.strling_loci
     aligner                     // params.aligner
     step                        // params.step
     tools                       // params.tools
@@ -86,8 +94,31 @@ workflow PREPARE_GENOME {
         else if (aligner == 'dragmap') {
             index_alignment = channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
         }
-        else if (aligner == 'giraffe' || aligner == 'none') {
-            // Giraffe uses pangenome indices, not traditional alignment indices
+        else if (aligner == 'giraffe') {
+            // Bundle Giraffe assets into index_alignment
+            def ch_gbz = pangenome_gbz_in ? channel.fromPath(pangenome_gbz_in).collect() : channel.value([[]])
+            def ch_dist = pangenome_dist_in ? channel.fromPath(pangenome_dist_in).collect() : channel.value([[]])
+            def ch_min = pangenome_min_in ? channel.fromPath(pangenome_min_in).collect() : channel.value([[]])
+            def ch_zipcodes = pangenome_zipcodes_in ? channel.fromPath(pangenome_zipcodes_in).collect() : channel.value([[]])
+            def ch_ref_paths = pangenome_ref_paths_in ? channel.fromPath(pangenome_ref_paths_in).collect() : channel.value([[]])
+
+            def ch_r_index = channel.value([])
+            if (pangenome_gbz_in) {
+                 if (pangenome_ri_in) {
+                     ch_r_index = channel.fromPath(pangenome_ri_in).collect()
+                 } else {
+                     VG_GBWT(ch_gbz.map { list -> [[id: 'pangenome'], list[0]] })
+                     ch_r_index = VG_GBWT.out.ri.map{ meta, ri -> ri }.collect()
+                     versions = versions.mix(VG_GBWT.out.versions)
+                 }
+            }
+
+            index_alignment = ch_gbz.combine(ch_dist).combine(ch_min).combine(ch_zipcodes).combine(ch_ref_paths).combine(ch_r_index)
+                .map { gbz, dist, min, zipcodes, ref_paths, r_index ->
+                    [[id: 'giraffe'], [gbz, dist, min, zipcodes, ref_paths, r_index]]
+                }.collect()
+        }
+        else if (aligner == 'none') {
             // 'none' skips alignment entirely
             index_alignment = channel.value([[id: aligner], []])
         }
@@ -131,6 +162,8 @@ workflow PREPARE_GENOME {
         strling_index = STRLING_INDEX.out.str_index.collect()
         versions = versions.mix(STRLING_INDEX.out.versions)
     }
+
+    strling_loci = strling_loci_in ? channel.fromPath(strling_loci_in).map { loci -> [[id: 'strling_loci'], loci] }.collect() : channel.empty()
 
     // Prepare genome for BBSplit contamination filtering
     bbsplit_index = channel.empty()
@@ -343,6 +376,7 @@ workflow PREPARE_GENOME {
     pon                      // Channel: [pon]
     pon_tbi                  // Channel: [pon_tbi]
     strling_index            // Channel: [meta, str_index]
+    strling_loci             // Channel: [meta, strling_loci]
     vep_fasta                // Channel: [meta, vep_fasta]
     versions                 // Channel: [versions.yml]
 }

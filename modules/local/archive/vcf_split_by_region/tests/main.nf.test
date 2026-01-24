@@ -1,0 +1,62 @@
+nextflow_process {
+
+    name "Test Process VCF_SPLIT_BY_REGION"
+    script "../main.nf"
+    process "VCF_SPLIT_BY_REGION"
+
+    tag "modules"
+    tag "modules_local"
+    tag "vcf_split_by_region"
+
+    test("human - region_string") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file("${projectDir}/assets/test_data/phasing/sapphire/test_trio.chr21_slice.vcf.gz"),
+                    file("${projectDir}/assets/test_data/phasing/sapphire/test_trio.chr21_slice.vcf.gz.tbi")
+                ]
+                input[1] = [ 'chr21_part', 'chr21:10000000-10100000' ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+            assert path(process.out.vcf.get(0).get(1)).exists()
+            assert path(process.out.vcf.get(0).get(2)).exists()
+        }
+
+    }
+
+    test("human - bed_file") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta
+                    file("${projectDir}/assets/test_data/phasing/sapphire/test_trio.chr21_slice.vcf.gz"),
+                    file("${projectDir}/assets/test_data/phasing/sapphire/test_trio.chr21_slice.vcf.gz.tbi")
+                ]
+                // Create a dummy bed file
+                def bed = file("${workDir}/test.bed")
+                bed.text = "chr21\\t10000000\\t10100000\\n"
+                
+                input[1] = [ 'chr21_bed', bed ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+            assert path(process.out.vcf.get(0).get(1)).exists()
+        }
+
+    }
+
+}

@@ -35,20 +35,21 @@ process SHAPEIT5_PHASECOMMON {
         ${scaffold_command} \
         ${map_command} \
         ${region_command} \
-        --output ${prefix}.bcf \
+        --output ${prefix}.phased_common_variants.bcf \
         --thread ${task.cpus} \
+        --log ${prefix}.log \
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        shapeit5: 
+        shapeit5: \$(SHAPEIT5_phase_common | head -n 1 | sed 's/^.*v//; s/ .*//')
     END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.bcf
+    touch ${prefix}.phased_common_variants.bcf
     touch ${prefix}.log
 
     cat <<-END_VERSIONS > versions.yml

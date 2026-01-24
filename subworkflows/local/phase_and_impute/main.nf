@@ -8,10 +8,12 @@ include { SHAPEIT5_PHASERARE   } from '../../../modules/local/shapeit5/phase_rar
 include { SHAPEIT5_LIGATE      } from '../../../modules/local/shapeit5/ligate/main'
 include { SHAPEIT4_PHASECOMMON } from '../../../modules/local/shapeit4/phase_common/main'
 include { WHATSHAP_PHASE       } from '../../../modules/nf-core/whatshap/phase/main'
-include { BCFTOOLS_VIEW        } from '../../../modules/nf-core/bcftools/view/main'
+include { BCFTOOLS_VIEW                             } from '../../../modules/nf-core/bcftools/view/main'
+include { BCFTOOLS_VIEW as BCFTOOLS_VIEW_FILTER_MAF } from '../../../modules/nf-core/bcftools/view/main'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_COMMON   } from '../../../modules/nf-core/bcftools/index/main'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_WHATSHAP } from '../../../modules/nf-core/bcftools/index/main'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_SHAPEIT4 } from '../../../modules/nf-core/bcftools/index/main'
+include { BCFTOOLS_FILLTAGS                         } from '../../../modules/local/bcftools/filltags/main'
 
 workflow PHASE_AND_IMPUTE {
     take:
@@ -96,14 +98,26 @@ workflow PHASE_AND_IMPUTE {
         ch_versions = ch_versions.mix(BCFTOOLS_INDEX_WHATSHAP.out.versions)
         ch_whatshap_index = BCFTOOLS_INDEX_WHATSHAP.out.csi.mix(BCFTOOLS_INDEX_WHATSHAP.out.tbi)
 
-        // 2. SHAPEIT4 (Scaffold = WhatsHap)
+        // Filter input VCF to keep only common variants (MAF >= threshold) for SHAPEIT4
+        // This leaves rare variants unphased so SHAPEIT5_PHASERARE can phase them
+        ch_maf_filter_input = ch_normalized
+            .map { meta, vcf, tbi, region, ref, ref_idx, map, scaff, scaff_idx, bam, bai ->
+                [ meta, vcf, tbi ]
+            }
+        BCFTOOLS_VIEW_FILTER_MAF(ch_maf_filter_input, [], [], [])
+        ch_versions = ch_versions.mix(BCFTOOLS_VIEW_FILTER_MAF.out.versions)
+        ch_maf_filtered_index = BCFTOOLS_VIEW_FILTER_MAF.out.csi.mix(BCFTOOLS_VIEW_FILTER_MAF.out.tbi)
+
+        // 2. SHAPEIT4 (Input = MAF-filtered VCF, Scaffold = WhatsHap)
         ch_shapeit4_input = ch_normalized
+            .join(BCFTOOLS_VIEW_FILTER_MAF.out.vcf)
+            .join(ch_maf_filtered_index)
             .join(WHATSHAP_PHASE.out.phased_vcf)
             .join(ch_whatshap_index)
-            .map { meta, vcf, tbi, region, ref, ref_idx, map, scaff, scaff_idx, bam, bai, wh_vcf, wh_idx ->
-                [ meta, vcf, tbi, ref, ref_idx, map, wh_vcf, wh_idx, region ]
+            .map { meta, orig_vcf, orig_tbi, region, ref, ref_idx, map, scaff, scaff_idx, bam, bai, filt_vcf, filt_idx, wh_vcf, wh_idx ->
+                [ meta, filt_vcf, filt_idx, ref, ref_idx, map, wh_vcf, wh_idx, region ]
             }
-            
+
         SHAPEIT4_PHASECOMMON(
             ch_shapeit4_input.map { it[0..7] }, // tuple inputs
             ch_shapeit4_input.map { it[8] }     // region
@@ -115,10 +129,19 @@ workflow PHASE_AND_IMPUTE {
         ch_versions = ch_versions.mix(BCFTOOLS_INDEX_SHAPEIT4.out.versions)
         ch_shapeit4_index = BCFTOOLS_INDEX_SHAPEIT4.out.csi.mix(BCFTOOLS_INDEX_SHAPEIT4.out.tbi)
 
-        // 3. SHAPEIT5_RARE (Scaffold = SHAPEIT4)
+        // Add AC/AN/AF tags to SHAPEIT4 output (required by SHAPEIT5_PHASERARE)
+        BCFTOOLS_FILLTAGS(
+            SHAPEIT4_PHASECOMMON.out.phased_variant
+                .join(ch_shapeit4_index)
+        )
+        ch_versions = ch_versions.mix(BCFTOOLS_FILLTAGS.out.versions)
+
+        ch_filled_index = BCFTOOLS_FILLTAGS.out.index
+
+        // 3. SHAPEIT5_RARE (Scaffold = SHAPEIT4 with tags)
         ch_rare_input = ch_normalized
-            .join(SHAPEIT4_PHASECOMMON.out.phased_variant)
-            .join(ch_shapeit4_index)
+            .join(BCFTOOLS_FILLTAGS.out.vcf)
+            .join(ch_filled_index)
             .map { meta, vcf, tbi, region, ref, ref_idx, map, scaff, scaff_idx, bam, bai, s4_vcf, s4_idx ->
                 [ meta, vcf, tbi, [], region, s4_vcf, s4_idx, region, map ]
             }

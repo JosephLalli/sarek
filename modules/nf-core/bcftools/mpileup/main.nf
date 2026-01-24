@@ -46,8 +46,6 @@ process BCFTOOLS_MPILEUP {
 
     $bgzip_mpileup
 
-    tabix -p vcf -f ${prefix}.vcf.gz
-
     bcftools stats ${prefix}.vcf.gz > ${prefix}.bcftools_stats.txt
 
     cat <<-END_VERSIONS > versions.yml

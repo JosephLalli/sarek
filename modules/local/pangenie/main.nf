@@ -19,23 +19,25 @@ process PANGENIE {
     tuple val(meta), path("*.log"),                   emit: log
     path "versions.yml",                              emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
-
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def reads_arg = reads.collect { it.name.endsWith(".gz") ? "-i <(gzip -cd ${it})" : "-i ${it}" }.join(' ')
     
+    def input_vcf = panel_vcf.name.endsWith(".gz") ? "input_panel.vcf" : panel_vcf
+    def decompress_cmd = panel_vcf.name.endsWith(".gz") ? "gunzip -c ${panel_vcf} > input_panel.vcf" : ""
+
     // PanGenie-index outputs multiple files. We need to find the prefix used for indexing.
     // The prefix is usually the base name of the VCF used in indexing.
     // We assume the index files are passed as a list of paths.
     def index_prefix = panel_index ? panel_index[0].name.replaceFirst(/(_Graph\.cereal|_UniqueKmersMap\.cereal|_path_segments\.fasta|_kmers\.tsv\.gz)$/, '') : ""
     def index_arg = panel_index ? "-P ${index_prefix}" : ""
     """
+    ${decompress_cmd}
+
     PanGenie \\
         ${reads_arg} \\
-        -v ${panel_vcf} \\
+        -v ${input_vcf} \\
         ${index_arg} \\
         -r ${reference} \\
         -o ${prefix} \\

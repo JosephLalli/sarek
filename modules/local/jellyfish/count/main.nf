@@ -15,9 +15,6 @@ process JELLYFISH_COUNT {
     tuple val(meta), path("*.jf"), emit: kmer_file
     path "versions.yml",           emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
-
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"

@@ -15,7 +15,6 @@ process STRLING_CALL {
     output:
     tuple val(meta), path("*-bounds.txt")  , emit: bounds
     tuple val(meta), path("*-genotype.txt"), emit: genotype
-    tuple val(meta), path("*.vcf.gz")      , emit: vcf, optional: true
     path "versions.yml"                    , emit: versions
 
     when:
@@ -45,7 +44,6 @@ process STRLING_CALL {
     """
     touch ${prefix}-bounds.txt
     touch ${prefix}-genotype.txt
-    echo "" | gzip > ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

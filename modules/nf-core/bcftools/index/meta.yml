@@ -1,0 +1,54 @@
+name: bcftools_index
+description: Index VCF tools
+keywords:
+  - vcf
+  - index
+  - bcftools
+  - csi
+  - tbi
+tools:
+  - bcftools:
+      description: |
+        BCFtools is a set of utilities that manipulate variant calls in the Variant Call Format (VCF) and its binary counterpart BCF. All commands work transparently with both VCFs and BCFs, both uncompressed and BGZF-compressed.
+      homepage: http://samtools.github.io/bcftools/
+      documentation: http://www.htslib.org/doc/bcftools.html
+      doi: 10.1093/gigascience/giw008
+      licence: ["MIT"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: VCF file (optionally GZIPPED)
+        pattern: "*.{vcf,vcf.gz}"
+output:
+  - csi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.csi":
+          type: file
+          description: Default VCF file index file
+          pattern: "*.csi"
+  - tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tbi":
+          type: file
+          description: Alternative VCF file index file for larger files (activated with -t parameter)
+          pattern: "*.tbi"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software version
+          pattern: "versions.yml"
+authors:
+  - "@jfy133"

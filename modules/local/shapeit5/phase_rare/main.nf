@@ -34,7 +34,7 @@ process SHAPEIT5_PHASERARE {
         ${map_command} \\
         ${input_region_command} \\
         ${scaffold_region_command} \\
-        --output ${prefix}.bcf \\
+        --output ${prefix}.phased_rare_variants.bcf \\
         --thread ${task.cpus} \\
         ${args} \\
         > ${prefix}.log 2>&1
@@ -48,7 +48,7 @@ process SHAPEIT5_PHASERARE {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.bcf
+    touch ${prefix}.phased_rare_variants.bcf
     touch ${prefix}.log
 
     cat <<-END_VERSIONS > versions.yml
