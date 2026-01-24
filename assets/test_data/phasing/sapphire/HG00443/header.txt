@@ -1,0 +1,2 @@
+##FORMAT=<ID=PP,Number=1,Type=Float,Description="Posterior probability for the phased genotype">
+##source=Shapeit5

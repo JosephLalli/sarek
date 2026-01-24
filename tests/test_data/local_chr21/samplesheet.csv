@@ -1,0 +1,2 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2
+HG00443,XX,0,HG00443,L1,tests/test_data/local_chr21/HG00443.chr21.t2t_R1.fastq.gz,tests/test_data/local_chr21/HG00443.chr21.t2t_R2.fastq.gz

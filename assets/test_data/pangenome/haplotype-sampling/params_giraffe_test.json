@@ -1,0 +1,22 @@
+{
+    "input": "assets/test_data/pangenome/haplotype-sampling/samplesheet.csv",
+    "outdir": "test_output/giraffe",
+    "aligner": "giraffe",
+
+    "pangenome_gbz": "assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz",
+    "pangenome_dist": "assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.dist",
+    "pangenome_min": "assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.withzip.min",
+
+    "fasta": "assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.GRCh38.fa",
+    "fasta_fai": "assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.GRCh38.fa.fai",
+    "dict": "assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.GRCh38.dict",
+
+    "save_reference": true,
+    "save_mapped": true,
+    "skip_tools": "baserecalibrator,markduplicates",
+    "tools": null,
+
+    "max_cpus": 4,
+    "max_memory": "8.GB",
+    "max_time": "1.h"
+}

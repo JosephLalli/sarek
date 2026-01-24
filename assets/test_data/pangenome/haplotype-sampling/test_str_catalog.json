@@ -1,0 +1,8 @@
+[
+  {
+    "LocusId": "TestSTR_chr6",
+    "LocusStructure": "(T)*",
+    "ReferenceRegion": "chr6:1020-1025",
+    "VariantType": "Repeat"
+  }
+]

@@ -1,0 +1,40 @@
+def projectDir = new File('.').absolutePath
+def pangenome_test_data_base = "${projectDir}/assets/test_data/pangenome/haplotype-sampling"
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "tool_pangenie"
+
+    def test_scenario = [
+        [
+            name: "-profile test --aligner none --tools pangenie",
+            params: [
+                aligner: 'none',
+                tools: 'pangenie',
+                input: "${projectDir}/tests/csv/pangenie_test_samplesheet.csv",
+                fasta: "${projectDir}/assets/test_data/pangenie/test-reference.fa",
+                pangenie_panel_vcf: "${projectDir}/assets/test_data/pangenie/test-variants.vcf"
+            ]
+        ],
+        [
+            name: "-profile test --aligner none --tools pangenie -stub",
+            params: [
+                aligner: 'none',
+                tools: 'pangenie',
+                input: "${projectDir}/tests/csv/pangenie_test_samplesheet.csv",
+                fasta: "${projectDir}/assets/test_data/pangenie/test-reference.fa",
+                pangenie_panel_vcf: "${projectDir}/assets/test_data/pangenie/test-variants.vcf"
+            ],
+            stub: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

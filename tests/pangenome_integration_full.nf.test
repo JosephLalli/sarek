@@ -1,0 +1,79 @@
+nextflow_pipeline {
+
+    name "Test Pangenome Full Integration (Alignment + PanGenie + STRs)"
+    script "main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "pangenome_full"
+
+    test("--aligner giraffe --tools deepvariant_pangenome,pangenie,expansionhunter,gangstr,strling") {
+        setup {
+            def pangenome_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+            
+            // 1. Prepare ref_paths.txt matching the GRAPH paths
+            def ref_paths = new File("${outputDir}/ref_paths.txt")
+            ref_paths.text = "CHM13#0#chr6\nCHM13#0#chr19\n"
+            
+            // 2. Samplesheet
+            def samplesheet = new File("${outputDir}/samplesheet.csv")
+            samplesheet.text = """patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${pangenome_base}/HG003_R1.fastq.gz,${pangenome_base}/HG003_R2.fastq.gz
+"""
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'giraffe'
+                input = "${outputDir}/samplesheet.csv"
+                
+                // Pangenome indices (Rebased & Corrected)
+                pangenome_gbz = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.giraffe.gbz"
+                pangenome_dist = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.dist"
+                pangenome_min = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.shortread.withzip.min"
+                pangenome_zipcodes = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.shortread.zipcodes"
+                
+                pangenome_ref_paths = "${outputDir}/ref_paths.txt"
+                
+                // Reference genome
+                fasta = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.giraffe.fasta"
+                fasta_fai = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.giraffe.fasta.fai"
+                
+                igenomes_ignore = true
+                genome = 'CHM13'
+                
+                // Tools enabled
+                tools = 'samtools_markdup,deepvariant_pangenome,pangenie,str,expansionhunter,gangstr,strling'
+                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc'
+                
+                // STR Assets
+                expansionhunter_catalog = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/test_str_catalog.json"
+                gangstr_catalog = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/test_str_catalog.bed"
+                strling_catalog = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/test_str_catalog.bed"
+
+                // PanGenie Assets
+                pangenie_panel_vcf = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/test_pangenie_panel.vcf.gz"
+
+                save_mapped = false
+                no_intervals = true
+            }
+        }
+
+        then {
+            assert workflow.success
+            // 1. Giraffe Alignment
+            // assert path("$outputDir/preprocessing/mapped/HG003/HG003.sorted.cram").exists()
+            
+            // 2. DeepVariant Calling
+            assert path("$outputDir/variant_calling/deepvariant/HG003/HG003.deepvariant.vcf.gz").exists()
+            
+            // 3. PanGenie Calling
+            assert path("$outputDir/pangenie/HG003-L001_genotyping.vcf.gz").exists()
+            
+            // 4. STR Calling
+            assert path("$outputDir/variant_calling/expansionhunter/HG003/HG003.vcf.gz").exists()
+            assert path("$outputDir/variant_calling/gangstr/HG003/HG003.vcf.gz").exists()
+            assert path("$outputDir/variant_calling/strling/HG003/HG003.vcf.gz").exists()
+        }
+    }
+}

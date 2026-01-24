@@ -1,0 +1,20 @@
+[
+    {
+        "LocusId": "chr21_3278_3306_trsolve",
+        "ReferenceRegion": "chr21:3278-3306",
+        "LocusStructure": "(TTAACCTTAAAG)*",
+        "VariantType": "Repeat"
+    },
+    {
+        "LocusId": "chr21_3702_3749_trsolve",
+        "ReferenceRegion": "chr21:3702-3749",
+        "LocusStructure": "(AAGTA)*",
+        "VariantType": "Repeat"
+    },
+    {
+        "LocusId": "chr21_4058_4096_trsolve",
+        "ReferenceRegion": "chr21:4058-4096",
+        "LocusStructure": "(GTG)*",
+        "VariantType": "Repeat"
+    }
+]

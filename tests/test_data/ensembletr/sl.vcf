@@ -1,0 +1,15 @@
+##fileformat=VCFv4.2
+##contig=<ID=chr1,length=60>
+##command=hipstr
+##INFO=<ID=ID,Number=1,Type=String,Description="Locus ID from catalog">
+##INFO=<ID=RU,Number=1,Type=String,Description="Repeat Unit">
+##INFO=<ID=START,Number=1,Type=Integer,Description="Start position of the locus">
+##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the locus">
+##INFO=<ID=PERIOD,Number=1,Type=Integer,Description="Repeat unit length">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=REPCN,Number=2,Type=Float,Description="Repeat Copy Number">
+##FORMAT=<ID=Q,Number=1,Type=Integer,Description="Quality score derived from STRling evidence">
+##FORMAT=<ID=AD,Number=2,Type=Integer,Description="Anchored and Spanning read counts">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Total Depth">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE1
+chr1	10	SL1	CAGCAG	CAGCAGCAGCAG	.	PASS	ID=SL1;RU=CAG;START=10;END=15;PERIOD=3	GT:REPCN:Q:AD:DP	0/1:2.00,4.00:30:10,20:30

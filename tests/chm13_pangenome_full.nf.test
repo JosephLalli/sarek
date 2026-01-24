@@ -1,0 +1,61 @@
+nextflow_pipeline {
+
+    name "Test CHM13 Pangenome Full Pipeline"
+    script "main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "chm13_pangenome"
+
+    test("--aligner giraffe --tools deepvariant_pangenome (CHM13 MICB-KIR REBASED)") {
+        setup {
+            def pangenome_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+            
+            // 1. Prepare ref_paths.txt matching the GRAPH paths
+            def ref_paths = new File("${outputDir}/ref_paths.txt")
+            ref_paths.text = "CHM13#0#chr6\nCHM13#0#chr19\n"
+            
+            // 2. Samplesheet
+            def samplesheet = new File("${outputDir}/samplesheet.csv")
+            samplesheet.text = """patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${pangenome_base}/HG003_R1.fastq.gz,${pangenome_base}/HG003_R2.fastq.gz
+"""
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'giraffe'
+                input = "${outputDir}/samplesheet.csv"
+                
+                // Pangenome indices (Rebased & Corrected)
+                pangenome_gbz = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.giraffe.gbz"
+                pangenome_dist = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.dist"
+                pangenome_min = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.shortread.withzip.min"
+                pangenome_zipcodes = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.shortread.zipcodes"
+                
+                pangenome_ref_paths = "${outputDir}/ref_paths.txt"
+                
+                // Reference genome
+                fasta = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.giraffe.fasta"
+                fasta_fai = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13rebased.giraffe.fasta.fai"
+                
+                igenomes_ignore = true
+                genome = 'CHM13'
+                
+                tools = 'samtools_markdup,deepvariant_pangenome'
+                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                
+                save_mapped = true
+                no_intervals = true
+            }
+        }
+
+        then {
+            assert workflow.success
+            // Verify CRAM output from optimized path
+            assert path("$outputDir/preprocessing/giraffe/mapped/HG003/HG003.cram").exists()
+            // Verify DeepVariant VCF output
+            assert path("$outputDir/variant_calling/deepvariant/HG003/HG003.deepvariant.vcf.gz").exists()
+        }
+    }
+}

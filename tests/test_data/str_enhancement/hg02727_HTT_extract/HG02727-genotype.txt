@@ -1,0 +1,1 @@
+#chrom	left	right	repeatunit	allele1_est	allele2_est	anchored_reads	spanning_reads	spanning_pairs	expected_spanning_pairs	spanning_pairs_pctl	left_clips	right_clips	unplaced_pairs	depth	sum_str_counts

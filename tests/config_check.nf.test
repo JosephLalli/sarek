@@ -1,0 +1,32 @@
+nextflow_pipeline {
+
+    name "Config Validation"
+    script "main.nf"
+
+    test("Validate T2T and Pangenome Paths") {
+        when {
+            options "-stub" // Run in stub mode to avoid execution
+            params {
+                outdir = "$outputDir"
+                input = false
+                build_only_index = true
+                genome = 'CHM13'
+                skip_tools = 'baserecalibrator'
+                tools = null
+            }
+        }
+
+        then {
+            def chm13 = params.genomes['CHM13']
+            assert chm13 != null : "CHM13 genome not found"
+            
+            assert chm13.fasta == "s3://human-pangenomics/T2T/CHM13/assemblies/analysis_set/chm13v2.0_maskedY.fa.gz"
+            assert chm13.fasta_fai == null : "CHM13 fasta_fai should be null for generation"
+            assert chm13.dict == null : "CHM13 dict should be null for generation"
+            
+            def pangenomes = params.pangenomes
+            assert pangenomes['v2'] != null : "Pangenome v2 config not found"
+            assert pangenomes['v2'].gbz == "s3://human-pangenomics/pangenomes/freeze/release2/minigraph-cactus/hprc-v2.0-mc-chm13.gbz"
+        }
+    }
+}

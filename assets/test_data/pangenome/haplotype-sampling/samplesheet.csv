@@ -1,0 +1,2 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${projectDir}/assets/test_data/pangenome/haplotype-sampling/HG003_R1.fastq.gz,${projectDir}/assets/test_data/pangenome/haplotype-sampling/HG003_R2.fastq.gz

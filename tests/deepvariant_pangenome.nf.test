@@ -1,0 +1,53 @@
+nextflow_pipeline {
+
+    name "Test DeepVariant with Pangenome Alignment"
+    script "main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "deepvariant_pangenome"
+
+    test("--aligner giraffe --tools samtools_markdup,deepvariant_pangenome (GRCh38 Flow)") {
+        options "-stub"
+        
+        setup {
+            // Create samplesheet with absolute paths
+            def pangenome_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+            def samplesheet = new File("${outputDir}/samplesheet.csv")
+            samplesheet.text = """patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${pangenome_base}/HG003_R1.fastq.gz,${pangenome_base}/HG003_R2.fastq.gz
+"""
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'giraffe'
+                input = "${outputDir}/samplesheet.csv"
+                // Pangenome indices
+                pangenome_gbz = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz"
+                pangenome_dist = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.dist"
+                pangenome_min = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.withzip.min"
+                pangenome_zipcodes = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.zipcodes"
+                pangenome_ref_paths = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.ref_paths.txt"
+                // Reference genome (GRCh38 subset matching ref_paths)
+                fasta = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.GRCh38.fa"
+                fasta_fai = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.GRCh38.fa.fai"
+                dict = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.GRCh38.dict"
+                
+                igenomes_ignore = true
+                genome = null
+                
+                tools = 'samtools_markdup,deepvariant_pangenome'
+                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                
+                save_mapped = true
+                no_intervals = true
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.succeeded().any { it.name.contains('DEEPVARIANT_PANGENOME_AWARE') }
+        }
+    }
+}

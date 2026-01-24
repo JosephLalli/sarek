@@ -1,0 +1,17 @@
+[
+  {
+    "LocusId": "HD_HTT",
+    "ReferenceRegion": ["chr4:3074876-3074927", "chr4:3074933-3074969"],
+    "LocusStructure": "(CAG)*CAACAG(CCG)*",
+    "VariantType": ["Repeat", "Repeat"],
+    "VariantId": ["HD_HTT", "HD_HTT_CCG"],
+    "PathologicRegion": "chr4:3074876-3074927",
+    "HGNCId": null,
+    "InheritanceMode": ["AD"],
+    "DisplayRU": "CAG",
+    "Disease": "HD",
+    "NormalMax": 26,
+    "PathologicMin": 36,
+    "Gene": "HTT"
+  }
+]

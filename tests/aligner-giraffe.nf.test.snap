@@ -1,0 +1,118 @@
+{
+    "-profile test --aligner giraffe --save_reference skip QC/recal/md -stub": {
+        "content": [
+            8,
+            {
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "VG_GIRAFFE": {
+                    "vg": "v1.70.0"
+                },
+                "VG_STATS": {
+                    "vg": "v1.70.0"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/giraffe",
+                "preprocessing/giraffe/test-test_L1",
+                "preprocessing/giraffe/test-test_L1/test-test_L1.stats",
+                "preprocessing/giraffe/test-test_L2",
+                "preprocessing/giraffe/test-test_L2/test-test_L2.stats",
+                "reference",
+                "reference/intervals",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
+                "reference/intervals/genome.stub.bed",
+                "reference/intervals/genome.stub.bed.gz"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-03T22:59:42.741962916"
+    },
+    "-profile test --aligner giraffe --save_reference skip QC/recal/md": {
+        "content": [
+            8,
+            {
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "VG_GIRAFFE": {
+                    "vg": "v1.70.0"
+                },
+                "VG_STATS": {
+                    "vg": "v1.70.0"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/giraffe",
+                "preprocessing/giraffe/test-test_L1",
+                "preprocessing/giraffe/test-test_L1/test-test_L1.stats",
+                "preprocessing/giraffe/test-test_L2",
+                "preprocessing/giraffe/test-test_L2/test-test_L2.stats",
+                "reference",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz"
+            ],
+            [
+                "test-test_L1.stats:md5,912f6e8d229f732d176abd2b9490f75f",
+                "test-test_L2.stats:md5,e3c1c265d03ae5167309259a2bd9394d",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-04T05:47:20.735130089"
+    },
+    "--aligner giraffe pangenome alignment": {
+        "content": [
+            2,
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
+        },
+        "timestamp": "2026-01-05T06:15:13.201061414"
+    }
+}

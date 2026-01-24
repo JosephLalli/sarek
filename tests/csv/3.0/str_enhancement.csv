@@ -1,0 +1,3 @@
+patient,sample,sex,status,lane,bam,bai
+patient1,nc30_15,XX,0,1,/mnt/ssd/lalli/nf_stage/sarek_pangenome/tests/test_data/str_enhancement/nc30_15.sorted.bam,/mnt/ssd/lalli/nf_stage/sarek_pangenome/tests/test_data/str_enhancement/nc30_15.sorted.bam.bai
+patient2,nc190_25,XX,0,1,/mnt/ssd/lalli/nf_stage/sarek_pangenome/tests/test_data/str_enhancement/nc190_25.sorted.bam,/mnt/ssd/lalli/nf_stage/sarek_pangenome/tests/test_data/str_enhancement/nc190_25.sorted.bam.bai

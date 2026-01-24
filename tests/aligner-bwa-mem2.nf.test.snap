@@ -1,16 +1,10 @@
 {
     "-profile test --aligner bwa-mem2 --save_reference --build_only_index": {
         "content": [
-            5,
+            23,
             {
-                "BWAMEM2_INDEX": {
-                    "bwamem2": "2.2.1"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
-                },
-                "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -24,116 +18,104 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/bwamem2",
-                "reference/bwamem2/genome.fasta.0123",
-                "reference/bwamem2/genome.fasta.amb",
-                "reference/bwamem2/genome.fasta.ann",
-                "reference/bwamem2/genome.fasta.bwt.2bit.64",
-                "reference/bwamem2/genome.fasta.pac",
                 "reference/intervals",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
-                "reference/intervals/genome.bed",
-                "reference/intervals/genome.bed.gz"
+                "reference/intervals/chr10_39590436-39593013.bed",
+                "reference/intervals/chr10_39590436-39593013.bed.gz",
+                "reference/intervals/chr11_51078349-54425074.bed",
+                "reference/intervals/chr11_51078349-54425074.bed.gz",
+                "reference/intervals/chr12_37235253-37240944.bed",
+                "reference/intervals/chr12_37235253-37240944.bed.gz",
+                "reference/intervals/chr13_86252980-111703855.bed",
+                "reference/intervals/chr13_86252980-111703855.bed.gz",
+                "reference/intervals/chr15_20729747-21193490.bed",
+                "reference/intervals/chr15_20729747-21193490.bed.gz",
+                "reference/intervals/chr17_60001-448188.bed",
+                "reference/intervals/chr17_60001-448188.bed.gz",
+                "reference/intervals/chr18_47019913-54536574.bed",
+                "reference/intervals/chr18_47019913-54536574.bed.gz",
+                "reference/intervals/chr1_10001-207666.bed",
+                "reference/intervals/chr1_10001-207666.bed.gz",
+                "reference/intervals/chr1_122026460-124977944.bed",
+                "reference/intervals/chr1_122026460-124977944.bed.gz",
+                "reference/intervals/chr20_36314720-64334167.bed",
+                "reference/intervals/chr20_36314720-64334167.bed.gz",
+                "reference/intervals/chr2_16146120-32867130.bed",
+                "reference/intervals/chr2_16146120-32867130.bed.gz",
+                "reference/intervals/chr2_238904048-242183529.bed",
+                "reference/intervals/chr2_238904048-242183529.bed.gz",
+                "reference/intervals/chr4_10001-1429358.bed",
+                "reference/intervals/chr4_10001-1429358.bed.gz",
+                "reference/intervals/chr4_190173122-190204555.bed",
+                "reference/intervals/chr4_190173122-190204555.bed.gz",
+                "reference/intervals/chr5_139453660-155760324.bed",
+                "reference/intervals/chr5_139453660-155760324.bed.gz",
+                "reference/intervals/chr6_95070791-167591393.bed",
+                "reference/intervals/chr6_95070791-167591393.bed.gz",
+                "reference/intervals/chr7_58169654-60828234.bed",
+                "reference/intervals/chr7_58169654-60828234.bed.gz",
+                "reference/intervals/chr8_44033745-45877265.bed",
+                "reference/intervals/chr8_44033745-45877265.bed.gz",
+                "reference/intervals/chr9_41229379-41237752.bed",
+                "reference/intervals/chr9_41229379-41237752.bed.gz",
+                "reference/intervals/chrX_37285838-49348394.bed",
+                "reference/intervals/chrX_37285838-49348394.bed.gz",
+                "reference/intervals/chrY_9055175-9057608.bed",
+                "reference/intervals/chrY_9055175-9057608.bed.gz",
+                "reference/intervals/wgs_calling_regions_noseconds.hg38.bed.gz"
             ],
             [
-                "genome.fasta.0123:md5,d73300d44f733bcdb7c988fc3ff3e3e9",
-                "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
-                "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
-                "genome.fasta.bwt.2bit.64:md5,cd4bdf496eab05228a50c45ee43c1ed0",
-                "genome.fasta.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
-                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+                "chr10_39590436-39593013.bed:md5,ee390583f78e123a1638fa2000897087",
+                "chr10_39590436-39593013.bed.gz:md5,ee390583f78e123a1638fa2000897087",
+                "chr11_51078349-54425074.bed:md5,b40f73555d0ccaf9793a0648c158d6ee",
+                "chr11_51078349-54425074.bed.gz:md5,b40f73555d0ccaf9793a0648c158d6ee",
+                "chr12_37235253-37240944.bed:md5,435c50330dd3d0ed97bb7b86246f2632",
+                "chr12_37235253-37240944.bed.gz:md5,435c50330dd3d0ed97bb7b86246f2632",
+                "chr13_86252980-111703855.bed:md5,7b097dedf93117a3248dd8f7fc6dcb2c",
+                "chr13_86252980-111703855.bed.gz:md5,7b097dedf93117a3248dd8f7fc6dcb2c",
+                "chr15_20729747-21193490.bed:md5,e00362405d049d8332b43dc09802561c",
+                "chr15_20729747-21193490.bed.gz:md5,e00362405d049d8332b43dc09802561c",
+                "chr17_60001-448188.bed:md5,69e3a53692d16f877efc64278b34591d",
+                "chr17_60001-448188.bed.gz:md5,69e3a53692d16f877efc64278b34591d",
+                "chr18_47019913-54536574.bed:md5,b24207c01ef22401d90dd80cf206b9c3",
+                "chr18_47019913-54536574.bed.gz:md5,b24207c01ef22401d90dd80cf206b9c3",
+                "chr1_10001-207666.bed:md5,4844778df88c35121e6c76e90fae5a9f",
+                "chr1_10001-207666.bed.gz:md5,4844778df88c35121e6c76e90fae5a9f",
+                "chr1_122026460-124977944.bed:md5,1f1ecd7789243a924e5a50b83ca78912",
+                "chr1_122026460-124977944.bed.gz:md5,1f1ecd7789243a924e5a50b83ca78912",
+                "chr20_36314720-64334167.bed:md5,39dd11e6d7739f356d92695011a3259b",
+                "chr20_36314720-64334167.bed.gz:md5,39dd11e6d7739f356d92695011a3259b",
+                "chr2_16146120-32867130.bed:md5,2cb0bbffc7d6b1beecb655496850076a",
+                "chr2_16146120-32867130.bed.gz:md5,2cb0bbffc7d6b1beecb655496850076a",
+                "chr2_238904048-242183529.bed:md5,6e2c1a508bcd24fc71414f90deaea6c0",
+                "chr2_238904048-242183529.bed.gz:md5,6e2c1a508bcd24fc71414f90deaea6c0",
+                "chr4_10001-1429358.bed:md5,500040b5c9b402734769d0e6964ffbd9",
+                "chr4_10001-1429358.bed.gz:md5,500040b5c9b402734769d0e6964ffbd9",
+                "chr4_190173122-190204555.bed:md5,d9015e832d88a4df442fef46c98d3204",
+                "chr4_190173122-190204555.bed.gz:md5,d9015e832d88a4df442fef46c98d3204",
+                "chr5_139453660-155760324.bed:md5,88ee83020a088a0a19a2384c3d850488",
+                "chr5_139453660-155760324.bed.gz:md5,88ee83020a088a0a19a2384c3d850488",
+                "chr6_95070791-167591393.bed:md5,709df9ea9907bb64e3984f9b21198dbc",
+                "chr6_95070791-167591393.bed.gz:md5,709df9ea9907bb64e3984f9b21198dbc",
+                "chr7_58169654-60828234.bed:md5,60de91aecc29ad3d5bd870b98fab8d77",
+                "chr7_58169654-60828234.bed.gz:md5,60de91aecc29ad3d5bd870b98fab8d77",
+                "chr8_44033745-45877265.bed:md5,105e4a14e3765bc89688c2b625f78608",
+                "chr8_44033745-45877265.bed.gz:md5,105e4a14e3765bc89688c2b625f78608",
+                "chr9_41229379-41237752.bed:md5,fa3502e7466d2ff2cd91743db165acce",
+                "chr9_41229379-41237752.bed.gz:md5,fa3502e7466d2ff2cd91743db165acce",
+                "chrX_37285838-49348394.bed:md5,8edcc39e9b11cc7e714a0ebfd9796736",
+                "chrX_37285838-49348394.bed.gz:md5,8edcc39e9b11cc7e714a0ebfd9796736",
+                "chrY_9055175-9057608.bed:md5,d97d1298923db2a39adb9e416b23ca0b",
+                "chrY_9055175-9057608.bed.gz:md5,d97d1298923db2a39adb9e416b23ca0b",
+                "wgs_calling_regions_noseconds.hg38.bed.gz:md5,715b643da42bd93726ad1673ee0a1cfe"
             ],
             "No BAM files",
             "No CRAM files",
             "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.12.0"
         },
-        "timestamp": "2025-06-12T10:35:55.383074123"
-    },
-    "-profile test --aligner bwa-mem2 --save_reference skip QC/recal/md": {
-        "content": [
-            10,
-            {
-                "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
-                },
-                "BWAMEM2_INDEX": {
-                    "bwamem2": "2.2.1"
-                },
-                "BWAMEM2_MEM": {
-                    "bwamem2": "2.2.1",
-                    "samtools": 1.21
-                },
-                "CREATE_INTERVALS_BED": {
-                    "gawk": "5.3.0"
-                },
-                "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
-                },
-                "MERGE_BAM": {
-                    "samtools": 1.21
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
-                }
-            },
-            [
-                "csv",
-                "csv/mapped.csv",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/mapped",
-                "preprocessing/mapped/test",
-                "preprocessing/mapped/test/test.sorted.cram",
-                "preprocessing/mapped/test/test.sorted.cram.crai",
-                "reference",
-                "reference/bwamem2",
-                "reference/bwamem2/genome.fasta.0123",
-                "reference/bwamem2/genome.fasta.amb",
-                "reference/bwamem2/genome.fasta.ann",
-                "reference/bwamem2/genome.fasta.bwt.2bit.64",
-                "reference/bwamem2/genome.fasta.pac",
-                "reference/intervals",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
-                "reference/intervals/genome.bed",
-                "reference/intervals/genome.bed.gz"
-            ],
-            [
-                "genome.fasta.0123:md5,d73300d44f733bcdb7c988fc3ff3e3e9",
-                "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
-                "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
-                "genome.fasta.bwt.2bit.64:md5,cd4bdf496eab05228a50c45ee43c1ed0",
-                "genome.fasta.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
-                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
-            ],
-            "No BAM files",
-            [
-                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
-            ],
-            "No VCF files"
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
-        },
-        "timestamp": "2025-06-12T10:34:52.406506871"
+        "timestamp": "2026-01-03T04:20:02.452150297"
     }
 }

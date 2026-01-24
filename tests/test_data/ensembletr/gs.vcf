@@ -1,0 +1,8 @@
+##fileformat=VCFv4.2
+##contig=<ID=chr1,length=60>
+##command=gangstr
+##INFO=<ID=RU,Number=1,Type=String,Description="Repeat unit">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=Q,Number=1,Type=Float,Description="Quality score">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE1
+chr1	10	.	CAGCAG	CAGCAGCAGCAG	.	PASS	RU=CAG	GT:Q	0/1:1.0

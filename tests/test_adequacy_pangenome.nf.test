@@ -1,0 +1,62 @@
+nextflow_pipeline {
+
+    name "Test Adequacy Pangenome + DeepVariant"
+    script "../main.nf"
+    tag "pangenome"
+    tag "deepvariant"
+
+    test("Pangenome Alignment + DeepVariant (micb data)") {
+
+        setup {
+            // Create samplesheet with absolute paths
+            def pangenome_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+            def samplesheet = new File("${outputDir}/samplesheet.csv")
+            samplesheet.text = """patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${pangenome_base}/HG003_R1.fastq.gz,${pangenome_base}/HG003_R2.fastq.gz
+"""
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'giraffe'
+                tools = 'deepvariant' // Enable DeepVariant
+                input = "${outputDir}/samplesheet.csv"
+                
+                // Pangenome indices
+                pangenome_gbz = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz"
+                pangenome_dist = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.dist"
+                pangenome_min = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.withzip.min"
+                pangenome_ref_paths = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.ref_paths.txt"
+                
+                // Reference genome
+                fasta = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa"
+                fasta_fai = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa.fai"
+                dict = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.dict"
+                
+                // Config
+                igenomes_ignore = true
+                genome = null
+                no_intervals = true 
+                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+            }
+        }
+
+        then {
+            assert workflow.success
+            if (!path("$outputDir/variant_calling/deepvariant/HG003/HG003.vcf.gz").exists()) {
+                println "Processes executed:"
+                workflow.trace.succeeded().each { println it.name }
+            }
+            // Check for DeepVariant VCF
+            assert path("$outputDir/variant_calling/deepvariant/HG003/HG003.vcf.gz").exists()
+            
+            // Snapshot versions and VCF existence
+            assert snapshot(
+                workflow.trace.succeeded().size(),
+                path("$outputDir/variant_calling/deepvariant/HG003/HG003.vcf.gz").exists()
+            ).match()
+        }
+
+    }
+}

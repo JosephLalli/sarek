@@ -1,0 +1,161 @@
+nextflow_pipeline {
+
+    name "Test FASTQ_PREPROCESS_PANGENOME"
+    script "main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "fastq_preprocess_pangenome"
+
+    test("--aligner giraffe - Default (Picard MarkDuplicates)") {
+        setup {
+            // Create samplesheet with absolute paths
+            def pangenome_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+            def samplesheet = new File("${outputDir}/samplesheet.csv")
+            samplesheet.text = """patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${pangenome_base}/HG003_R1.fastq.gz,${pangenome_base}/HG003_R2.fastq.gz
+"""
+        }
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'giraffe'
+                input = "${outputDir}/samplesheet.csv"
+                pangenome_gbz = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz"
+                pangenome_dist = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.dist"
+                pangenome_min = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.withzip.min"
+                pangenome_zipcodes = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.zipcodes"
+                pangenome_ref_paths = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.ref_paths.txt"
+                fasta = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa"
+                fasta_fai = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa.fai"
+                dict = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.dict"
+                igenomes_ignore = true
+                genome = null
+                tools = ''
+                skip_tools = 'baserecalibrator,fastqc,mosdepth,multiqc,samtools'
+                save_reference = true
+                save_mapped = true
+                no_intervals = true
+            }
+        }
+
+        then {
+            assert workflow.success
+            // Should have run BAM_MARKDUPLICATES
+            assert workflow.trace.succeeded().any { it.name.contains('BAM_MARKDUPLICATES') }
+            // Picard produces CRAM in preprocessing/markduplicates/${meta.id}/${meta.id}.md.cram
+            assert path("$outputDir/preprocessing/markduplicates/HG003/HG003.md.cram").exists()
+        }
+    }
+
+    test("--aligner giraffe --tools samtools_markdup --skip_tools markduplicates") {
+        setup {
+            // Create samplesheet with absolute paths
+            def pangenome_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+            def samplesheet = new File("${outputDir}/samplesheet.csv")
+            samplesheet.text = """patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${pangenome_base}/HG003_R1.fastq.gz,${pangenome_base}/HG003_R2.fastq.gz
+"""
+        }
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'giraffe'
+                input = "${outputDir}/samplesheet.csv"
+                pangenome_gbz = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz"
+                pangenome_dist = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.dist"
+                pangenome_min = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.withzip.min"
+                pangenome_zipcodes = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.zipcodes"
+                pangenome_ref_paths = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.ref_paths.txt"
+                fasta = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa"
+                fasta_fai = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa.fai"
+                dict = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.dict"
+                igenomes_ignore = true
+                genome = null
+                tools = 'samtools_markdup'
+                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                save_mapped = true
+                no_intervals = true
+            }
+        }
+
+        then {
+            assert workflow.success
+            // Should NOT have run BAM_MARKDUPLICATES
+            assert !workflow.trace.succeeded().any { it.name.contains('BAM_MARKDUPLICATES') }
+            // VG_SURJECT should have run with samtools markdup pipe (check log)
+            assert path("$outputDir/preprocessing/giraffe/qc/HG003/HG003.markdup.log").exists()
+            // CRAM should be in giraffe/mapped/${meta.id}/ (since it came from VG_ALIGN)
+            assert path("$outputDir/preprocessing/giraffe/mapped/HG003/HG003.cram").exists()
+        }
+    }
+
+    test("--aligner giraffe --tools samtools_markdup (Invalid)") {
+        setup {
+            // Create samplesheet with absolute paths
+            def pangenome_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+            def samplesheet = new File("${outputDir}/samplesheet.csv")
+            samplesheet.text = """patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${pangenome_base}/HG003_R1.fastq.gz,${pangenome_base}/HG003_R2.fastq.gz
+"""
+        }
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'giraffe'
+                input = "${outputDir}/samplesheet.csv"
+                pangenome_gbz = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz"
+                fasta = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa"
+                igenomes_ignore = true
+                genome = null
+                tools = 'samtools_markdup'
+                skip_tools = 'baserecalibrator'
+                no_intervals = true
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assert workflow.stdout.contains("Invalid configuration: 'samtools_markdup' cannot be in 'tools' if 'markduplicates' is not in 'skip_tools'.")
+        }
+    }
+
+    test("--aligner giraffe - Stub Test") {
+        options "-stub"
+        
+        setup {
+            def pangenome_base = "${baseDir}/assets/test_data/pangenome/haplotype-sampling"
+            def samplesheet = new File("${outputDir}/samplesheet.csv")
+            samplesheet.text = """patient,sex,status,sample,lane,fastq_1,fastq_2
+HG003,XY,0,HG003,L001,${pangenome_base}/HG003_R1.fastq.gz,${pangenome_base}/HG003_R2.fastq.gz
+"""
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'giraffe'
+                input = "${outputDir}/samplesheet.csv"
+                pangenome_gbz = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.giraffe.gbz"
+                pangenome_dist = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.dist"
+                pangenome_min = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.withzip.min"
+                pangenome_zipcodes = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.shortread.zipcodes"
+                pangenome_ref_paths = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.ref_paths.txt"
+                fasta = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa"
+                fasta_fai = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.fa.fai"
+                dict = "${baseDir}/assets/test_data/pangenome/haplotype-sampling/micb-kir3dl1.CHM13.dict"
+                igenomes_ignore = true
+                genome = null
+                tools = ''
+                skip_tools = 'baserecalibrator,fastqc,mosdepth,multiqc,samtools'
+                save_reference = true
+                save_mapped = true
+                no_intervals = true
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.succeeded().any { it.name.contains('BAM_MARKDUPLICATES') }
+        }
+    }
+}

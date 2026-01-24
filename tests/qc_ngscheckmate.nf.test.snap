@@ -29,6 +29,7 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -111,9 +112,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.12.0"
         },
-        "timestamp": "2025-09-30T19:38:59.74710121"
+        "timestamp": "2026-01-03T04:17:07.001845811"
     },
     "-profile test --tools ngscheckmate": {
         "content": [
@@ -260,8 +261,8 @@
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
-                "ngscheckmate_all.txt:md5,f858e3eb892b8245cbf74cc979e4f33a",
-                "ngscheckmate_matched.txt:md5,ab2c5b46e9a4dfb3bb54292db931b58b",
+                "ngscheckmate_all.txt:md5,559f8e97ca32c4ea1bc464d3e026ac3b",
+                "ngscheckmate_matched.txt:md5,1fe9486ef09ab3beddb082ef40f5f036",
                 "ngscheckmate_output_corr_matrix.txt:md5,a86afff85677c875503d495cbbb4f495"
             ],
             "No BAM files",
@@ -275,8 +276,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.12.0"
         },
-        "timestamp": "2025-09-30T21:27:36.837652254"
+        "timestamp": "2026-01-03T04:16:06.73854921"
     }
 }

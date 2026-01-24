@@ -1,0 +1,1 @@
+#chrom	left	right	repeat	name	left_most	right_most	center_mass	n_left	n_right	n_total

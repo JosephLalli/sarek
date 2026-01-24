@@ -1,0 +1,11 @@
+##fileformat=VCFv4.2
+##command=hipstr
+##contig=<ID=chr1,length=248956422>
+##INFO=<ID=RU,Number=1,Type=String,Description="Repeat Unit">
+##INFO=<ID=START,Number=1,Type=Integer,Description="Start position of the locus">
+##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the locus">
+##INFO=<ID=PERIOD,Number=1,Type=Integer,Description="Repeat unit length">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=REPCN,Number=2,Type=Float,Description="Repeat Copy Number">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE1
+chr1	200	STRling_Novel_chr1_200	ATATATATATATATAT	ATATATATATATATATATAT	.	PASS	RU=AT;START=200;END=215;PERIOD=2	GT:REPCN	0/1:8.00,10.00

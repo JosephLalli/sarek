@@ -1,0 +1,11 @@
+##fileformat=VCFv4.2
+##contig=<ID=chr1,length=60>
+##ALT=<ID=STR1,Description="ExpansionHunter-style tandem repeat allele">
+##INFO=<ID=VARID,Number=1,Type=String,Description="ExpansionHunter variant ID">
+##INFO=<ID=RU,Number=1,Type=String,Description="Repeat unit">
+##INFO=<ID=RL,Number=1,Type=Integer,Description="Reference repeat length in bp">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=REPCN,Number=1,Type=String,Description="Repeat Copy Number">
+##FORMAT=<ID=REPCI,Number=1,Type=String,Description="Repeat Copy Number CI">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE1
+chr1	10	.	N	<STR4>	.	PASS	VARID=EH1;RU=CAG;RL=6	GT:REPCN:REPCI	0/1:2/4:1-3/3-5

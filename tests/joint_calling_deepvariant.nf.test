@@ -1,0 +1,32 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline - GLnexus Joint Calling"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "joint_calling"
+    tag "glnexus"
+
+    test("-profile test --tools deepvariant --joint_germline --input tests/csv/3.0/mapped_joint_bam.csv -stub") {
+        options "-stub"
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv"
+                outdir = "$outputDir"
+                step = "variant_calling"
+                tools = 'deepvariant'
+                joint_germline = true
+            }
+        }
+
+        then {
+            assert workflow.success
+            // Check if the joint vcf was created and published
+            assert path("$outputDir/variant_calling/deepvariant/joint_variant_calling/joint_germline.vcf.gz").exists()
+        }
+
+    }
+
+}
