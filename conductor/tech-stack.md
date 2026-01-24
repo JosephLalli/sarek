@@ -18,7 +18,8 @@
 *   **Testing:** nf-test, GitHub Actions
 
 ## Bioinformatics Tools (Key Dependencies)
-*   **Alignment:** BWA-MEM, BWA-MEM2, Dragmap, Sentieon
-*   **Variant Calling:** GATK (HaplotypeCaller, Mutect2), DeepVariant, Strelka, Manta, FreeBayes, etc.
+*   **Alignment:** BWA-MEM, BWA-MEM2, Dragmap, Sentieon, vg giraffe
+*   **Variant Calling:** GATK (HaplotypeCaller, Mutect2), DeepVariant, Strelka, Manta, FreeBayes, PanGenie, ExpansionHunter, STRling, GangSTR, etc.
+*   **STR Consensus:** EnsembleTR (container: `community.wave.seqera.io/library/pysam_samtools_pip_ensembletr:343f01fd8b77ac0a`)
+*   **Phasing:** SHAPEIT5, WhatsHap, SHAPEIT4, SAPPHIRE
 *   **QC:** FastQC, MultiQC, Samtools
-*   **Upcoming:** Pangenie, Graph aligners (minigraph-cactus/vg)

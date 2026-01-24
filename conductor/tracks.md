@@ -47,16 +47,16 @@ Successfully implemented and verified pangenome-aware alignment (VG Giraffe) and
 
 Implemented production-grade STR consensus merging with format adapters for STRling, coordinate-aware normalization, and EnsembleTR integration.
 
+### [x] Track: STR Enhancement
+*Link: [./conductor/tracks/str_enhancement_20260109/](./conductor/tracks/str_enhancement_20260109/)*
+
+Verified integration of EH, STRling, and GS; resolved STRling allele estimation anomalies; implemented joint calling logic. Superseded by `str_consensus_merge` for final merging implementation.
+
 ---
 
 ## Active & Planned Tracks
 
-## [~] Track: STR Enhancement
-*Link: [./conductor/tracks/str_enhancement_20260109/](./conductor/tracks/str_enhancement_20260109/)*
-
----
-
-## [ ] Track: Phasing Pipeline Separation
+## [~] Track: Phasing Pipeline Separation
 *Link: [./conductor/tracks/phasing_separation_20260109/](./conductor/tracks/phasing_separation_20260109/)*
 
 ---
@@ -82,7 +82,7 @@ Long-read PacBio support including preprocessing (lima), alignment (Minimap2/Gir
 |-------|--------|---------|--------------|
 | legacy_gap_analysis | DONE | - | - |
 | test_adequacy_pangenome | DONE | - | - |
-| str_enhancement | PLANNED | - | - |
+| str_enhancement | DONE | - | - |
 | str_consensus_merge | DONE | 3 | 1 |
 | phasing_separation | PLANNED | - | - |
 | ont_support | PLANNED | - | - |

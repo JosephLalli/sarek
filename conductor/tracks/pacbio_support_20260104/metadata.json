@@ -1,0 +1,8 @@
+{
+  "track_id": "pacbio_support_20260104",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-04T12:10:00Z",
+  "updated_at": "2026-01-04T12:10:00Z",
+  "description": "Long-read PacBio support including preprocessing (lima), alignment (Minimap2/Giraffe), and variant calling (DeepVariant/PBSV/TRGT)"
+}

@@ -1,0 +1,8 @@
+{
+  "track_id": "bcftools_index_opt_20260108",
+  "type": "refactor",
+  "status": "new",
+  "created_at": "2026-01-08T10:00:00Z",
+  "updated_at": "2026-01-08T10:00:00Z",
+  "description": "Optimize BCFTOOLS indexing by using -W argument and removing redundant TABIX steps."
+}

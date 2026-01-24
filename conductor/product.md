@@ -18,12 +18,13 @@ To engineer a future-proof, high-precision variant calling pipeline. The immedia
     *   *Complete:* Standardize local modules with `task.ext.args`, `prefix`, and `meta.yml` documentation.
     *   *Complete:* Address missing resource labels and environments in nf-core modules.
 2.  **Regression Validation:** Rigorous verification using existing Sarek test datasets (`test_full`, `test_full_germline`) to ensure the syntax upgrade preserves exact functionality.
-3.  **Advanced Feature Integration:** Implement Graph alignment, T2T reference support, STR calling, and Pangenie SV imputation.
+3.  **Advanced Feature Integration:** Implement Graph alignment, T2T reference support, STR calling, Pangenie SV imputation, and comprehensive Haplotype Phasing.
 4.  **Benchmarking:** Evaluate the new features using standard Trio datasets (GIAB) to quantify precision/recall gains.
 5.  **Production Deployment:** Validate end-to-end execution on BrainVar pilot data.
 
 ## Key Features
 *   **Strict Syntax Codebase:** A refactored Nextflow implementation compliant with modern standards (no implicit closures, fully documented local modules).
-*   **Graph & T2T Alignment:** Support for non-linear references and the complete T2T-CHM13 genome.
-*   **Complex Variant Calling:** Native support for Short Tandem Repeats (STRs) and Genotype Imputation (Pangenie).
+*   **Graph & T2T Alignment:** Full configuration support for T2T-CHM13 v2.0 and HPRC Pangenome (v1.1 and v2.0) with automated index generation. Integrated `vg giraffe` for pangenome-aware short-read alignment.
+*   **Comprehensive Phasing Suite:** Integrated phasing workflow supporting population-based (SHAPEIT5), read-backed (WhatsHap), and hybrid/corrected (SHAPEIT5 + SAPPHIRE) strategies for high-accuracy haplotype reconstruction.
+*   **Complex Variant Calling:** Native support for Short Tandem Repeats (STRs) and Genotype Imputation via PanGenie.
 *   **Phased Validation Suite:** A structured testing pipeline (Regression -> Benchmarking -> Pilot).

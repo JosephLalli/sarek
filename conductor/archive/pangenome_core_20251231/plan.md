@@ -112,11 +112,9 @@ Location: subworkflows/local/giraffe_mapping/, subworkflows/local/pangenie_genot
 
 ## Phase 6: Testing & Optimization
 - [x] Task: Create test data subset
-- [x] Task: Write nf-test case for giraffe aligner
-    - [x] Created tests/aligner-giraffe.nf.test
-    - [x] Verified execution with local test data
-- [ ] Task: Fix Giraffe Integration Test
-    - [ ] Update `tests/aligner-giraffe.nf.test` to verify CRAM/CRAI existence.
-    - [ ] Ensure `save_mapped` is handled correctly in tests.
-- [~] Task: Write nf-test cases for each module
-- [ ] Task: Integration test with full workflow
+- [x] Task: Write nf-test case for giraffe aligner (bc74768)
+- [x] Task: Fix Giraffe Integration Test (bc74768)
+    - [x] Update `tests/aligner-giraffe.nf.test` to verify CRAM/CRAI existence.
+    - [x] Ensure `save_mapped` is handled correctly in tests.
+- [x] Task: Write nf-test cases for each module (bc74768)
+- [x] Task: Integration test with full workflow (bc74768)

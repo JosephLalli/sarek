@@ -1,0 +1,8 @@
+{
+  "track_id": "test_adequacy_pangenome_20260109",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-01-09T14:30:00Z",
+  "updated_at": "2026-01-09T14:30:00Z",
+  "description": "Evaluate the adequacy of testing for pangenome-aware features (alignment, DeepVariant) using dry-runs and downsampled real data."
+}
